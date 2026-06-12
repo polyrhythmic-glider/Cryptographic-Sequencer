@@ -931,63 +931,29 @@ Una formulazione corretta è:
 ## 16. Sintesi
 
 La formulazione compatta del sistema è:
-
 $$
-{\Large
 \mathcal{E}
 =
 Map
 \left(
-\left(
-\left[
-\text{int}
-\left(
-H(h_S \parallel p \parallel q \parallel e \parallel i)
-\right)
-\bmod n
-\right]^e
-\bmod n
-\right)_{i=0}^{L-1},
+(c_i)_{i=0}^{L-1},
 \mathcal{K},
 \mathcal{M},
 r,
 mode
 \right)
-}
-$$
-
-dove:
-
-$$
-{\Large
-h_S = H(bytes(S))
-}
 $$
 
 $$
-{\Large
-n = p \cdot q
-}
-$$
-
-$$
-{\Large
-\varphi(n) = (p - 1)(q - 1)
-}
-$$
-
-$$
-{\Large
-\gcd(e, \varphi(n)) = 1
-}
-$$
-
-Il risultato finale è una sequenza musicale deterministica:
-
-$$
-{\Large
-\mathcal{E} = (E_0, E_1, \dots, E_{L-1})
-}
+c_i =
+\left(
+\operatorname{int}
+\left(
+H(h_S \parallel p \parallel q \parallel e \parallel i)
+\right)
+\bmod n
+\right)^e
+\bmod n
 $$
 
 generata da una sorgente multimediale e controllata da parametri crittografici e musicali.
