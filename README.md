@@ -947,7 +947,7 @@ $$
 $$
 c_i =
 \left(
-\operatorname{int}
+\mathrm{int}{h_i}
 \left(
 H(h_S \parallel p \parallel q \parallel e \parallel i)
 \right)
