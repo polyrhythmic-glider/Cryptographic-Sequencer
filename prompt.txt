@@ -1,0 +1,70 @@
+You are working on the `Cryptographic-Sequencer` repository on Windows, with Ableton Live 12.1.3, Max for Live, and the Cycling '74 Max SDK available locally.
+
+Goal:
+Build and validate the first working Max external for this project by wrapping the existing C core and the existing Max adapter model.
+
+Repository context:
+- The reusable generation engine is in `core/`.
+- The Linux-testable Max adapter model is in `adapters/max/include/cryptoseq_max_model.h` and `adapters/max/src/cryptoseq_max_model.c`.
+- The Max SDK bridge skeleton is in `adapters/max/src/cryptoseq_max_external.c`.
+- The core and adapter model already have tests and should not be rewritten without reason.
+
+What to do:
+1. Inspect the current repository structure before editing.
+2. Integrate the local Max SDK into the build in a conservative way.
+3. Make `adapters/max/src/cryptoseq_max_external.c` compile as a real Max external on Windows.
+4. Keep the existing `cryptoseq_max_model` as the logic/state layer and use it from the external.
+5. Produce an external object named `cryptoseq`.
+6. Support these Max messages:
+   - `source <symbol>`
+   - `p <int>`
+   - `q <int>`
+   - `length <int>`
+   - `root <int>`
+   - `mode <symbol>` where symbol is `melody`, `rhythm`, or `hybrid`
+   - `generate`
+   - `dump`
+   - `step <int>`
+   - `bang`
+7. Keep the event output format as:
+   - `event step active note velocity accent duration gate value`
+8. Add or update build instructions for Windows and Max SDK usage in the documentation.
+9. Verify that the external can be built successfully.
+10. If possible, explain exactly where the built `.mxe64` file should be placed so Max can load it.
+
+Constraints:
+- Do not rewrite the core API unless there is a concrete build or integration blocker.
+- Do not add unrelated refactors.
+- Keep the adapter architecture split:
+  - `core/` for deterministic generation
+  - `cryptoseq_max_model` for Max-facing state/commands without SDK dependency
+  - `cryptoseq_max_external.c` for the actual Max SDK bridge
+- Prefer small, testable changes.
+- Preserve ASCII unless a file already requires something else.
+- Use the repository's existing style and naming.
+
+Build expectations:
+- Use CMake if possible.
+- If a dedicated Visual Studio solution or Max SDK-specific build path is required, document it instead of guessing.
+- If the Max SDK requires additional source files, libraries, headers, or package layout, wire them in explicitly.
+
+Validation checklist:
+- The project configures on Windows.
+- The Max external target builds.
+- The built external exports `ext_main`.
+- The object class name is `cryptoseq`.
+- The message handlers compile and link correctly.
+- Documentation explains how to load and test the external in Max / Max for Live.
+
+Runtime validation inside Max:
+- Create a minimal test patch that:
+  - sends `source "demo source"`
+  - sets `p 251`, `q 257`, `length 16`, `mode hybrid`, `root 60`
+  - triggers `generate`
+  - observes emitted `event` messages
+- If Ableton/Max manual interaction is needed, leave a concise checklist of exactly what still needs to be clicked or verified by the user.
+
+Expected output from you:
+- Implemented build and source changes
+- Any required documentation updates
+- A concise summary of what works, what was verified, and what remains manual inside Max/Ableton
