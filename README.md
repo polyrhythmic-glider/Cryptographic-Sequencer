@@ -1,5 +1,5 @@
 # Cryptographic-Sequencer
-Sequencer generativo deterministico basato su hashing multimediale e trasformazioni modulari ispirate a RSA, con doppia implementazione: Max4Live e modulo hardware ESP32.
+Sequencer generativo deterministico basato su hashing multimediale e trasformazioni modulari ispirate a RSA, con doppia implementazione: Max for Live e modulo hardware ESP32.
 
 Il progetto ha l’obiettivo di realizzare un sequencer musicale generativo deterministico che, a partire da una sorgente multimediale e da due numeri primi scelti dall’utente, genera sequenze melodiche o ritmiche.
 
@@ -7,10 +7,177 @@ La sorgente viene trasformata tramite hashing in una sequenza numerica di lunghe
 
 Il progetto prevede due implementazioni principali:
 
-Max4Live device, per generare sequenze MIDI sincronizzate con Ableton Live.
+Max for Live device, per generare sequenze MIDI sincronizzate con Ableton Live.
 Modulo hardware ESP32, per generare sequenze standalone tramite MIDI, gate, trigger e/o CV.
 
 Il sistema non è pensato come strumento di sicurezza crittografica, ma come strumento di composizione generativa ispirato a concetti crittografici.
+
+# Core C
+
+La repository contiene un primo core C portabile, separato dagli adapter Max for Live ed ESP32. Il core implementa solo la pipeline deterministica:
+
+1. hash SHA-256 della sorgente;
+2. espansione hash a contatore;
+3. trasformazione modulare ispirata a RSA;
+4. mapping musicale in eventi.
+
+La struttura attuale è:
+
+```text
+core/
+  include/
+    cryptoseq.h
+  src/
+    cryptoseq.c
+    cryptoseq_hash.c
+    cryptoseq_internal.h
+  examples/
+    print_sequence.c
+  tests/
+    test_core.c
+adapters/
+  max/
+    include/
+      cryptoseq_max_model.h
+    src/
+      cryptoseq_max_model.c
+      cryptoseq_max_external.c
+    tests/
+      test_max_model.c
+```
+
+Il core è C99, non usa allocazione dinamica e non dipende da Max, Ableton, ESP-IDF, Arduino, filesystem o MIDI. Gli adapter futuri dovranno occuparsi di I/O, UI, clock, MIDI, gate, trigger e CV.
+
+L'adapter Max è diviso in due parti:
+
+- `cryptoseq_max_model`: model testabile su Linux, senza Max SDK;
+- `cryptoseq_max_external.c`: ponte verso la Max SDK, da compilare su macOS o Windows.
+
+## Build, test e demo
+
+Build standard:
+
+```bash
+cmake -S . -B build
+cmake --build build
+ctest --test-dir build --output-on-failure
+./build/cryptoseq_print_sequence
+```
+
+Su Linux questa build compila e testa anche il model dell'adapter Max. Non compila l'external Max reale, perché gli header e il formato binary target della Max SDK sono specifici dell'ambiente Max/macOS/Windows.
+
+Build consigliata per misurare performance:
+
+```bash
+cmake -S . -B build-release -DCMAKE_BUILD_TYPE=Release
+cmake --build build-release
+./build-release/cryptoseq_print_sequence
+```
+
+## API principale
+
+L'header pubblico è `core/include/cryptoseq.h`.
+
+Le funzioni principali sono:
+
+```c
+cs_status_t cs_generate_from_bytes(
+    const uint8_t *source_bytes,
+    size_t source_len,
+    const cs_params_t *params,
+    cs_event_t *events,
+    size_t event_capacity
+);
+
+cs_status_t cs_source_digest(
+    const uint8_t *source_bytes,
+    size_t source_len,
+    uint8_t digest[CS_SHA256_DIGEST_SIZE]
+);
+
+cs_status_t cs_generate_values_from_digest(
+    const uint8_t source_digest[CS_SHA256_DIGEST_SIZE],
+    const cs_params_t *params,
+    uint32_t *values,
+    size_t value_capacity
+);
+
+cs_status_t cs_map_values(
+    const uint32_t *values,
+    size_t value_count,
+    const cs_params_t *params,
+    cs_event_t *events,
+    size_t event_capacity
+);
+```
+
+`cs_generate_from_bytes` è il percorso semplice. Per Max for Live ed ESP32 è spesso preferibile separare le fasi:
+
+1. calcolare o ricevere `h_S`;
+2. generare e salvare la sequenza numerica `C`;
+3. rimappare `C` quando cambiano scala, densità, gate o modalità.
+
+Questo evita di ricalcolare hash e trasformazione modulare quando cambia solo il mapping musicale.
+
+## Limiti della prima implementazione
+
+I limiti sono definiti nell'header pubblico:
+
+```c
+#define CS_MAX_SOURCE_BYTES ((size_t)16u * 1024u * 1024u)
+#define CS_MAX_SEQUENCE_LENGTH ((size_t)4096u)
+#define CS_MAX_PRIME_VALUE 65521u
+#define CS_MAX_SCALE_LENGTH ((size_t)24u)
+#define CS_MAX_DURATION_COUNT ((size_t)32u)
+#define CS_MAX_RHYTHM_DIVISOR 1024u
+#define CS_MAX_ACCENT_LEVELS 16u
+```
+
+Questi limiti sono intenzionali:
+
+- `p` e `q` restano sotto `2^16`, quindi `n = p*q` resta gestibile con aritmetica a 32 bit e moltiplicazioni intermedie a 64 bit;
+- la sequenza massima di 4096 step è ampia per uso musicale e prevedibile su hardware embedded;
+- la sorgente diretta è limitata a 16 MiB per evitare caricamenti e hashing troppo costosi in RAM;
+- per sorgenti più grandi si può calcolare il digest SHA-256 fuori dal core o aggiungere un'API streaming.
+
+## Ottimizzazioni
+
+Il core è pensato per generare o rigenerare la sequenza prima del playback. Durante l'esecuzione musicale il sistema dovrebbe leggere solo l'evento dello step corrente.
+
+### Precalcolo e caching
+
+- `cs_source_digest` permette di calcolare `h_S` una sola volta.
+- `cs_generate_values_from_digest` permette di generare e salvare la sequenza numerica `C`.
+- `cs_map_values` permette di rimappare `C` quando cambiano scala, densità, gate o modalità, senza rifare hash ed esponenziazione modulare.
+- `cs_generate_from_bytes` valida i parametri prima di calcolare l'hash della sorgente, così evita lavoro inutile quando l'input è invalido.
+
+### Hashing per step
+
+- Per ogni step il seed SHA-256 fisso viene preimpacchettato come `h_S || p || q || e`.
+- Nel loop cambia solo l'indice `i`, codificato in big-endian su 64 bit.
+- Questo riduce il numero di chiamate a `cs_sha256_update` e il lavoro ripetuto per ogni step.
+
+### Aritmetica modulare
+
+- `p` e `q` sono limitati a `CS_MAX_PRIME_VALUE`, quindi `n = p*q` resta in `uint32_t`.
+- Le moltiplicazioni modulari usano intermedi a 64 bit per evitare overflow.
+- La riduzione del digest SHA-256 modulo `n` procede a blocchi da 32 bit invece che byte per byte.
+- `pow_mod` usa square-and-multiply, adatto all'esponente standard `65537`.
+
+### Mapping degli eventi
+
+- Lo switch `melody`, `rhythm`, `hybrid` è fuori dai loop principali.
+- Il loop interno chiama direttamente la funzione di mapping corretta.
+- Gli eventi vengono scritti in buffer forniti dal chiamante, senza allocazioni dinamiche.
+
+### Vincoli embedded-friendly
+
+- Il core non usa heap.
+- La source diretta è limitata a 16 MiB.
+- La sequenza è limitata a 4096 step.
+- I limiti sono esposti nell'header pubblico, quindi gli adapter Max for Live ed ESP32 possono validarli prima di chiamare il core.
+
+L'obiettivo non è la massima sicurezza crittografica, ma un motore deterministico rapido e stabile per generazione musicale.
 
 # Formulazione matematica del Cryptographic Sequencer
 
