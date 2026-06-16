@@ -66,6 +66,77 @@ ctest --test-dir build --output-on-failure
 
 Su Linux questa build compila e testa anche il model dell'adapter Max. Non compila l'external Max reale, perché gli header e il formato binary target della Max SDK sono specifici dell'ambiente Max/macOS/Windows.
 
+### Windows Max external build
+
+The real Max external is opt-in and keeps the existing split:
+
+- `core/` remains the deterministic generation engine;
+- `cryptoseq_max_model` remains the SDK-free Max-facing state layer;
+- `cryptoseq_max_external.c` is the Cycling '74 Max SDK bridge.
+
+Prerequisites:
+
+- CMake 3.25 or newer on `PATH` for the Max external target.
+- Visual Studio 2022 or Visual Studio Build Tools with the C++ desktop workload.
+- Cycling '74 Max SDK available locally, for example in `C:\dev\max-sdk`.
+
+The current Cycling '74 SDK fetches `max-sdk-base` during CMake configure. That package provides the Max headers, libraries, and imported target `Max::Max`.
+
+From a Developer PowerShell or Developer Command Prompt:
+
+```powershell
+cmake -S . -B build-max -G "Visual Studio 17 2022" -A x64 `
+  -DCRYPTOSEQ_BUILD_MAX_EXTERNAL=ON `
+  -DMAX_SDK_ROOT="C:\dev\max-sdk"
+
+cmake --build build-max --config Release --target cryptoseq_max_external
+```
+
+If CMake cannot fetch `max-sdk-base`, clone it locally and add `-DMAX_SDK_BASE_ROOT="C:\dev\max-sdk-base"` to the configure command.
+
+The target builds `cryptoseq.mxe64`, exporting `ext_main` and registering the Max class name `cryptoseq`.
+
+During development, copy the built external to a Max package externals folder:
+
+```text
+Documents\Max 8\Packages\Cryptographic-Sequencer\externals\cryptoseq.mxe64
+```
+
+The repository includes ready-to-open Max patches:
+
+```text
+adapters\max\patchers\cryptoseq-test.maxpat
+adapters\max\patchers\cryptoseq-midi-ui.maxpat
+```
+
+Restart Max, then create an object named `cryptoseq`, or open one of the patches. A manual test patch should connect the outlet to `print cryptoseq` and send:
+
+```text
+source demo source
+p 251
+q 257
+e 65537
+length 16
+mode hybrid
+scale major
+root 60
+generate
+```
+
+Expected outlet messages use this format:
+
+```text
+event step active note velocity accent duration gate value
+```
+
+`sourcefile` accepts binary files up to 16 MiB. Files above that limit are rejected and the external reports the error in the Max Console.
+
+Mode intent in the Max UI:
+
+- `melodic`: melodic instruments; root and scale shape the notes.
+- `hybrid`: Drum Rack; rhythm/velocity plus 16 consecutive pads from root, with no scale mapping.
+- `rhythm`: single percussion lane; one root note, with no scale mapping.
+
 Build consigliata per misurare performance:
 
 ```bash

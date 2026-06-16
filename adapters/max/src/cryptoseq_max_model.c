@@ -2,6 +2,10 @@
 
 #include <string.h>
 
+static const int8_t k_major_pentatonic_scale[] = {0, 2, 4, 7, 9};
+static const int8_t k_minor_pentatonic_scale[] = {0, 3, 5, 7, 10};
+static const int8_t k_chromatic_scale[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+
 static cs_status_t validate_after_change(cs_max_model_t *model, cs_params_t previous)
 {
     const cs_status_t status = cs_validate_params(&model->params);
@@ -97,12 +101,42 @@ cs_status_t cs_max_model_set_mode(cs_max_model_t *model, const char *mode)
 
     previous = model->params;
 
-    if (strcmp(mode, "melody") == 0) {
+    if (strcmp(mode, "melody") == 0 || strcmp(mode, "melodic") == 0) {
         model->params.mode = CS_MODE_MELODY;
     } else if (strcmp(mode, "rhythm") == 0) {
         model->params.mode = CS_MODE_RHYTHM;
     } else if (strcmp(mode, "hybrid") == 0) {
         model->params.mode = CS_MODE_HYBRID;
+    } else {
+        return CS_ERROR_INVALID_PARAM;
+    }
+
+    return validate_after_change(model, previous);
+}
+
+cs_status_t cs_max_model_set_scale(cs_max_model_t *model, const char *scale)
+{
+    cs_params_t previous;
+
+    if (model == NULL || scale == NULL) {
+        return CS_ERROR_NULL;
+    }
+
+    previous = model->params;
+
+    if (strcmp(scale, "major") == 0) {
+        model->params.scale_intervals = cs_major_scale(&model->params.scale_len);
+    } else if (strcmp(scale, "minor") == 0) {
+        model->params.scale_intervals = cs_minor_scale(&model->params.scale_len);
+    } else if (strcmp(scale, "major_pentatonic") == 0) {
+        model->params.scale_intervals = k_major_pentatonic_scale;
+        model->params.scale_len = sizeof(k_major_pentatonic_scale) / sizeof(k_major_pentatonic_scale[0]);
+    } else if (strcmp(scale, "minor_pentatonic") == 0) {
+        model->params.scale_intervals = k_minor_pentatonic_scale;
+        model->params.scale_len = sizeof(k_minor_pentatonic_scale) / sizeof(k_minor_pentatonic_scale[0]);
+    } else if (strcmp(scale, "chromatic") == 0) {
+        model->params.scale_intervals = k_chromatic_scale;
+        model->params.scale_len = sizeof(k_chromatic_scale) / sizeof(k_chromatic_scale[0]);
     } else {
         return CS_ERROR_INVALID_PARAM;
     }

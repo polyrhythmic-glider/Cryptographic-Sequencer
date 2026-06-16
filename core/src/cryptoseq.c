@@ -146,6 +146,13 @@ static uint8_t map_melodic_note(uint32_t value, const cs_params_t *params)
     return clamp_u8_int(note, 0, 127);
 }
 
+static uint8_t map_drum_rack_note(uint32_t value, const cs_params_t *params)
+{
+    const uint32_t pad_count = 16u;
+    const int note = (int)params->root_note + (int)(value % pad_count);
+    return clamp_u8_int(note, 0, 127);
+}
+
 static uint8_t map_melodic_velocity(uint32_t value, const cs_params_t *params)
 {
     const uint32_t span = (uint32_t)params->velocity_max - (uint32_t)params->velocity_min + 1u;
@@ -241,7 +248,7 @@ static void map_hybrid_event(uint32_t index, uint32_t value, const cs_params_t *
     event->step_index = index;
     event->value = value;
     event->active = map_rhythm_active(value, params);
-    event->note = map_melodic_note(value, params);
+    event->note = map_drum_rack_note(value, params);
     event->velocity = map_rhythm_velocity(value, accent, params);
     event->accent = accent;
     event->duration_ticks = select_duration(value, params);
@@ -433,7 +440,7 @@ cs_status_t cs_validate_params(const cs_params_t *params)
         return CS_ERROR_NOT_COPRIME;
     }
 
-    if (params->mode == CS_MODE_MELODY || params->mode == CS_MODE_HYBRID) {
+    if (params->mode == CS_MODE_MELODY) {
         if (params->scale_intervals == NULL ||
             params->scale_len == 0u ||
             params->scale_len > CS_MAX_SCALE_LENGTH ||

@@ -124,6 +124,67 @@ static int test_value_cache_and_remap(void)
     return 0;
 }
 
+static int test_scale_does_not_affect_percussive_modes(void)
+{
+    static const uint32_t values[] = {0u, 1u, 2u, 3u, 4u, 5u, 6u, 7u};
+    cs_params_t params = cs_default_params();
+    cs_event_t major_events[8];
+    cs_event_t minor_events[8];
+    cs_status_t status;
+    size_t minor_len = 0u;
+    size_t i;
+
+    params.length = 8u;
+    params.root_note = 36u;
+    params.rhythm_threshold = params.rhythm_divisor;
+
+    params.mode = CS_MODE_HYBRID;
+    status = cs_map_values(values, 8u, &params, major_events, 8u);
+    if (expect_status(status, CS_OK, "hybrid major map")) {
+        return 1;
+    }
+
+    params.scale_intervals = cs_minor_scale(&minor_len);
+    params.scale_len = minor_len;
+    status = cs_map_values(values, 8u, &params, minor_events, 8u);
+    if (expect_status(status, CS_OK, "hybrid minor map")) {
+        return 1;
+    }
+
+    for (i = 0u; i < 8u; ++i) {
+        if (major_events[i].note != minor_events[i].note ||
+            major_events[i].active != minor_events[i].active ||
+            major_events[i].velocity != minor_events[i].velocity) {
+            fprintf(stderr, "hybrid mode should ignore scale\n");
+            return 1;
+        }
+    }
+
+    params.mode = CS_MODE_RHYTHM;
+    status = cs_map_values(values, 8u, &params, major_events, 8u);
+    if (expect_status(status, CS_OK, "rhythm first map")) {
+        return 1;
+    }
+
+    params.scale_intervals = NULL;
+    params.scale_len = 0u;
+    status = cs_map_values(values, 8u, &params, minor_events, 8u);
+    if (expect_status(status, CS_OK, "rhythm without scale map")) {
+        return 1;
+    }
+
+    for (i = 0u; i < 8u; ++i) {
+        if (major_events[i].note != minor_events[i].note ||
+            major_events[i].active != minor_events[i].active ||
+            major_events[i].velocity != minor_events[i].velocity) {
+            fprintf(stderr, "rhythm mode should ignore scale\n");
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
 static int test_generation_paths_equivalent(void)
 {
     static const uint8_t source[] = "same source through different api paths";
@@ -253,6 +314,10 @@ int main(void)
     }
 
     if (test_value_cache_and_remap()) {
+        return 1;
+    }
+
+    if (test_scale_does_not_affect_percussive_modes()) {
         return 1;
     }
 

@@ -30,6 +30,7 @@ cs_status_t cs_max_model_set_primes(cs_max_model_t *model, uint32_t p, uint32_t 
 cs_status_t cs_max_model_set_exponent(cs_max_model_t *model, uint32_t e);
 cs_status_t cs_max_model_set_length(cs_max_model_t *model, size_t length);
 cs_status_t cs_max_model_set_mode(cs_max_model_t *model, const char *mode);
+cs_status_t cs_max_model_set_scale(cs_max_model_t *model, const char *scale);
 cs_status_t cs_max_model_set_root_note(cs_max_model_t *model, uint8_t root_note);
 cs_status_t cs_max_model_set_velocity_range(cs_max_model_t *model, uint8_t min_velocity, uint8_t max_velocity);
 cs_status_t cs_max_model_set_gate_range(cs_max_model_t *model, uint16_t min_permille, uint16_t max_permille);

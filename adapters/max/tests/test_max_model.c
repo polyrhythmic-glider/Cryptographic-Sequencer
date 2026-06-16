@@ -45,6 +45,31 @@ static int test_max_model_generation(void)
         return 1;
     }
 
+    status = cs_max_model_set_mode(&model, "melodic");
+    if (expect_status(status, CS_OK, "set melodic alias")) {
+        return 1;
+    }
+
+    status = cs_max_model_set_mode(&model, "hybrid");
+    if (expect_status(status, CS_OK, "restore hybrid mode")) {
+        return 1;
+    }
+
+    status = cs_max_model_set_scale(&model, "minor_pentatonic");
+    if (expect_status(status, CS_OK, "set scale")) {
+        return 1;
+    }
+
+    status = cs_max_model_set_exponent(&model, CS_DEFAULT_EXPONENT);
+    if (expect_status(status, CS_OK, "set exponent")) {
+        return 1;
+    }
+
+    status = cs_max_model_set_rhythm(&model, 16u, 8u);
+    if (expect_status(status, CS_OK, "set rhythm")) {
+        return 1;
+    }
+
     status = cs_max_model_generate(&model);
     if (expect_status(status, CS_OK, "generate")) {
         return 1;
@@ -83,6 +108,11 @@ static int test_max_model_validation(void)
 
     status = cs_max_model_set_mode(&model, "wrong");
     if (expect_status(status, CS_ERROR_INVALID_PARAM, "invalid mode")) {
+        return 1;
+    }
+
+    status = cs_max_model_set_scale(&model, "wrong");
+    if (expect_status(status, CS_ERROR_INVALID_PARAM, "invalid scale")) {
         return 1;
     }
 
