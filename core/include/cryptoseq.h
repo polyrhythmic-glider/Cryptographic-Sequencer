@@ -10,7 +10,7 @@ extern "C" {
 
 #define CS_SHA256_DIGEST_SIZE 32u
 #define CS_DEFAULT_EXPONENT 65537u
-#define CS_MAX_SOURCE_BYTES ((size_t)16u * 1024u * 1024u)
+#define CS_MAX_SOURCE_BYTES ((size_t)256u * 1024u * 1024u)
 #define CS_MAX_SEQUENCE_LENGTH ((size_t)4096u)
 #define CS_MAX_PRIME_VALUE 65521u
 #define CS_MAX_SCALE_LENGTH ((size_t)24u)
@@ -45,6 +45,9 @@ typedef struct cs_params_t {
     uint8_t root_note;
     int8_t octave_min;
     uint8_t octave_count;
+    uint8_t melody_note_min;
+    uint8_t melody_note_max;
+    uint8_t drum_pad_count;
     const int8_t *scale_intervals;
     size_t scale_len;
 

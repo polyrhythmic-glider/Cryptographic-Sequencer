@@ -1,7 +1,7 @@
-# Cryptographic-Sequencer
+﻿# Cryptographic-Sequencer
 Sequencer generativo deterministico basato su hashing multimediale e trasformazioni modulari ispirate a RSA, con doppia implementazione: Max for Live e modulo hardware ESP32.
 
-Il progetto ha l’obiettivo di realizzare un sequencer musicale generativo deterministico che, a partire da una sorgente multimediale e da due numeri primi scelti dall’utente, genera sequenze melodiche o ritmiche.
+Il progetto ha l'obiettivo di realizzare un sequencer musicale generativo deterministico che, a partire da una sorgente multimediale e da due numeri primi scelti dall'utente, genera sequenze melodiche o ritmiche.
 
 La sorgente viene trasformata tramite hashing in una sequenza numerica di lunghezza controllabile. I valori ottenuti vengono elaborati attraverso una trasformazione modulare ispirata a RSA e infine mappati su strutture musicali discrete: scale, metriche, step, durate, accenti, velocity, gate e CV.
 
@@ -10,7 +10,7 @@ Il progetto prevede due implementazioni principali:
 Max for Live device, per generare sequenze MIDI sincronizzate con Ableton Live.
 Modulo hardware ESP32, per generare sequenze standalone tramite MIDI, gate, trigger e/o CV.
 
-Il sistema non è pensato come strumento di sicurezza crittografica, ma come strumento di composizione generativa ispirato a concetti crittografici.
+Il sistema non e' pensato come strumento di sicurezza crittografica, ma come strumento di composizione generativa ispirato a concetti crittografici.
 
 # Core C
 
@@ -21,7 +21,7 @@ La repository contiene un primo core C portabile, separato dagli adapter Max for
 3. trasformazione modulare ispirata a RSA;
 4. mapping musicale in eventi.
 
-La struttura attuale è:
+La struttura attuale e':
 
 ```text
 core/
@@ -46,9 +46,9 @@ adapters/
       test_max_model.c
 ```
 
-Il core è C99, non usa allocazione dinamica e non dipende da Max, Ableton, ESP-IDF, Arduino, filesystem o MIDI. Gli adapter futuri dovranno occuparsi di I/O, UI, clock, MIDI, gate, trigger e CV.
+Il core e' C99, non usa allocazione dinamica e non dipende da Max, Ableton, ESP-IDF, Arduino, filesystem o MIDI. Gli adapter futuri dovranno occuparsi di I/O, UI, clock, MIDI, gate, trigger e CV.
 
-L'adapter Max è diviso in due parti:
+L'adapter Max e' diviso in due parti:
 
 - `cryptoseq_max_model`: model testabile su Linux, senza Max SDK;
 - `cryptoseq_max_external.c`: ponte verso la Max SDK, da compilare su macOS o Windows.
@@ -64,7 +64,7 @@ ctest --test-dir build --output-on-failure
 ./build/cryptoseq_print_sequence
 ```
 
-Su Linux questa build compila e testa anche il model dell'adapter Max. Non compila l'external Max reale, perché gli header e il formato binary target della Max SDK sono specifici dell'ambiente Max/macOS/Windows.
+Su Linux questa build compila e testa anche il model dell'adapter Max. Non compila l'external Max reale, perche' gli header e il formato binary target della Max SDK sono specifici dell'ambiente Max/macOS/Windows.
 
 ### Windows Max external build
 
@@ -113,12 +113,9 @@ Restart Max, then create an object named `cryptoseq`, or open one of the patches
 
 ```text
 source demo source
-p 251
-q 257
-e 65537
+rsa 251 257 65537
 length 16
 mode hybrid
-scale major
 root 60
 generate
 ```
@@ -129,13 +126,16 @@ Expected outlet messages use this format:
 event step active note velocity accent duration gate value
 ```
 
-`sourcefile` accepts binary files up to 16 MiB. Files above that limit are rejected and the external reports the error in the Max Console.
+`sourcefile` accepts binary files up to 256 MiB. Files above that limit are rejected and the external reports the error in the Max Console. The Max external hashes files in chunks, so a large source file is not copied into one large RAM buffer.
 
 Mode intent in the Max UI:
 
 - `melodic`: melodic instruments; root and scale shape the notes.
-- `hybrid`: Drum Rack; rhythm/velocity plus 16 consecutive pads from root, with no scale mapping.
+- `melodic` also exposes low/high note controls; generated notes stay inside that range.
+- `hybrid`: Drum Rack; rhythm/velocity plus a controllable number of consecutive pads from root, with no scale mapping.
 - `rhythm`: single percussion lane; one root note, with no scale mapping.
+
+The Max for Live UI sends `rsa p q e` atomically when prime parameters change, debounces auto-generation after bursts of control changes, and derives MIDI note length from Live tempo, the selected division, event duration, and event gate.
 
 Build consigliata per misurare performance:
 
@@ -147,7 +147,7 @@ cmake --build build-release
 
 ## API principale
 
-L'header pubblico è `core/include/cryptoseq.h`.
+L'header pubblico e' `core/include/cryptoseq.h`.
 
 Le funzioni principali sono:
 
@@ -182,11 +182,11 @@ cs_status_t cs_map_values(
 );
 ```
 
-`cs_generate_from_bytes` è il percorso semplice. Per Max for Live ed ESP32 è spesso preferibile separare le fasi:
+`cs_generate_from_bytes` e' il percorso semplice. Per Max for Live ed ESP32 e' spesso preferibile separare le fasi:
 
 1. calcolare o ricevere `h_S`;
 2. generare e salvare la sequenza numerica `C`;
-3. rimappare `C` quando cambiano scala, densità, gate o modalità.
+3. rimappare `C` quando cambiano scala, densita', gate o modalita'.
 
 Questo evita di ricalcolare hash e trasformazione modulare quando cambia solo il mapping musicale.
 
@@ -195,7 +195,7 @@ Questo evita di ricalcolare hash e trasformazione modulare quando cambia solo il
 I limiti sono definiti nell'header pubblico:
 
 ```c
-#define CS_MAX_SOURCE_BYTES ((size_t)16u * 1024u * 1024u)
+#define CS_MAX_SOURCE_BYTES ((size_t)256u * 1024u * 1024u)
 #define CS_MAX_SEQUENCE_LENGTH ((size_t)4096u)
 #define CS_MAX_PRIME_VALUE 65521u
 #define CS_MAX_SCALE_LENGTH ((size_t)24u)
@@ -207,20 +207,20 @@ I limiti sono definiti nell'header pubblico:
 Questi limiti sono intenzionali:
 
 - `p` e `q` restano sotto `2^16`, quindi `n = p*q` resta gestibile con aritmetica a 32 bit e moltiplicazioni intermedie a 64 bit;
-- la sequenza massima di 4096 step è ampia per uso musicale e prevedibile su hardware embedded;
-- la sorgente diretta è limitata a 16 MiB per evitare caricamenti e hashing troppo costosi in RAM;
-- per sorgenti più grandi si può calcolare il digest SHA-256 fuori dal core o aggiungere un'API streaming.
+- la sequenza massima di 4096 step e' ampia per uso musicale e prevedibile su hardware embedded;
+- la sorgente diretta e' limitata a 256 MiB per permettere foto e file multimediali comuni senza accettare input enormi;
+- per sorgenti piu' grandi si puo' calcolare il digest SHA-256 fuori dal core o aggiungere un'API streaming.
 
 ## Ottimizzazioni
 
-Il core è pensato per generare o rigenerare la sequenza prima del playback. Durante l'esecuzione musicale il sistema dovrebbe leggere solo l'evento dello step corrente.
+Il core e' pensato per generare o rigenerare la sequenza prima del playback. Durante l'esecuzione musicale il sistema dovrebbe leggere solo l'evento dello step corrente.
 
 ### Precalcolo e caching
 
 - `cs_source_digest` permette di calcolare `h_S` una sola volta.
 - `cs_generate_values_from_digest` permette di generare e salvare la sequenza numerica `C`.
-- `cs_map_values` permette di rimappare `C` quando cambiano scala, densità, gate o modalità, senza rifare hash ed esponenziazione modulare.
-- `cs_generate_from_bytes` valida i parametri prima di calcolare l'hash della sorgente, così evita lavoro inutile quando l'input è invalido.
+- `cs_map_values` permette di rimappare `C` quando cambiano scala, densita', gate o modalita', senza rifare hash ed esponenziazione modulare.
+- `cs_generate_from_bytes` valida i parametri prima di calcolare l'hash della sorgente, cosi' evita lavoro inutile quando l'input e' invalido.
 
 ### Hashing per step
 
@@ -237,35 +237,35 @@ Il core è pensato per generare o rigenerare la sequenza prima del playback. Dur
 
 ### Mapping degli eventi
 
-- Lo switch `melody`, `rhythm`, `hybrid` è fuori dai loop principali.
+- Lo switch `melody`, `rhythm`, `hybrid` e' fuori dai loop principali.
 - Il loop interno chiama direttamente la funzione di mapping corretta.
 - Gli eventi vengono scritti in buffer forniti dal chiamante, senza allocazioni dinamiche.
 
 ### Vincoli embedded-friendly
 
 - Il core non usa heap.
-- La source diretta è limitata a 16 MiB.
-- La sequenza è limitata a 4096 step.
+- La source diretta e' limitata a 256 MiB.
+- La sequenza e' limitata a 4096 step.
 - I limiti sono esposti nell'header pubblico, quindi gli adapter Max for Live ed ESP32 possono validarli prima di chiamare il core.
 
-L'obiettivo non è la massima sicurezza crittografica, ma un motore deterministico rapido e stabile per generazione musicale.
+L'obiettivo non e' la massima sicurezza crittografica, ma un motore deterministico rapido e stabile per generazione musicale.
 
 # Formulazione matematica del Cryptographic Sequencer
 
-> Questa versione evita formule troppo lunghe in una sola riga. Le espressioni principali sono spezzate in passaggi intermedi, così risultano più leggibili nei renderer Markdown che supportano LaTeX/MathJax, per esempio GitHub, Obsidian o VS Code con estensioni Markdown Math.
+> Questa versione evita formule troppo lunghe in una sola riga. Le espressioni principali sono spezzate in passaggi intermedi, cosi' risultano piu' leggibili nei renderer Markdown che supportano LaTeX/MathJax, per esempio GitHub, Obsidian o VS Code con estensioni Markdown Math.
 
 ---
 
 ## 1. Obiettivo
 
-Il **Cryptographic Sequencer** è un sistema di generazione musicale deterministica che trasforma una sorgente multimediale in una sequenza melodica o ritmica mediante:
+Il **Cryptographic Sequencer** e' un sistema di generazione musicale deterministica che trasforma una sorgente multimediale in una sequenza melodica o ritmica mediante:
 
 1. hashing della sorgente;
 2. espansione dell'hash a lunghezza controllata;
 3. trasformazione modulare ispirata a RSA;
 4. mapping dei valori numerici su strutture musicali discrete.
 
-L'obiettivo non è realizzare un sistema crittografico sicuro, ma usare concetti crittografici come motore generativo per la composizione algoritmica.
+L'obiettivo non e' realizzare un sistema crittografico sicuro, ma usare concetti crittografici come motore generativo per la composizione algoritmica.
 
 ---
 
@@ -296,7 +296,7 @@ $$
 L \in \mathbb{N}
 $$
 
-dove $L$ è la lunghezza della sequenza da generare.
+dove $L$ e' la lunghezza della sequenza da generare.
 
 Indichiamo con:
 
@@ -318,7 +318,7 @@ $$
 r
 $$
 
-la risoluzione ritmica, cioè il numero di suddivisioni della griglia musicale.
+la risoluzione ritmica, cioe' il numero di suddivisioni della griglia musicale.
 
 Infine:
 
@@ -326,7 +326,7 @@ $$
 mode \in \{\mathrm{melody}, \mathrm{rhythm}, \mathrm{hybrid}\}
 $$
 
-indica la modalità di funzionamento del sequencer.
+indica la modalita' di funzionamento del sequencer.
 
 ---
 
@@ -356,15 +356,15 @@ $$
 \gcd(e, \varphi(n)) = 1
 $$
 
-Nel caso pratico si può usare un valore standard, ad esempio:
+Nel caso pratico si puo' usare un valore standard, ad esempio:
 
 $$
 e = 65537
 $$
 
-se la condizione di coprimalità è soddisfatta.
+se la condizione di coprimalita' e' soddisfatta.
 
-La trasformazione modulare principale è:
+La trasformazione modulare principale e':
 
 $$
 R(m_i) = m_i^e \bmod n
@@ -398,7 +398,7 @@ $$
 H: \{0,1\}^{*} \rightarrow \{0,1\}^{b}
 $$
 
-dove $b$ è la dimensione dell'output in bit.
+dove $b$ e' la dimensione dell'output in bit.
 
 Per esempio, nel caso di SHA-256:
 
@@ -406,7 +406,7 @@ $$
 b = 256
 $$
 
-L'hash diretto della sorgente è:
+L'hash diretto della sorgente e':
 
 $$
 h_S = H(bytes(S))
@@ -418,7 +418,7 @@ Questo digest compatto rappresenta la sorgente multimediale nella pipeline gener
 
 ## 5. Espansione hash a lunghezza controllata
 
-Per ottenere una sequenza di lunghezza arbitraria $L$, si usa una modalità a contatore.
+Per ottenere una sequenza di lunghezza arbitraria $L$, si usa una modalita' a contatore.
 
 Per ogni indice:
 
@@ -434,7 +434,7 @@ $$
 
 dove $\parallel$ indica la concatenazione.
 
-Ogni hash $h_i$ viene convertito in un intero. Nel seguito questa conversione è indicata con $\mathrm{int}(h_i)$:
+Ogni hash $h_i$ viene convertito in un intero. Nel seguito questa conversione e' indicata con $\mathrm{int}(h_i)$:
 
 $$
 u_i = \mathrm{int}(h_i)
@@ -446,7 +446,7 @@ $$
 m_i = u_i \bmod n
 $$
 
-La sequenza numerica di partenza è:
+La sequenza numerica di partenza e':
 
 $$
 M = (m_0, m_1, \dots, m_{L-1})
@@ -464,20 +464,20 @@ $$
 c_i = m_i^e \bmod n
 $$
 
-La sequenza $C$ è il materiale numerico generativo del sequencer.
+La sequenza $C$ e' il materiale numerico generativo del sequencer.
 
 ---
 
-## 6. Proprietà di determinismo
+## 6. Proprieta' di determinismo
 
-Il sistema è deterministico rispetto alla tupla:
+Il sistema e' deterministico rispetto alla tupla:
 
 $$
 \Theta =
 (S, p, q, e, L, \mathcal{K}, \mathcal{M}, r, mode)
 $$
 
-Questo significa che, a parità di parametri, il risultato è sempre lo stesso:
+Questo significa che, a parita' di parametri, il risultato e' sempre lo stesso:
 
 $$
 \Theta = \Theta'
@@ -485,7 +485,7 @@ $$
 F(\Theta) = F(\Theta')
 $$
 
-La funzione globale del sequencer può essere indicata come:
+La funzione globale del sequencer puo' essere indicata come:
 
 $$
 F:
@@ -494,7 +494,7 @@ F:
 \mathcal{E}
 $$
 
-dove $\mathcal{E}$ è la sequenza musicale finale.
+dove $\mathcal{E}$ e' la sequenza musicale finale.
 
 ---
 
@@ -506,7 +506,7 @@ $$
 \mathcal{K} = (k_0, k_1, \dots, k_{s-1})
 $$
 
-dove $s$ è il numero di gradi della scala.
+dove $s$ e' il numero di gradi della scala.
 
 Per esempio, in una scala maggiore:
 
@@ -524,19 +524,19 @@ $$
 
 la nota fondamentale, espressa come numero MIDI.
 
-Il grado della scala associato allo step $i$ è:
+Il grado della scala associato allo step $i$ e':
 
 $$
 d_i = c_i \bmod s
 $$
 
-La componente intervallare è:
+La componente intervallare e':
 
 $$
 k_{d_i}
 $$
 
-L'ottava può essere determinata da:
+L'ottava puo' essere determinata da:
 
 $$
 o_i =
@@ -549,10 +549,10 @@ $$
 
 dove:
 
-- $o_{min}$ è l'ottava minima;
-- $N_o$ è il numero di ottave disponibili.
+- $o_{min}$ e' l'ottava minima;
+- $N_o$ e' il numero di ottave disponibili.
 
-La nota MIDI generata è:
+La nota MIDI generata e':
 
 $$
 note_i =
@@ -561,7 +561,7 @@ $$
 
 ### Velocity
 
-La velocity MIDI può essere definita come:
+La velocity MIDI puo' essere definita come:
 
 $$
 vel_i =
@@ -598,7 +598,7 @@ $$
 \right)
 $$
 
-La durata dello step $i$ è:
+La durata dello step $i$ e':
 
 $$
 dur_i = \mathcal{D}_{c_i \bmod d}
@@ -606,7 +606,7 @@ $$
 
 ### Gate length
 
-Il gate length può essere calcolato come valore normalizzato:
+Il gate length puo' essere calcolato come valore normalizzato:
 
 $$
 gate_i =
@@ -637,9 +637,9 @@ $$
 
 il numero totale di step.
 
-Ogni step può essere attivo o inattivo.
+Ogni step puo' essere attivo o inattivo.
 
-Una definizione semplice è:
+Una definizione semplice e':
 
 $$
 active_i =
@@ -651,20 +651,20 @@ $$
 
 dove:
 
-- $D$ è un divisore di riferimento;
-- $\tau$ è una soglia di densità.
+- $D$ e' un divisore di riferimento;
+- $\tau$ e' una soglia di densita'.
 
-La densità ritmica attesa cresce al crescere di $\tau$.
+La densita' ritmica attesa cresce al crescere di $\tau$.
 
 ### Accento
 
-Il livello di accento può essere definito come:
+Il livello di accento puo' essere definito come:
 
 $$
 accent_i = c_i \bmod A
 $$
 
-dove $A$ è il numero di livelli di accento.
+dove $A$ e' il numero di livelli di accento.
 
 Per esempio, con:
 
@@ -680,7 +680,7 @@ $$
 
 ### Velocity ritmica
 
-La velocity dello step ritmico può essere ottenuta combinando valore numerico e accento:
+La velocity dello step ritmico puo' essere ottenuta combinando valore numerico e accento:
 
 $$
 vel_i =
@@ -701,7 +701,7 @@ $$
 
 ## 9. Mapping ibrido
 
-Nella modalità ibrida, ogni valore $c_i$ genera contemporaneamente:
+Nella modalita' ibrida, ogni valore $c_i$ genera contemporaneamente:
 
 - altezza;
 - attivazione ritmica;
@@ -710,14 +710,14 @@ Nella modalità ibrida, ogni valore $c_i$ genera contemporaneamente:
 - gate;
 - accento.
 
-L'evento musicale completo può essere rappresentato come:
+L'evento musicale completo puo' essere rappresentato come:
 
 $$
 E_i =
 (i, active_i, note_i, dur_i, vel_i, gate_i, accent_i)
 $$
 
-La sequenza musicale completa è:
+La sequenza musicale completa e':
 
 $$
 \mathcal{E} =
@@ -728,7 +728,7 @@ $$
 
 ## 10. Funzione complessiva del sistema
 
-La funzione globale del sequencer può essere scritta come composizione di tre funzioni:
+La funzione globale del sequencer puo' essere scritta come composizione di tre funzioni:
 
 $$
 F = Map \circ R \circ ExpandHash
@@ -843,7 +843,7 @@ $$
 
 ### Formula finale
 
-La formulazione complessiva può essere letta così:
+La formulazione complessiva puo' essere letta cosi':
 
 $$
 \mathcal{E} = Map(C, \mathcal{K}, \mathcal{M}, r, mode)
@@ -879,13 +879,13 @@ $$
 h_S = H(bytes(S))
 $$
 
-Quindi il risultato finale è:
+Quindi il risultato finale e':
 
 $$
 \mathcal{E} = (E_0, E_1, \dots, E_{L-1})
 $$
 
-cioè una sequenza musicale deterministica generata da una sorgente multimediale e controllata da parametri crittografici e musicali.
+cioe' una sequenza musicale deterministica generata da una sorgente multimediale e controllata da parametri crittografici e musicali.
 
 ---
 
@@ -939,7 +939,7 @@ Procedure:
 
 ---
 
-## 13. Complessità computazionale
+## 13. Complessita' computazionale
 
 Sia:
 
@@ -957,7 +957,7 @@ $$
 O(L \cdot |S|)
 $$
 
-Questa soluzione è semplice ma inefficiente per file grandi.
+Questa soluzione e' semplice ma inefficiente per file grandi.
 
 Una strategia migliore consiste nel calcolare prima un digest della sorgente:
 
@@ -977,7 +977,7 @@ $$
 O(|S| + L \cdot b)
 $$
 
-Questa forma è più adatta a implementazioni hardware su ESP32.
+Questa forma e' piu' adatta a implementazioni hardware su ESP32.
 
 ### Esponenziazione modulare
 
@@ -987,9 +987,9 @@ $$
 O(\log(e) \cdot M(\ell))
 $$
 
-dove $M(\ell)$ è il costo della moltiplicazione tra interi di $\ell$ bit.
+dove $M(\ell)$ e' il costo della moltiplicazione tra interi di $\ell$ bit.
 
-Per uso musicale ed embedded, è consigliabile usare primi piccoli o medi, compatibili con aritmetica a 32 o 64 bit.
+Per uso musicale ed embedded, e' consigliabile usare primi piccoli o medi, compatibili con aritmetica a 32 o 64 bit.
 
 ### Mapping musicale
 
@@ -999,7 +999,7 @@ $$
 O(L)
 $$
 
-Il costo è trascurabile rispetto a hashing ed esponenziazione modulare.
+Il costo e' trascurabile rispetto a hashing ed esponenziazione modulare.
 
 ---
 
@@ -1035,7 +1035,7 @@ $$
 E_i
 $$
 
-Questo evita ricalcoli in tempo reale e migliora la stabilità del timing MIDI, gate e CV.
+Questo evita ricalcoli in tempo reale e migliora la stabilita' del timing MIDI, gate e CV.
 
 ### 14.3 Limitazione dei primi su ESP32
 
@@ -1053,11 +1053,11 @@ $$
 
 a seconda delle librerie numeriche disponibili.
 
-L'uso di primi molto grandi non è necessario, perché l'obiettivo è generativo e non crittografico.
+L'uso di primi molto grandi non e' necessario, perche' l'obiettivo e' generativo e non crittografico.
 
 ### 14.4 Caching
 
-È possibile memorizzare:
+E' possibile memorizzare:
 
 $$
 h_S = H(bytes(S))
@@ -1069,9 +1069,9 @@ $$
 C = (c_0, c_1, \dots, c_{L-1})
 $$
 
-Se cambia solo il mapping musicale, ad esempio scala o metrica, non è necessario ricalcolare hash e trasformazione RSA-inspired.
+Se cambia solo il mapping musicale, ad esempio scala o metrica, non e' necessario ricalcolare hash e trasformazione RSA-inspired.
 
-Si può ricalcolare solo:
+Si puo' ricalcolare solo:
 
 $$
 Map(C, \mathcal{K}, \mathcal{M}, r, mode)
@@ -1081,16 +1081,18 @@ $$
 
 ## 15. Nota sulla sicurezza
 
-Il sistema è ispirato a RSA, ma non deve essere presentato come implementazione sicura di RSA.
+Il sistema e' ispirato a RSA, ma non deve essere presentato come implementazione sicura di RSA.
 
 In particolare:
 
 - i primi possono essere piccoli;
-- la sorgente è usata a scopo generativo;
-- l'obiettivo è produrre sequenze musicali;
-- non è previsto l'uso per cifrare dati sensibili;
+- la sorgente e' usata a scopo generativo;
+- l'obiettivo e' produrre sequenze musicali;
+- non e' previsto l'uso per cifrare dati sensibili;
 - non viene garantita sicurezza crittografica.
 
-Una formulazione corretta è:
+Una formulazione corretta e':
 
 > Il sistema usa una trasformazione modulare ispirata a RSA come motore deterministico per la generazione musicale.
+
+

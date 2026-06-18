@@ -51,6 +51,21 @@ cs_status_t cs_max_model_set_source_bytes(
     return CS_OK;
 }
 
+cs_status_t cs_max_model_set_source_digest(
+    cs_max_model_t *model,
+    const uint8_t source_digest[CS_SHA256_DIGEST_SIZE]
+)
+{
+    if (model == NULL || source_digest == NULL) {
+        return CS_ERROR_NULL;
+    }
+
+    memcpy(model->source_digest, source_digest, CS_SHA256_DIGEST_SIZE);
+    model->has_source = 1u;
+    model->event_count = 0u;
+    return CS_OK;
+}
+
 cs_status_t cs_max_model_set_primes(cs_max_model_t *model, uint32_t p, uint32_t q)
 {
     cs_params_t previous;
@@ -74,6 +89,21 @@ cs_status_t cs_max_model_set_exponent(cs_max_model_t *model, uint32_t e)
     }
 
     previous = model->params;
+    model->params.e = e;
+    return validate_after_change(model, previous);
+}
+
+cs_status_t cs_max_model_set_rsa(cs_max_model_t *model, uint32_t p, uint32_t q, uint32_t e)
+{
+    cs_params_t previous;
+
+    if (model == NULL) {
+        return CS_ERROR_NULL;
+    }
+
+    previous = model->params;
+    model->params.p = p;
+    model->params.q = q;
     model->params.e = e;
     return validate_after_change(model, previous);
 }
@@ -146,6 +176,8 @@ cs_status_t cs_max_model_set_scale(cs_max_model_t *model, const char *scale)
 
 cs_status_t cs_max_model_set_root_note(cs_max_model_t *model, uint8_t root_note)
 {
+    cs_params_t previous;
+
     if (model == NULL) {
         return CS_ERROR_NULL;
     }
@@ -154,9 +186,36 @@ cs_status_t cs_max_model_set_root_note(cs_max_model_t *model, uint8_t root_note)
         return CS_ERROR_INVALID_PARAM;
     }
 
+    previous = model->params;
     model->params.root_note = root_note;
-    model->event_count = 0u;
-    return CS_OK;
+    return validate_after_change(model, previous);
+}
+
+cs_status_t cs_max_model_set_melody_range(cs_max_model_t *model, uint8_t low_note, uint8_t high_note)
+{
+    cs_params_t previous;
+
+    if (model == NULL) {
+        return CS_ERROR_NULL;
+    }
+
+    previous = model->params;
+    model->params.melody_note_min = low_note;
+    model->params.melody_note_max = high_note;
+    return validate_after_change(model, previous);
+}
+
+cs_status_t cs_max_model_set_drum_pad_count(cs_max_model_t *model, uint8_t pad_count)
+{
+    cs_params_t previous;
+
+    if (model == NULL) {
+        return CS_ERROR_NULL;
+    }
+
+    previous = model->params;
+    model->params.drum_pad_count = pad_count;
+    return validate_after_change(model, previous);
 }
 
 cs_status_t cs_max_model_set_velocity_range(cs_max_model_t *model, uint8_t min_velocity, uint8_t max_velocity)

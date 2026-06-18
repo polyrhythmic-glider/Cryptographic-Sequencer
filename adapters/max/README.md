@@ -6,11 +6,14 @@ Su Linux possiamo compilare e testare `cryptoseq_max_model`, che non dipende dal
 
 - `source`
 - `sourcefile`
+- `rsa`
 - `p`
 - `q`
 - `e`
 - `length`
 - `root`
+- `melodyrange`
+- `padcount`
 - `mode`
 - `scale`
 - `rhythm`
@@ -18,15 +21,17 @@ Su Linux possiamo compilare e testare `cryptoseq_max_model`, che non dipende dal
 - `dump`
 - `step`
 
-`sourcefile` legge file binari fino a 16 MiB. Se il file supera questo limite, l'external lo rifiuta e stampa un errore nella Max Console; se il caricamento riesce, stampa il numero di byte caricati.
+`sourcefile` legge file binari fino a 256 MiB. Se il file supera questo limite, l'external lo rifiuta e stampa un errore nella Max Console; se il caricamento riesce, stampa il numero di byte caricati. I file sono hashati a blocchi, quindi non vengono caricati interamente in RAM.
 
 I modi sono pensati cosi:
 
-- `melodic`: strumenti melodici; usa root e scala.
-- `hybrid`: Drum Rack; usa timing/velocity ritmici e 16 note consecutive dalla root, senza scala.
+- `melodic`: strumenti melodici; usa root, scala e range low/high.
+- `hybrid`: Drum Rack; usa timing/velocity ritmici e un numero controllabile di pad consecutivi dalla root, senza scala.
 - `rhythm`: percussione singola; usa una sola nota root, senza scala.
 
-Il file `src/cryptoseq_max_external.c` è lo scheletro dell'external Max reale. Richiede gli header della Cycling '74 Max SDK (`ext.h`, `ext_obex.h`) e va compilato su macOS o Windows.
+`density` e' disponibile in tutte e tre le modalita' e controlla quanti step sono attivi.
+
+Il file `src/cryptoseq_max_external.c` e' l'external Max reale. Richiede gli header della Cycling '74 Max SDK (`ext.h`, `ext_obex.h`) e va compilato su macOS o Windows.
 
 Output previsto dall'external:
 
@@ -38,15 +43,17 @@ Esempio di messaggi Max:
 
 ```text
 source "demo source"
-p 251
-q 257
+rsa 251 257 65537
 length 16
 mode hybrid
 root 60
+padcount 16
 generate
 step 0
 dump
 ```
+
+I messaggi separati `p`, `q` ed `e` restano supportati per test manuali, ma la UI usa `rsa p q e` per evitare stati intermedi invalidi.
 
 ## Cosa possiamo fare su Linux
 
@@ -119,7 +126,9 @@ This repository includes two ready-to-open patches:
 - `patchers/cryptoseq-test.maxpat`: minimal event/MIDI smoke test.
 - `patchers/cryptoseq-midi-ui.maxpat`: first playable UI with file source, prime menus, mode, scale, length, division, and play controls.
 
-The UI patch auto-generates after control changes so playback does not keep using a stale sequence. It also keeps `p` and `q` different and filters the `e` menu to RSA-style exponents that are coprime with `phi(n) = (p - 1)(q - 1)`.
+The UI patch auto-generates shortly after control changes so playback does not keep using a stale sequence. It also keeps `p` and `q` different and sends `rsa p q e` atomically after filtering the `e` menu to RSA-style exponents that are coprime with `phi(n) = (p - 1)(q - 1)`.
+
+The MIDI helper reads the selected division and Live tempo when available, then applies the event `gate` value to the note length sent to `makenote`.
 
 Create a Max patch with one `cryptoseq` object and connect its outlet to `print cryptoseq`.
 
@@ -129,12 +138,11 @@ Send these messages:
 
 ```text
 source demo source
-p 251
-q 257
-e 65537
+rsa 251 257 65537
 length 16
 mode melodic
 root 60
+melodyrange 60 84
 generate
 ```
 

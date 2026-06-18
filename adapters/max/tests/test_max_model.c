@@ -70,6 +70,16 @@ static int test_max_model_generation(void)
         return 1;
     }
 
+    status = cs_max_model_set_melody_range(&model, 60u, 84u);
+    if (expect_status(status, CS_OK, "set melody range")) {
+        return 1;
+    }
+
+    status = cs_max_model_set_drum_pad_count(&model, 16u);
+    if (expect_status(status, CS_OK, "set drum pad count")) {
+        return 1;
+    }
+
     status = cs_max_model_generate(&model);
     if (expect_status(status, CS_OK, "generate")) {
         return 1;
@@ -121,8 +131,106 @@ static int test_max_model_validation(void)
         return 1;
     }
 
+    status = cs_max_model_set_mode(&model, "melodic");
+    if (expect_status(status, CS_OK, "switch to melodic")) {
+        return 1;
+    }
+
+    status = cs_max_model_set_melody_range(&model, 61u, 61u);
+    if (expect_status(status, CS_ERROR_INVALID_PARAM, "invalid melody range")) {
+        return 1;
+    }
+
+    status = cs_max_model_set_mode(&model, "hybrid");
+    if (expect_status(status, CS_OK, "switch to hybrid")) {
+        return 1;
+    }
+
+    status = cs_max_model_set_root_note(&model, 120u);
+    if (expect_status(status, CS_ERROR_INVALID_PARAM, "invalid hybrid root for pad count")) {
+        return 1;
+    }
+
     if (model.params.length != cs_default_params().length) {
         fprintf(stderr, "invalid setter should restore previous length\n");
+        return 1;
+    }
+
+    return 0;
+}
+
+static int test_max_model_atomic_rsa(void)
+{
+    cs_max_model_t model;
+    cs_status_t status;
+
+    cs_max_model_init(&model);
+
+    status = cs_max_model_set_rsa(&model, 251u, 257u, 3u);
+    if (expect_status(status, CS_OK, "set initial rsa")) {
+        return 1;
+    }
+
+    status = cs_max_model_set_primes(&model, 271u, 277u);
+    if (expect_status(status, CS_ERROR_NOT_COPRIME, "separate prime change should reject stale e")) {
+        return 1;
+    }
+
+    status = cs_max_model_set_rsa(&model, 271u, 277u, 17u);
+    if (expect_status(status, CS_OK, "atomic rsa change")) {
+        return 1;
+    }
+
+    if (model.params.p != 271u || model.params.q != 277u || model.params.e != 17u) {
+        fprintf(stderr, "atomic rsa did not update all values\n");
+        return 1;
+    }
+
+    return 0;
+}
+
+static int test_max_model_source_digest(void)
+{
+    static const uint8_t source[] = "digest source";
+    uint8_t digest[CS_SHA256_DIGEST_SIZE];
+    cs_max_model_t from_bytes;
+    cs_max_model_t from_digest;
+    cs_status_t status;
+    const cs_event_t *byte_event;
+    const cs_event_t *digest_event;
+
+    status = cs_source_digest(source, sizeof(source) - 1u, digest);
+    if (expect_status(status, CS_OK, "source digest")) {
+        return 1;
+    }
+
+    cs_max_model_init(&from_bytes);
+    cs_max_model_init(&from_digest);
+
+    status = cs_max_model_set_source_bytes(&from_bytes, source, sizeof(source) - 1u);
+    if (expect_status(status, CS_OK, "set source bytes")) {
+        return 1;
+    }
+
+    status = cs_max_model_set_source_digest(&from_digest, digest);
+    if (expect_status(status, CS_OK, "set source digest")) {
+        return 1;
+    }
+
+    status = cs_max_model_generate(&from_bytes);
+    if (expect_status(status, CS_OK, "generate from bytes")) {
+        return 1;
+    }
+
+    status = cs_max_model_generate(&from_digest);
+    if (expect_status(status, CS_OK, "generate from digest")) {
+        return 1;
+    }
+
+    byte_event = cs_max_model_event_at(&from_bytes, 0u);
+    digest_event = cs_max_model_event_at(&from_digest, 0u);
+    if (byte_event == NULL || digest_event == NULL || byte_event->value != digest_event->value) {
+        fprintf(stderr, "digest-backed source should match byte-backed source\n");
         return 1;
     }
 
@@ -136,6 +244,14 @@ int main(void)
     }
 
     if (test_max_model_validation()) {
+        return 1;
+    }
+
+    if (test_max_model_atomic_rsa()) {
+        return 1;
+    }
+
+    if (test_max_model_source_digest()) {
         return 1;
     }
 

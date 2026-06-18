@@ -25,13 +25,20 @@ cs_status_t cs_max_model_set_source_bytes(
     const uint8_t *source_bytes,
     size_t source_len
 );
+cs_status_t cs_max_model_set_source_digest(
+    cs_max_model_t *model,
+    const uint8_t source_digest[CS_SHA256_DIGEST_SIZE]
+);
 
 cs_status_t cs_max_model_set_primes(cs_max_model_t *model, uint32_t p, uint32_t q);
 cs_status_t cs_max_model_set_exponent(cs_max_model_t *model, uint32_t e);
+cs_status_t cs_max_model_set_rsa(cs_max_model_t *model, uint32_t p, uint32_t q, uint32_t e);
 cs_status_t cs_max_model_set_length(cs_max_model_t *model, size_t length);
 cs_status_t cs_max_model_set_mode(cs_max_model_t *model, const char *mode);
 cs_status_t cs_max_model_set_scale(cs_max_model_t *model, const char *scale);
 cs_status_t cs_max_model_set_root_note(cs_max_model_t *model, uint8_t root_note);
+cs_status_t cs_max_model_set_melody_range(cs_max_model_t *model, uint8_t low_note, uint8_t high_note);
+cs_status_t cs_max_model_set_drum_pad_count(cs_max_model_t *model, uint8_t pad_count);
 cs_status_t cs_max_model_set_velocity_range(cs_max_model_t *model, uint8_t min_velocity, uint8_t max_velocity);
 cs_status_t cs_max_model_set_gate_range(cs_max_model_t *model, uint16_t min_permille, uint16_t max_permille);
 cs_status_t cs_max_model_set_rhythm(cs_max_model_t *model, uint32_t divisor, uint32_t threshold);

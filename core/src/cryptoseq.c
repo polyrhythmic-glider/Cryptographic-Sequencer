@@ -137,19 +137,67 @@ static uint16_t map_gate(uint32_t value, const cs_params_t *params)
     return (uint16_t)(params->gate_min_permille + (((value % quantizer) * span) / (quantizer - 1u)));
 }
 
+static uint8_t positive_mod_12(int value)
+{
+    int result = value % 12;
+
+    if (result < 0) {
+        result += 12;
+    }
+
+    return (uint8_t)result;
+}
+
+static int note_is_in_scale(uint8_t note, const cs_params_t *params)
+{
+    const uint8_t relative_pitch = positive_mod_12((int)note - (int)params->root_note);
+    size_t i;
+
+    for (i = 0u; i < params->scale_len; ++i) {
+        if (positive_mod_12((int)params->scale_intervals[i]) == relative_pitch) {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+static uint32_t count_melodic_notes_in_range(const cs_params_t *params)
+{
+    uint32_t count = 0u;
+    uint16_t note;
+
+    for (note = params->melody_note_min; note <= params->melody_note_max; ++note) {
+        if (note_is_in_scale((uint8_t)note, params)) {
+            ++count;
+        }
+    }
+
+    return count;
+}
+
 static uint8_t map_melodic_note(uint32_t value, const cs_params_t *params)
 {
-    const size_t degree = value % params->scale_len;
-    const uint32_t octave_index = (value / (uint32_t)params->scale_len) % params->octave_count;
-    const int octave = (int)params->octave_min + (int)octave_index;
-    const int note = (int)params->root_note + (int)params->scale_intervals[degree] + (12 * octave);
-    return clamp_u8_int(note, 0, 127);
+    const uint32_t note_count = count_melodic_notes_in_range(params);
+    const uint32_t target = (note_count == 0u) ? 0u : (value % note_count);
+    uint32_t index = 0u;
+    uint16_t note;
+
+    for (note = params->melody_note_min; note <= params->melody_note_max; ++note) {
+        if (note_is_in_scale((uint8_t)note, params)) {
+            if (index == target) {
+                return (uint8_t)note;
+            }
+            ++index;
+        }
+    }
+
+    return clamp_u8_int((int)params->root_note, (int)params->melody_note_min, (int)params->melody_note_max);
 }
 
 static uint8_t map_drum_rack_note(uint32_t value, const cs_params_t *params)
 {
-    const uint32_t pad_count = 16u;
-    const int note = (int)params->root_note + (int)(value % pad_count);
+    const int note = (int)params->root_note + (int)(value % params->drum_pad_count);
     return clamp_u8_int(note, 0, 127);
 }
 
@@ -219,7 +267,7 @@ static void map_melody_event(uint32_t index, uint32_t value, const cs_params_t *
 {
     event->step_index = index;
     event->value = value;
-    event->active = 1u;
+    event->active = map_rhythm_active(value, params);
     event->note = map_melodic_note(value, params);
     event->velocity = map_melodic_velocity(value, params);
     event->accent = 0u;
@@ -381,6 +429,9 @@ cs_params_t cs_default_params(void)
     params.root_note = 60u;
     params.octave_min = 0;
     params.octave_count = 2u;
+    params.melody_note_min = 60u;
+    params.melody_note_max = 84u;
+    params.drum_pad_count = 16u;
     params.scale_intervals = cs_major_scale(&params.scale_len);
     params.durations_ticks = cs_default_durations(&params.duration_count);
     params.velocity_min = 48u;
@@ -440,11 +491,26 @@ cs_status_t cs_validate_params(const cs_params_t *params)
         return CS_ERROR_NOT_COPRIME;
     }
 
+    if (params->root_note > 127u) {
+        return CS_ERROR_INVALID_PARAM;
+    }
+
+    if (params->scale_len > CS_MAX_SCALE_LENGTH ||
+        (params->scale_len > 0u && params->scale_intervals == NULL)) {
+        return CS_ERROR_INVALID_PARAM;
+    }
+
     if (params->mode == CS_MODE_MELODY) {
         if (params->scale_intervals == NULL ||
             params->scale_len == 0u ||
-            params->scale_len > CS_MAX_SCALE_LENGTH ||
-            params->octave_count == 0u) {
+            params->octave_count == 0u ||
+            params->melody_note_min > 127u ||
+            params->melody_note_max > 127u ||
+            params->melody_note_min > params->melody_note_max) {
+            return CS_ERROR_INVALID_PARAM;
+        }
+
+        if (count_melodic_notes_in_range(params) == 0u) {
             return CS_ERROR_INVALID_PARAM;
         }
     }
@@ -466,12 +532,18 @@ cs_status_t cs_validate_params(const cs_params_t *params)
         return CS_ERROR_INVALID_PARAM;
     }
 
-    if (params->mode == CS_MODE_RHYTHM || params->mode == CS_MODE_HYBRID) {
-        if (params->rhythm_divisor == 0u ||
-            params->rhythm_divisor > CS_MAX_RHYTHM_DIVISOR ||
-            params->rhythm_threshold > params->rhythm_divisor ||
-            params->accent_levels == 0u ||
-            params->accent_levels > CS_MAX_ACCENT_LEVELS) {
+    if (params->rhythm_divisor == 0u ||
+        params->rhythm_divisor > CS_MAX_RHYTHM_DIVISOR ||
+        params->rhythm_threshold > params->rhythm_divisor ||
+        params->accent_levels == 0u ||
+        params->accent_levels > CS_MAX_ACCENT_LEVELS) {
+        return CS_ERROR_INVALID_PARAM;
+    }
+
+    if (params->mode == CS_MODE_HYBRID) {
+        if (params->drum_pad_count == 0u ||
+            params->drum_pad_count > 128u ||
+            (uint16_t)params->root_note + (uint16_t)params->drum_pad_count - 1u > 127u) {
             return CS_ERROR_INVALID_PARAM;
         }
     }

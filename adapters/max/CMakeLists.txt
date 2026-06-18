@@ -88,6 +88,11 @@ if(CRYPTOSEQ_BUILD_MAX_EXTERNAL)
             Max::Max
     )
 
+    target_include_directories(cryptoseq_max_external
+        PRIVATE
+            ${PROJECT_SOURCE_DIR}/core/src
+    )
+
     target_compile_features(cryptoseq_max_external PRIVATE c_std_99)
 
     if(MSVC)

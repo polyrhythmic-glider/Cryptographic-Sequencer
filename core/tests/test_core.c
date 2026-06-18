@@ -185,6 +185,103 @@ static int test_scale_does_not_affect_percussive_modes(void)
     return 0;
 }
 
+static int test_note_range_controls(void)
+{
+    static const uint32_t values[] = {0u, 1u, 2u, 3u, 4u, 5u, 6u, 7u};
+    cs_params_t params = cs_default_params();
+    cs_event_t events[8];
+    cs_status_t status;
+    size_t i;
+
+    params.mode = CS_MODE_MELODY;
+    params.root_note = 60u;
+    params.melody_note_min = 60u;
+    params.melody_note_max = 64u;
+    status = cs_map_values(values, 8u, &params, events, 8u);
+    if (expect_status(status, CS_OK, "melodic note range map")) {
+        return 1;
+    }
+
+    for (i = 0u; i < 8u; ++i) {
+        if (events[i].note < 60u || events[i].note > 64u) {
+            fprintf(stderr, "melodic note outside requested range\n");
+            return 1;
+        }
+    }
+
+    params.melody_note_min = 61u;
+    params.melody_note_max = 61u;
+    status = cs_validate_params(&params);
+    if (expect_status(status, CS_ERROR_INVALID_PARAM, "melodic range without scale note")) {
+        return 1;
+    }
+
+    params = cs_default_params();
+    params.mode = CS_MODE_HYBRID;
+    params.root_note = 36u;
+    params.drum_pad_count = 4u;
+    params.rhythm_threshold = params.rhythm_divisor;
+    status = cs_map_values(values, 8u, &params, events, 8u);
+    if (expect_status(status, CS_OK, "hybrid pad count map")) {
+        return 1;
+    }
+
+    for (i = 0u; i < 8u; ++i) {
+        if (events[i].note < 36u || events[i].note > 39u) {
+            fprintf(stderr, "hybrid note outside requested pad range\n");
+            return 1;
+        }
+    }
+
+    params.root_note = 120u;
+    params.drum_pad_count = 16u;
+    status = cs_validate_params(&params);
+    if (expect_status(status, CS_ERROR_INVALID_PARAM, "hybrid pad count beyond midi range")) {
+        return 1;
+    }
+
+    return 0;
+}
+
+static int test_density_controls_melodic_activity(void)
+{
+    static const uint32_t values[] = {0u, 1u, 2u, 3u};
+    cs_params_t params = cs_default_params();
+    cs_event_t events[4];
+    cs_status_t status;
+    size_t i;
+
+    params.mode = CS_MODE_MELODY;
+    params.rhythm_threshold = 0u;
+
+    status = cs_map_values(values, 4u, &params, events, 4u);
+    if (expect_status(status, CS_OK, "melodic zero density map")) {
+        return 1;
+    }
+
+    for (i = 0u; i < 4u; ++i) {
+        if (events[i].active != 0u) {
+            fprintf(stderr, "melodic density should control active state\n");
+            return 1;
+        }
+    }
+
+    params.rhythm_threshold = params.rhythm_divisor;
+    status = cs_map_values(values, 4u, &params, events, 4u);
+    if (expect_status(status, CS_OK, "melodic full density map")) {
+        return 1;
+    }
+
+    for (i = 0u; i < 4u; ++i) {
+        if (events[i].active != 1u) {
+            fprintf(stderr, "melodic full density should activate all steps\n");
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
 static int test_generation_paths_equivalent(void)
 {
     static const uint8_t source[] = "same source through different api paths";
@@ -318,6 +415,14 @@ int main(void)
     }
 
     if (test_scale_does_not_affect_percussive_modes()) {
+        return 1;
+    }
+
+    if (test_note_range_controls()) {
+        return 1;
+    }
+
+    if (test_density_controls_melodic_activity()) {
         return 1;
     }
 

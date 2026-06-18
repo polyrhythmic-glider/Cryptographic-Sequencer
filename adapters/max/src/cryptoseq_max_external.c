@@ -1,12 +1,12 @@
 /*
  * Max SDK bridge for the Cryptographic Sequencer core.
  *
- * This file is intentionally not built by the Linux CMake targets. It requires
- * Cycling '74 Max SDK headers and is meant to become the platform-specific
+ * This file requires Cycling '74 Max SDK headers and is the platform-specific
  * external entry point that wraps cryptoseq_max_model.
  */
 
 #include "cryptoseq_max_model.h"
+#include "cryptoseq_internal.h"
 
 #include "ext.h"
 #include "ext_obex.h"
@@ -14,6 +14,8 @@
 
 #include <stdio.h>
 #include <string.h>
+
+#define CRYPTOSEQ_FILE_BUFFER_SIZE 32768u
 
 typedef struct cryptoseq_object_t {
     t_object object;
@@ -26,7 +28,7 @@ static t_class *cryptoseq_class = NULL;
 static void cryptoseq_post_status(cryptoseq_object_t *x, cs_status_t status)
 {
     if (status != CS_OK) {
-        object_error((t_object *)x, "cryptoseq: %s", cs_status_string(status));
+        object_error((t_object *)x, "%s", cs_status_string(status));
     }
 }
 
@@ -79,13 +81,13 @@ static void cryptoseq_step(cryptoseq_object_t *x, long index)
     const cs_event_t *event;
 
     if (index < 0) {
-        object_error((t_object *)x, "cryptoseq: step index must be non-negative");
+        object_error((t_object *)x, "step index must be non-negative");
         return;
     }
 
     event = cs_max_model_event_at(&x->model, (size_t)index);
     if (event == NULL) {
-        object_error((t_object *)x, "cryptoseq: step index out of range");
+        object_error((t_object *)x, "step index out of range");
         return;
     }
 
@@ -101,7 +103,7 @@ static void cryptoseq_source(cryptoseq_object_t *x, t_symbol *selector, long arg
     (void)selector;
 
     if (argc <= 0 || argv == NULL) {
-        object_error((t_object *)x, "cryptoseq: source requires text");
+        object_error((t_object *)x, "source requires text");
         return;
     }
 
@@ -114,7 +116,7 @@ static void cryptoseq_source(cryptoseq_object_t *x, t_symbol *selector, long arg
     );
 
     if (err != MAX_ERR_NONE || text == NULL) {
-        object_error((t_object *)x, "cryptoseq: could not parse source text");
+        object_error((t_object *)x, "could not parse source text");
         return;
     }
 
@@ -150,32 +152,35 @@ static void cryptoseq_sourcefile(cryptoseq_object_t *x, t_symbol *selector, long
     char *path;
     FILE *file;
     long file_size;
-    uint8_t *bytes;
+    uint8_t buffer[CRYPTOSEQ_FILE_BUFFER_SIZE];
+    uint8_t digest[CS_SHA256_DIGEST_SIZE];
     size_t bytes_read;
+    size_t total_read = 0u;
+    cs_sha256_t sha;
     cs_status_t status;
 
     (void)selector;
 
     if (argc <= 0 || argv == NULL) {
-        object_error((t_object *)x, "cryptoseq: sourcefile requires a path");
+        object_error((t_object *)x, "sourcefile requires a path");
         return;
     }
 
     path = cryptoseq_atoms_to_text(argc, argv);
     if (path == NULL) {
-        object_error((t_object *)x, "cryptoseq: could not parse sourcefile path");
+        object_error((t_object *)x, "could not parse sourcefile path");
         return;
     }
 
     file = fopen(path, "rb");
     if (file == NULL) {
-        object_error((t_object *)x, "cryptoseq: could not open source file");
+        object_error((t_object *)x, "could not open source file");
         sysmem_freeptr(path);
         return;
     }
 
     if (fseek(file, 0, SEEK_END) != 0) {
-        object_error((t_object *)x, "cryptoseq: could not inspect source file");
+        object_error((t_object *)x, "could not inspect source file");
         fclose(file);
         sysmem_freeptr(path);
         return;
@@ -183,44 +188,43 @@ static void cryptoseq_sourcefile(cryptoseq_object_t *x, t_symbol *selector, long
 
     file_size = ftell(file);
     if (file_size < 0 || (size_t)file_size > CS_MAX_SOURCE_BYTES) {
-        object_error((t_object *)x, "cryptoseq: source file must be 16 MiB or smaller");
+        object_error(
+            (t_object *)x,
+            "source file must be %lu MiB or smaller",
+            (unsigned long)(CS_MAX_SOURCE_BYTES / (1024u * 1024u))
+        );
         fclose(file);
         sysmem_freeptr(path);
         return;
     }
 
     if (fseek(file, 0, SEEK_SET) != 0) {
-        object_error((t_object *)x, "cryptoseq: could not read source file");
+        object_error((t_object *)x, "could not read source file");
         fclose(file);
         sysmem_freeptr(path);
         return;
     }
 
-    bytes = (uint8_t *)sysmem_newptr((long)file_size);
-    if (bytes == NULL && file_size > 0) {
-        object_error((t_object *)x, "cryptoseq: could not allocate source buffer");
-        fclose(file);
-        sysmem_freeptr(path);
-        return;
+    cs_sha256_init(&sha);
+    while ((bytes_read = fread(buffer, 1u, sizeof(buffer), file)) > 0u) {
+        total_read += bytes_read;
+        cs_sha256_update(&sha, buffer, bytes_read);
     }
-
-    bytes_read = fread(bytes, 1u, (size_t)file_size, file);
     fclose(file);
 
-    if (bytes_read != (size_t)file_size) {
-        object_error((t_object *)x, "cryptoseq: could not read complete source file");
-        sysmem_freeptr(bytes);
+    if (total_read != (size_t)file_size) {
+        object_error((t_object *)x, "could not hash complete source file");
         sysmem_freeptr(path);
         return;
     }
 
-    status = cs_max_model_set_source_bytes(&x->model, bytes, (size_t)file_size);
+    cs_sha256_final(&sha, digest);
+    status = cs_max_model_set_source_digest(&x->model, digest);
     cryptoseq_post_status(x, status);
     if (status == CS_OK) {
         object_post((t_object *)x, "cryptoseq: loaded source file (%ld bytes)", file_size);
     }
 
-    sysmem_freeptr(bytes);
     sysmem_freeptr(path);
 }
 
@@ -260,6 +264,19 @@ static void cryptoseq_e(cryptoseq_object_t *x, long e)
     cryptoseq_post_status(x, cs_max_model_set_exponent(&x->model, (uint32_t)e));
 }
 
+static void cryptoseq_rsa(cryptoseq_object_t *x, long p, long q, long e)
+{
+    if (p < 0 || q < 0 || e < 0) {
+        cryptoseq_post_status(x, CS_ERROR_INVALID_PARAM);
+        return;
+    }
+
+    cryptoseq_post_status(
+        x,
+        cs_max_model_set_rsa(&x->model, (uint32_t)p, (uint32_t)q, (uint32_t)e)
+    );
+}
+
 static void cryptoseq_length(cryptoseq_object_t *x, long length)
 {
     if (length < 0) {
@@ -278,6 +295,29 @@ static void cryptoseq_root(cryptoseq_object_t *x, long root)
     }
 
     cryptoseq_post_status(x, cs_max_model_set_root_note(&x->model, (uint8_t)root));
+}
+
+static void cryptoseq_melodyrange(cryptoseq_object_t *x, long low_note, long high_note)
+{
+    if (low_note < 0 || low_note > 127 || high_note < 0 || high_note > 127) {
+        cryptoseq_post_status(x, CS_ERROR_INVALID_PARAM);
+        return;
+    }
+
+    cryptoseq_post_status(
+        x,
+        cs_max_model_set_melody_range(&x->model, (uint8_t)low_note, (uint8_t)high_note)
+    );
+}
+
+static void cryptoseq_padcount(cryptoseq_object_t *x, long pad_count)
+{
+    if (pad_count < 1 || pad_count > 128) {
+        cryptoseq_post_status(x, CS_ERROR_INVALID_PARAM);
+        return;
+    }
+
+    cryptoseq_post_status(x, cs_max_model_set_drum_pad_count(&x->model, (uint8_t)pad_count));
 }
 
 static void cryptoseq_mode(cryptoseq_object_t *x, t_symbol *mode)
@@ -336,7 +376,7 @@ static void cryptoseq_assist(cryptoseq_object_t *x, void *b, long m, long a, cha
     (void)a;
 
     if (m == ASSIST_INLET) {
-        strcpy(s, "messages: source, sourcefile, p, q, e, length, root, mode, scale, rhythm, generate");
+        strcpy(s, "messages: source, sourcefile, rsa, p, q, e, length, root, melodyrange, padcount, mode, scale, rhythm, generate");
     } else {
         strcpy(s, "event step active note velocity accent duration gate value");
     }
@@ -376,8 +416,12 @@ void ext_main(void *r)
     class_addmethod(c, (method)cryptoseq_q, "q", A_LONG, 0);
     class_addmethod(c, (method)cryptoseq_e, "e", A_LONG, 0);
     class_addmethod(c, (method)cryptoseq_e, "exponent", A_LONG, 0);
+    class_addmethod(c, (method)cryptoseq_rsa, "rsa", A_LONG, A_LONG, A_LONG, 0);
     class_addmethod(c, (method)cryptoseq_length, "length", A_LONG, 0);
     class_addmethod(c, (method)cryptoseq_root, "root", A_LONG, 0);
+    class_addmethod(c, (method)cryptoseq_melodyrange, "melodyrange", A_LONG, A_LONG, 0);
+    class_addmethod(c, (method)cryptoseq_melodyrange, "noterange", A_LONG, A_LONG, 0);
+    class_addmethod(c, (method)cryptoseq_padcount, "padcount", A_LONG, 0);
     class_addmethod(c, (method)cryptoseq_mode, "mode", A_SYM, 0);
     class_addmethod(c, (method)cryptoseq_scale, "scale", A_SYM, 0);
     class_addmethod(c, (method)cryptoseq_rhythm, "rhythm", A_LONG, A_LONG, 0);
