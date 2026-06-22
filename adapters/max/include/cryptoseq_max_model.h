@@ -12,6 +12,7 @@ extern "C" {
 
 typedef struct cs_max_model_t {
     cs_params_t params;
+    int8_t scale_intervals[CS_MAX_SCALE_LENGTH];
     uint8_t source_digest[CS_SHA256_DIGEST_SIZE];
     uint8_t has_source;
     cs_event_t events[CS_MAX_SEQUENCE_LENGTH];
@@ -34,8 +35,14 @@ cs_status_t cs_max_model_set_primes(cs_max_model_t *model, uint32_t p, uint32_t 
 cs_status_t cs_max_model_set_exponent(cs_max_model_t *model, uint32_t e);
 cs_status_t cs_max_model_set_rsa(cs_max_model_t *model, uint32_t p, uint32_t q, uint32_t e);
 cs_status_t cs_max_model_set_length(cs_max_model_t *model, size_t length);
+cs_status_t cs_max_model_set_sequence_shift(cs_max_model_t *model, size_t shift);
 cs_status_t cs_max_model_set_mode(cs_max_model_t *model, const char *mode);
 cs_status_t cs_max_model_set_scale(cs_max_model_t *model, const char *scale);
+cs_status_t cs_max_model_set_scale_intervals(
+    cs_max_model_t *model,
+    const int8_t *intervals,
+    size_t interval_count
+);
 cs_status_t cs_max_model_set_root_note(cs_max_model_t *model, uint8_t root_note);
 cs_status_t cs_max_model_set_melody_range(cs_max_model_t *model, uint8_t low_note, uint8_t high_note);
 cs_status_t cs_max_model_set_drum_pad_count(cs_max_model_t *model, uint8_t pad_count);

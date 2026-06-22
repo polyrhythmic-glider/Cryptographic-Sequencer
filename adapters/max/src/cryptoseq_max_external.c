@@ -76,6 +76,16 @@ static void cryptoseq_generate(cryptoseq_object_t *x)
     }
 }
 
+static void cryptoseq_setup(cryptoseq_object_t *x)
+{
+    const cs_status_t status = cs_max_model_generate(&x->model);
+
+    cryptoseq_post_status(x, status);
+    if (status == CS_OK) {
+        cryptoseq_dump(x);
+    }
+}
+
 static void cryptoseq_step(cryptoseq_object_t *x, long index)
 {
     const cs_event_t *event;
@@ -287,6 +297,16 @@ static void cryptoseq_length(cryptoseq_object_t *x, long length)
     cryptoseq_post_status(x, cs_max_model_set_length(&x->model, (size_t)length));
 }
 
+static void cryptoseq_shift(cryptoseq_object_t *x, long shift)
+{
+    if (shift < 0) {
+        cryptoseq_post_status(x, CS_ERROR_INVALID_PARAM);
+        return;
+    }
+
+    cryptoseq_post_status(x, cs_max_model_set_sequence_shift(&x->model, (size_t)shift));
+}
+
 static void cryptoseq_root(cryptoseq_object_t *x, long root)
 {
     if (root < 0 || root > 127) {
@@ -328,6 +348,29 @@ static void cryptoseq_mode(cryptoseq_object_t *x, t_symbol *mode)
 static void cryptoseq_scale(cryptoseq_object_t *x, t_symbol *scale)
 {
     cryptoseq_post_status(x, cs_max_model_set_scale(&x->model, scale->s_name));
+}
+
+static void cryptoseq_scaleintervals(cryptoseq_object_t *x, t_symbol *selector, long argc, t_atom *argv)
+{
+    int8_t intervals[CS_MAX_SCALE_LENGTH];
+    long i;
+
+    (void)selector;
+
+    if (argc <= 0 || argc > (long)CS_MAX_SCALE_LENGTH || argv == NULL) {
+        cryptoseq_post_status(x, CS_ERROR_INVALID_PARAM);
+        return;
+    }
+
+    for (i = 0; i < argc; ++i) {
+        const long value = atom_getlong(argv + i);
+        intervals[i] = (int8_t)value;
+    }
+
+    cryptoseq_post_status(
+        x,
+        cs_max_model_set_scale_intervals(&x->model, intervals, (size_t)argc)
+    );
 }
 
 static void cryptoseq_rhythm(cryptoseq_object_t *x, long divisor, long threshold)
@@ -376,7 +419,7 @@ static void cryptoseq_assist(cryptoseq_object_t *x, void *b, long m, long a, cha
     (void)a;
 
     if (m == ASSIST_INLET) {
-        strcpy(s, "messages: source, sourcefile, rsa, p, q, e, length, root, melodyrange, padcount, mode, scale, rhythm, generate");
+        strcpy(s, "messages: source, sourcefile, rsa, p, q, e, length, shift, root, melodyrange, padcount, mode, scale, scaleintervals, rhythm, setup, generate");
     } else {
         strcpy(s, "event step active note velocity accent duration gate value");
     }
@@ -418,15 +461,19 @@ void ext_main(void *r)
     class_addmethod(c, (method)cryptoseq_e, "exponent", A_LONG, 0);
     class_addmethod(c, (method)cryptoseq_rsa, "rsa", A_LONG, A_LONG, A_LONG, 0);
     class_addmethod(c, (method)cryptoseq_length, "length", A_LONG, 0);
+    class_addmethod(c, (method)cryptoseq_shift, "shift", A_LONG, 0);
     class_addmethod(c, (method)cryptoseq_root, "root", A_LONG, 0);
     class_addmethod(c, (method)cryptoseq_melodyrange, "melodyrange", A_LONG, A_LONG, 0);
     class_addmethod(c, (method)cryptoseq_melodyrange, "noterange", A_LONG, A_LONG, 0);
     class_addmethod(c, (method)cryptoseq_padcount, "padcount", A_LONG, 0);
     class_addmethod(c, (method)cryptoseq_mode, "mode", A_SYM, 0);
     class_addmethod(c, (method)cryptoseq_scale, "scale", A_SYM, 0);
+    class_addmethod(c, (method)cryptoseq_scaleintervals, "scaleintervals", A_GIMME, 0);
+    class_addmethod(c, (method)cryptoseq_scaleintervals, "scale_intervals", A_GIMME, 0);
     class_addmethod(c, (method)cryptoseq_rhythm, "rhythm", A_LONG, A_LONG, 0);
     class_addmethod(c, (method)cryptoseq_velocity, "velocity", A_LONG, A_LONG, 0);
     class_addmethod(c, (method)cryptoseq_gate, "gate", A_LONG, A_LONG, 0);
+    class_addmethod(c, (method)cryptoseq_setup, "setup", 0);
     class_addmethod(c, (method)cryptoseq_generate, "generate", 0);
     class_addmethod(c, (method)cryptoseq_dump, "dump", 0);
     class_addmethod(c, (method)cryptoseq_step, "step", A_LONG, 0);

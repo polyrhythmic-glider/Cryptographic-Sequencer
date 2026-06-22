@@ -1,9 +1,8 @@
 autowatch = 1;
 inlets = 1;
-outlets = 9;
+outlets = 11;
 
-var UI_PRIME_MIN = 211;
-var UI_PRIME_MAX = 293;
+var MAX_PRIME = 65521;
 var DEFAULT_P = 251;
 var DEFAULT_Q = 257;
 var DEFAULT_E = 65537;
@@ -19,6 +18,8 @@ var current_mode = "hybrid";
 var current_melody_low = DEFAULT_MELODY_LOW;
 var current_melody_high = DEFAULT_MELODY_HIGH;
 var current_pad_count = DEFAULT_PAD_COUNT;
+var current_scale = "major";
+var live_scale_intervals = null;
 var primes = [];
 var exponent_candidates = [3, 5, 17, 257, 65537];
 var pad_count_candidates = [1, 4, 8, 12, 16, 24, 32];
@@ -57,7 +58,7 @@ function ensure_primes()
         return;
     }
 
-    for (value = UI_PRIME_MIN; value <= UI_PRIME_MAX; value += 1) {
+    for (value = 2; value <= MAX_PRIME; value += 1) {
         if (is_prime(value)) {
             primes.push(value);
         }
@@ -135,6 +136,8 @@ function init()
     send_checked_rsa();
     outlet(0, "melodyrange", current_melody_low, current_melody_high);
     outlet(0, "padcount", current_pad_count);
+    outlet(9, "rsa", current_p, current_q, current_e);
+    outlet(10, "mode", current_mode);
 }
 
 function bang()
@@ -192,18 +195,46 @@ function e(value)
 
     current_e = parsed;
     outlet(0, "rsa", current_p, current_q, current_e);
+    outlet(9, "rsa", current_p, current_q, current_e);
 }
 
 function length(value)
 {
-    var parsed = parse_int(value, 1, 4096);
+    var parsed = parse_int(value, 1, 128);
 
     if (parsed === null) {
         return;
     }
 
-    outlet(0, "length", parsed);
-    outlet(3, parsed);
+    send_length(parsed);
+}
+
+function uilength(value)
+{
+    var parsed = parse_int(value, 0, 127);
+
+    if (parsed === null) {
+        return;
+    }
+
+    send_length(parsed + 1);
+}
+
+function send_length(value)
+{
+    outlet(0, "length", value);
+    outlet(3, value);
+}
+
+function shift(value)
+{
+    var parsed = parse_int(value, 0, 127);
+
+    if (parsed === null) {
+        return;
+    }
+
+    outlet(0, "shift", parsed);
 }
 
 function root(value)
@@ -231,15 +262,67 @@ function mode(value)
     current_mode = value.toString();
     show_mode(current_mode);
     outlet(0, "mode", current_mode);
+    outlet(10, "mode", current_mode);
+    if (current_scale === "live" && mode_uses_musical_scale(current_mode)) {
+        send_live_scale();
+    }
 }
 
 function scale(value)
 {
+    current_scale = value.toString();
+
     if (!mode_uses_musical_scale(current_mode)) {
         return;
     }
 
-    outlet(0, "scale", value.toString());
+    if (current_scale === "live") {
+        send_live_scale();
+        return;
+    }
+
+    outlet(0, "scale", current_scale);
+}
+
+function livescale()
+{
+    live_scale_intervals = parse_live_scale(arrayfromargs(arguments));
+    if (current_scale === "live" && mode_uses_musical_scale(current_mode)) {
+        send_live_scale();
+    }
+}
+
+function send_live_scale()
+{
+    var message;
+
+    if (live_scale_intervals === null || live_scale_intervals.length === 0) {
+        post("cryptoseq-ui: Live scale is not available, using chromatic fallback\n");
+        live_scale_intervals = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+    }
+
+    message = ["scaleintervals"].concat(live_scale_intervals);
+    outlet.apply(this, [0].concat(message));
+}
+
+function parse_live_scale(values)
+{
+    var result = [];
+    var i;
+    var parsed;
+
+    for (i = 0; i < values.length; i += 1) {
+        parsed = parseInt(values[i], 10);
+        if (!isNaN(parsed)) {
+            result.push(positive_mod(parsed, 12));
+        }
+    }
+
+    if (result.length > 12) {
+        result = result.slice(0, 12);
+    }
+
+    return result;
 }
 
 function density(value)
@@ -315,7 +398,7 @@ function parse_prime(name, value)
 {
     var prime = parseInt(value, 10);
 
-    if (isNaN(prime) || prime < UI_PRIME_MIN || prime > UI_PRIME_MAX || !is_prime(prime)) {
+    if (isNaN(prime) || prime > MAX_PRIME || !is_prime(prime)) {
         post("cryptoseq-ui: ignored non-prime " + name + " value " + value + "\n");
         return null;
     }
@@ -374,7 +457,9 @@ function show_mode(mode)
         "cs_melody_low_label",
         "cs_melody_low_menu",
         "cs_melody_high_label",
-        "cs_melody_high_menu"
+        "cs_melody_high_menu",
+        "cs_poly_label",
+        "cs_poly_toggle"
     ], !is_melodic);
 
     set_hidden_many([
@@ -446,6 +531,7 @@ function send_checked_rsa()
     current_e = next_e;
     fill_exponent_menu(current_e);
     outlet(0, "rsa", current_p, current_q, current_e);
+    outlet(9, "rsa", current_p, current_q, current_e);
 }
 
 function valid_exponents(p_value, q_value)
@@ -490,6 +576,12 @@ function gcd(a, b)
     }
 
     return a;
+}
+
+function positive_mod(value, modulo)
+{
+    var result = value % modulo;
+    return result < 0 ? result + modulo : result;
 }
 
 function nearest_different_prime(value)

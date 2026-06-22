@@ -185,6 +185,99 @@ static int test_scale_does_not_affect_percussive_modes(void)
     return 0;
 }
 
+static int test_root_note_is_reachable_in_each_mode(void)
+{
+    static const uint32_t root_pad_values[] = {0u, 4u, 8u, 12u};
+    static const uint32_t melodic_values[] = {0u, 1u, 2u, 3u};
+    cs_params_t params = cs_default_params();
+    cs_event_t events[4];
+    cs_status_t status;
+    size_t i;
+
+    params.mode = CS_MODE_HYBRID;
+    params.root_note = 36u;
+    params.drum_pad_count = 4u;
+    params.rhythm_divisor = 16u;
+    params.rhythm_threshold = 1u;
+    status = cs_map_values(root_pad_values, 4u, &params, events, 4u);
+    if (expect_status(status, CS_OK, "hybrid root pad map")) {
+        return 1;
+    }
+
+    if (events[0].note != 36u || events[0].active != 1u) {
+        fprintf(stderr, "hybrid root pad should be active when density is above zero\n");
+        return 1;
+    }
+
+    for (i = 0u; i < 4u; ++i) {
+        if (events[i].note != 36u) {
+            fprintf(stderr, "hybrid pad should be selected from the event value\n");
+            return 1;
+        }
+    }
+
+    params.mode = CS_MODE_RHYTHM;
+    params.rhythm_threshold = params.rhythm_divisor;
+    status = cs_map_values(root_pad_values, 4u, &params, events, 4u);
+    if (expect_status(status, CS_OK, "rhythm root map")) {
+        return 1;
+    }
+
+    for (i = 0u; i < 4u; ++i) {
+        if (events[i].note != 36u || events[i].active != 1u) {
+            fprintf(stderr, "rhythm mode should play only the root note when active\n");
+            return 1;
+        }
+    }
+
+    params = cs_default_params();
+    params.mode = CS_MODE_MELODY;
+    params.root_note = 60u;
+    params.melody_note_min = 60u;
+    params.melody_note_max = 72u;
+    params.rhythm_threshold = params.rhythm_divisor;
+    status = cs_map_values(melodic_values, 4u, &params, events, 4u);
+    if (expect_status(status, CS_OK, "melodic root map")) {
+        return 1;
+    }
+
+    if (events[0].note != 60u || events[0].active != 1u) {
+        fprintf(stderr, "melodic mode should be able to emit the root note\n");
+        return 1;
+    }
+
+    return 0;
+}
+
+static int test_hybrid_pads_follow_values_not_step_order(void)
+{
+    static const uint32_t values[] = {7u, 2u, 5u, 0u};
+    static const uint8_t expected_notes[] = {39u, 38u, 37u, 36u};
+    cs_params_t params = cs_default_params();
+    cs_event_t events[4];
+    cs_status_t status;
+    size_t i;
+
+    params.mode = CS_MODE_HYBRID;
+    params.root_note = 36u;
+    params.drum_pad_count = 4u;
+    params.rhythm_threshold = params.rhythm_divisor;
+
+    status = cs_map_values(values, 4u, &params, events, 4u);
+    if (expect_status(status, CS_OK, "hybrid value-based pad map")) {
+        return 1;
+    }
+
+    for (i = 0u; i < 4u; ++i) {
+        if (events[i].note != expected_notes[i]) {
+            fprintf(stderr, "hybrid pads should not follow step order\n");
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
 static int test_note_range_controls(void)
 {
     static const uint32_t values[] = {0u, 1u, 2u, 3u, 4u, 5u, 6u, 7u};
@@ -277,6 +370,44 @@ static int test_density_controls_melodic_activity(void)
             fprintf(stderr, "melodic full density should activate all steps\n");
             return 1;
         }
+    }
+
+    return 0;
+}
+
+static int test_sequence_shift_rotates_events(void)
+{
+    static const uint32_t values[] = {10u, 20u, 30u, 40u};
+    cs_params_t params = cs_default_params();
+    cs_event_t events[4];
+    cs_status_t status;
+
+    params.length = 4u;
+    params.mode = CS_MODE_RHYTHM;
+    params.sequence_shift = 1u;
+
+    status = cs_map_values(values, 4u, &params, events, 4u);
+    if (expect_status(status, CS_OK, "shifted rhythm map")) {
+        return 1;
+    }
+
+    if (events[0].step_index != 0u || events[0].value != 40u ||
+        events[1].step_index != 1u || events[1].value != 10u ||
+        events[2].step_index != 2u || events[2].value != 20u ||
+        events[3].step_index != 3u || events[3].value != 30u) {
+        fprintf(stderr, "sequence shift should rotate events right while preserving order\n");
+        return 1;
+    }
+
+    params.sequence_shift = 5u;
+    status = cs_map_values(values, 4u, &params, events, 4u);
+    if (expect_status(status, CS_OK, "wrapped shifted rhythm map")) {
+        return 1;
+    }
+
+    if (events[0].value != 40u || events[1].value != 10u) {
+        fprintf(stderr, "sequence shift should wrap by sequence length\n");
+        return 1;
     }
 
     return 0;
@@ -418,11 +549,23 @@ int main(void)
         return 1;
     }
 
+    if (test_root_note_is_reachable_in_each_mode()) {
+        return 1;
+    }
+
+    if (test_hybrid_pads_follow_values_not_step_order()) {
+        return 1;
+    }
+
     if (test_note_range_controls()) {
         return 1;
     }
 
     if (test_density_controls_melodic_activity()) {
+        return 1;
+    }
+
+    if (test_sequence_shift_rotates_events()) {
         return 1;
     }
 

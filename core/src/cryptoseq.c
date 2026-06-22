@@ -292,10 +292,11 @@ static void map_rhythm_event(uint32_t index, uint32_t value, const cs_params_t *
 static void map_hybrid_event(uint32_t index, uint32_t value, const cs_params_t *params, cs_event_t *event)
 {
     const uint8_t accent = map_rhythm_accent(value, params);
+    const uint8_t is_root_pad = ((value % params->drum_pad_count) == 0u) ? 1u : 0u;
 
     event->step_index = index;
     event->value = value;
-    event->active = map_rhythm_active(value, params);
+    event->active = (is_root_pad && params->rhythm_threshold > 0u) ? 1u : map_rhythm_active(value, params);
     event->note = map_drum_rack_note(value, params);
     event->velocity = map_rhythm_velocity(value, accent, params);
     event->accent = accent;
@@ -331,6 +332,25 @@ static cs_status_t map_values_for_mode(
     default:
         return CS_ERROR_INVALID_PARAM;
     }
+}
+
+static void apply_sequence_shift(cs_event_t *events, size_t length, size_t shift)
+{
+    cs_event_t shifted[CS_MAX_SEQUENCE_LENGTH];
+    size_t i;
+    const size_t normalized_shift = (length == 0u) ? 0u : (shift % length);
+
+    if (normalized_shift == 0u) {
+        return;
+    }
+
+    for (i = 0u; i < length; ++i) {
+        const size_t source_index = (i + length - normalized_shift) % length;
+        shifted[i] = events[source_index];
+        shifted[i].step_index = (uint32_t)i;
+    }
+
+    memcpy(events, shifted, length * sizeof(events[0]));
 }
 
 static cs_status_t generate_events_for_mode(
@@ -425,6 +445,7 @@ cs_params_t cs_default_params(void)
     params.q = 257u;
     params.e = CS_DEFAULT_EXPONENT;
     params.length = 16u;
+    params.sequence_shift = 0u;
     params.mode = CS_MODE_HYBRID;
     params.root_note = 60u;
     params.octave_min = 0;
@@ -638,7 +659,12 @@ cs_status_t cs_map_values(
         return CS_ERROR_INVALID_PARAM;
     }
 
-    return map_values_for_mode(values, value_count, params, events);
+    status = map_values_for_mode(values, value_count, params, events);
+    if (status == CS_OK) {
+        apply_sequence_shift(events, value_count, params->sequence_shift);
+    }
+
+    return status;
 }
 
 cs_status_t cs_generate_from_digest(
@@ -665,7 +691,12 @@ cs_status_t cs_generate_from_digest(
     }
 
     init_generation_context(&ctx, source_digest, params);
-    return generate_events_for_mode(&ctx, params, events);
+    status = generate_events_for_mode(&ctx, params, events);
+    if (status == CS_OK) {
+        apply_sequence_shift(events, params->length, params->sequence_shift);
+    }
+
+    return status;
 }
 
 cs_status_t cs_generate_from_bytes(
@@ -699,5 +730,10 @@ cs_status_t cs_generate_from_bytes(
     }
 
     init_generation_context(&ctx, digest, params);
-    return generate_events_for_mode(&ctx, params, events);
+    status = generate_events_for_mode(&ctx, params, events);
+    if (status == CS_OK) {
+        apply_sequence_shift(events, params->length, params->sequence_shift);
+    }
+
+    return status;
 }

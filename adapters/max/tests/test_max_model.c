@@ -237,6 +237,108 @@ static int test_max_model_source_digest(void)
     return 0;
 }
 
+static int test_max_model_custom_scale_intervals(void)
+{
+    static const int8_t whole_tone[] = {0, 2, 4, 6, 8, 10};
+    cs_max_model_t model;
+    cs_status_t status;
+    size_t i;
+
+    cs_max_model_init(&model);
+
+    status = cs_max_model_set_mode(&model, "melodic");
+    if (expect_status(status, CS_OK, "switch to melodic for custom scale")) {
+        return 1;
+    }
+
+    status = cs_max_model_set_scale_intervals(
+        &model,
+        whole_tone,
+        sizeof(whole_tone) / sizeof(whole_tone[0])
+    );
+    if (expect_status(status, CS_OK, "set custom scale intervals")) {
+        return 1;
+    }
+
+    if (model.params.scale_intervals != model.scale_intervals ||
+        model.params.scale_len != sizeof(whole_tone) / sizeof(whole_tone[0])) {
+        fprintf(stderr, "custom scale was not installed on model params\n");
+        return 1;
+    }
+
+    for (i = 0u; i < model.params.scale_len; ++i) {
+        if (model.params.scale_intervals[i] != whole_tone[i]) {
+            fprintf(stderr, "custom scale interval mismatch\n");
+            return 1;
+        }
+    }
+
+    status = cs_max_model_set_scale_intervals(&model, whole_tone, 0u);
+    if (expect_status(status, CS_ERROR_INVALID_PARAM, "empty custom scale")) {
+        return 1;
+    }
+
+    return 0;
+}
+
+static int test_max_model_sequence_shift(void)
+{
+    static const uint8_t source[] = "shift source";
+    cs_max_model_t unshifted;
+    cs_max_model_t shifted;
+    cs_status_t status;
+    uint32_t expected_wrapped_value;
+    const cs_event_t *event;
+
+    cs_max_model_init(&unshifted);
+    cs_max_model_init(&shifted);
+
+    status = cs_max_model_set_source_bytes(&unshifted, source, sizeof(source) - 1u);
+    if (expect_status(status, CS_OK, "set unshifted source")) {
+        return 1;
+    }
+
+    status = cs_max_model_set_source_bytes(&shifted, source, sizeof(source) - 1u);
+    if (expect_status(status, CS_OK, "set shifted source")) {
+        return 1;
+    }
+
+    status = cs_max_model_set_length(&unshifted, 4u);
+    if (expect_status(status, CS_OK, "set unshifted length")) {
+        return 1;
+    }
+
+    status = cs_max_model_set_length(&shifted, 4u);
+    if (expect_status(status, CS_OK, "set shifted length")) {
+        return 1;
+    }
+
+    status = cs_max_model_generate(&unshifted);
+    if (expect_status(status, CS_OK, "generate unshifted")) {
+        return 1;
+    }
+
+    expected_wrapped_value = cs_max_model_event_at(&unshifted, 3u)->value;
+
+    status = cs_max_model_set_sequence_shift(&shifted, 1u);
+    if (expect_status(status, CS_OK, "set sequence shift")) {
+        return 1;
+    }
+
+    status = cs_max_model_generate(&shifted);
+    if (expect_status(status, CS_OK, "generate shifted")) {
+        return 1;
+    }
+
+    event = cs_max_model_event_at(&shifted, 0u);
+    if (event == NULL || event->step_index != 0u || event->value != expected_wrapped_value) {
+        fprintf(stderr, "max model shift should rotate generated events\n");
+        return 1;
+    }
+
+    return 0;
+}
+
 int main(void)
 {
     if (test_max_model_generation()) {
@@ -252,6 +354,14 @@ int main(void)
     }
 
     if (test_max_model_source_digest()) {
+        return 1;
+    }
+
+    if (test_max_model_custom_scale_intervals()) {
+        return 1;
+    }
+
+    if (test_max_model_sequence_shift()) {
         return 1;
     }
 

@@ -2,6 +2,14 @@
 
 Questa cartella contiene la parte Max for Live del progetto.
 
+Il patcher principale e' `patchers/cryptoseq-midi-ui.maxpat`. I blocchi riusabili sono astrazioni Max esterne nella stessa cartella:
+
+- `cryptoseq_auto_setup.maxpat`: inoltra i comandi all'external e manda un `setup` ritardato dopo i cambi parametro.
+- `cryptoseq_clock.maxpat`: clock sincronizzato a Live, counter, modulo lunghezza e messaggi `step`.
+- `cryptoseq_engine.maxpat`: patch motore che contiene external `cryptoseq`, auto-setup, clock, gate e MIDI out.
+- `cryptoseq_live_scale.maxpat`: osserva `live_set scale_intervals` e produce `livescale ...`.
+- `cryptoseq_midi_out.maxpat`: converte gli eventi CryptoSeq in note MIDI.
+
 Su Linux possiamo compilare e testare `cryptoseq_max_model`, che non dipende dalla Max SDK. Questo model rappresenta lo stato e i comandi dell'oggetto Max:
 
 - `source`
@@ -11,12 +19,15 @@ Su Linux possiamo compilare e testare `cryptoseq_max_model`, che non dipende dal
 - `q`
 - `e`
 - `length`
+- `shift`
 - `root`
 - `melodyrange`
 - `padcount`
 - `mode`
 - `scale`
+- `scaleintervals`
 - `rhythm`
+- `setup`
 - `generate`
 - `dump`
 - `step`
@@ -26,10 +37,12 @@ Su Linux possiamo compilare e testare `cryptoseq_max_model`, che non dipende dal
 I modi sono pensati cosi:
 
 - `melodic`: strumenti melodici; usa root, scala e range low/high.
-- `hybrid`: Drum Rack; usa timing/velocity ritmici e un numero controllabile di pad consecutivi dalla root, senza scala.
+- `hybrid`: Drum Rack; usa timing/velocity ritmici e un numero controllabile di pad consecutivi dalla root, senza scala. La root e' il primo pad e resta ancorata allo step-root quando la density e' maggiore di zero.
 - `rhythm`: percussione singola; usa una sola nota root, senza scala.
 
 `density` e' disponibile in tutte e tre le modalita' e controlla quanti step sono attivi.
+
+`scaleintervals` accetta una lista di intervalli cromatici, per esempio `scaleintervals 0 2 4 5 7 9 11`. La patch Max for Live usa questo messaggio per ereditare la scala globale di Ableton Live: come Sting 2, osserva `live_set` con `live.path live_set` e `live.observer scale_intervals`, poi passa la lista al bridge JavaScript. La root resta un controllo locale del device.
 
 Il file `src/cryptoseq_max_external.c` e' l'external Max reale. Richiede gli header della Cycling '74 Max SDK (`ext.h`, `ext_obex.h`) e va compilato su macOS o Windows.
 
@@ -45,15 +58,21 @@ Esempio di messaggi Max:
 source "demo source"
 rsa 251 257 65537
 length 16
+shift 0
 mode hybrid
 root 60
 padcount 16
+setup
 generate
 step 0
 dump
 ```
 
 I messaggi separati `p`, `q` ed `e` restano supportati per test manuali, ma la UI usa `rsa p q e` per evitare stati intermedi invalidi.
+
+`shift <n>` ruota circolarmente la sequenza di `n` posizioni verso destra. Gli eventi che escono dalla fine rientrano all'inizio nello stesso ordine; gli indici `step` emessi restano coerenti con la nuova posizione. La UI 0.1 mostra anche il valore numerico dello shift accanto al controllo.
+
+Il toggle `poly` e' un layer MIDI della UI melodica: non cambia la sequenza generata dal core, ma quando la modalita' e' `melodic` trasforma ogni nota attiva in una triade deterministica. In `hybrid` e `rhythm` viene ignorato per non rompere Drum Rack e percussioni.
 
 ## Cosa possiamo fare su Linux
 
@@ -124,11 +143,20 @@ cryptoseq
 This repository includes two ready-to-open patches:
 
 - `patchers/cryptoseq-test.maxpat`: minimal event/MIDI smoke test.
-- `patchers/cryptoseq-midi-ui.maxpat`: first playable UI with file source, prime menus, mode, scale, length, division, and play controls.
+- `patchers/cryptoseq-midi-ui.maxpat`: playable 0.1 UI with file source, prime menus, mode-specific controls, sequence monitor, length knob, shift, melodic poly toggle, and division. The UI is armed automatically; there are no generate/play buttons in presentation.
 
-The UI patch auto-generates shortly after control changes so playback does not keep using a stale sequence. It also keeps `p` and `q` different and sends `rsa p q e` atomically after filtering the `e` menu to RSA-style exponents that are coprime with `phi(n) = (p - 1)(q - 1)`.
+The UI patch sends a silent, debounced `setup` shortly after control changes so playback does not keep using a stale sequence and does not dump a burst of events. Playback is armed on load, so the device follows the Live clock without separate generate/play UI buttons. It also keeps `p` and `q` different and sends `rsa p q e` atomically after filtering the `e` menu to RSA-style exponents that are coprime with `phi(n) = (p - 1)(q - 1)`.
+
+The UI length control is a knob from 1 to 128 steps. Manual `length` messages in this UI path are also clamped to 1..128.
 
 The MIDI helper reads the selected division and Live tempo when available, then applies the event `gate` value to the note length sent to `makenote`.
+
+The 0.1 UI has four presentation areas:
+
+- source preview, with file button and drag/drop input;
+- RSA panel, with p/q/e controls and `n`, `phi(n)`, `gcd(e, phi)` formula display;
+- mode panel, with controls hidden or shown for melodic, hybrid, and rhythm, including the melodic-only `poly` toggle;
+- sequence monitor, driven by the actual `event` output from the external.
 
 Create a Max patch with one `cryptoseq` object and connect its outlet to `print cryptoseq`.
 

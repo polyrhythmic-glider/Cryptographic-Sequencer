@@ -40,6 +40,7 @@ typedef struct cs_params_t {
     uint32_t q;
     uint32_t e;
     size_t length;
+    size_t sequence_shift;
     cs_mode_t mode;
 
     uint8_t root_note;

@@ -121,6 +121,19 @@ cs_status_t cs_max_model_set_length(cs_max_model_t *model, size_t length)
     return validate_after_change(model, previous);
 }
 
+cs_status_t cs_max_model_set_sequence_shift(cs_max_model_t *model, size_t shift)
+{
+    cs_params_t previous;
+
+    if (model == NULL) {
+        return CS_ERROR_NULL;
+    }
+
+    previous = model->params;
+    model->params.sequence_shift = shift;
+    return validate_after_change(model, previous);
+}
+
 cs_status_t cs_max_model_set_mode(cs_max_model_t *model, const char *mode)
 {
     cs_params_t previous;
@@ -170,6 +183,36 @@ cs_status_t cs_max_model_set_scale(cs_max_model_t *model, const char *scale)
     } else {
         return CS_ERROR_INVALID_PARAM;
     }
+
+    return validate_after_change(model, previous);
+}
+
+cs_status_t cs_max_model_set_scale_intervals(
+    cs_max_model_t *model,
+    const int8_t *intervals,
+    size_t interval_count
+)
+{
+    cs_params_t previous;
+    size_t i;
+
+    if (model == NULL || intervals == NULL) {
+        return CS_ERROR_NULL;
+    }
+
+    if (interval_count == 0u || interval_count > CS_MAX_SCALE_LENGTH) {
+        return CS_ERROR_INVALID_PARAM;
+    }
+
+    previous = model->params;
+    for (i = 0u; i < interval_count; ++i) {
+        model->scale_intervals[i] = (int8_t)(intervals[i] % 12);
+        if (model->scale_intervals[i] < 0) {
+            model->scale_intervals[i] = (int8_t)(model->scale_intervals[i] + 12);
+        }
+    }
+    model->params.scale_intervals = model->scale_intervals;
+    model->params.scale_len = interval_count;
 
     return validate_after_change(model, previous);
 }
