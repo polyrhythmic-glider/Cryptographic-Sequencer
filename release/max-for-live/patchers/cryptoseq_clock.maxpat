@@ -22,8 +22,8 @@
             {"box": {"id": "obj-5", "maxclass": "newobj", "numinlets": 5, "numoutlets": 4, "outlettype": ["int", "", "", ""], "patching_rect": [30.0, 115.0, 80.0, 22.0], "text": "counter"}},
             {"box": {"id": "obj-6", "maxclass": "newobj", "numinlets": 2, "numoutlets": 1, "outlettype": ["int"], "patching_rect": [30.0, 150.0, 60.0, 22.0], "text": "% 16"}},
             {"box": {"id": "obj-7", "maxclass": "newobj", "numinlets": 1, "numoutlets": 2, "outlettype": ["int", "int"], "patching_rect": [30.0, 180.0, 40.0, 22.0], "text": "t i i"}},
-            {"box": {"id": "obj-8", "maxclass": "message", "numinlets": 2, "numoutlets": 1, "outlettype": [""], "patching_rect": [100.0, 180.0, 60.0, 22.0], "text": "step $1"}},
-            {"box": {"id": "obj-9", "maxclass": "outlet", "numinlets": 1, "patching_rect": [175.0, 180.0, 30.0, 30.0], "comment": "step message"}},
+            {"box": {"id": "obj-8", "maxclass": "message", "numinlets": 2, "numoutlets": 1, "outlettype": [""], "patching_rect": [100.0, 180.0, 80.0, 22.0], "text": "playstep $1"}},
+            {"box": {"id": "obj-9", "maxclass": "outlet", "numinlets": 1, "patching_rect": [195.0, 180.0, 30.0, 30.0], "comment": "playstep message"}},
             {"box": {"id": "obj-10", "maxclass": "outlet", "numinlets": 1, "patching_rect": [30.0, 210.0, 30.0, 30.0], "comment": "step index"}}
         ],
         "lines": [

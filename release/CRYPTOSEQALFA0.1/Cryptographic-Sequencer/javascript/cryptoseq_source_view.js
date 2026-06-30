@@ -35,7 +35,9 @@ function paint()
     var height = box.rect[3] - box.rect[1];
 
     background(width, height);
-    draw_preview(width, height);
+    if (source_type !== "image") {
+        draw_preview(width, height);
+    }
     label(12, 20, "source: " + source_type);
     small(12, height - 48, basename(source_path));
 }
@@ -115,8 +117,10 @@ function fingerprint(width, height)
 function background(width, height)
 {
     mgraphics.set_source_rgba(0.08, 0.08, 0.08, 1);
-    mgraphics.rectangle(0, 0, width, height);
-    mgraphics.fill();
+    if (source_type !== "image") {
+        mgraphics.rectangle(0, 0, width, height);
+        mgraphics.fill();
+    }
     mgraphics.set_source_rgba(0.28, 0.30, 0.30, 1);
     mgraphics.rectangle(0.5, 0.5, width - 1, height - 1);
     mgraphics.stroke();
@@ -214,6 +218,9 @@ function set_image_hidden(hidden)
 
     image_box = this.patcher.getnamed(image_box_name);
     if (image_box) {
-        image_box.hidden = hidden ? 1 : 0;
+        try {
+            image_box.hidden = hidden ? 1 : 0;
+        } catch (err) {
+        }
     }
 }

@@ -32,7 +32,12 @@ static void cryptoseq_post_status(cryptoseq_object_t *x, cs_status_t status)
     }
 }
 
-static void cryptoseq_output_event(cryptoseq_object_t *x, const cs_event_t *event)
+static int cryptoseq_long_in_range(long value, long min_value, long max_value)
+{
+    return value >= min_value && value <= max_value;
+}
+
+static void cryptoseq_output_event_as(cryptoseq_object_t *x, t_symbol *selector, const cs_event_t *event)
 {
     t_atom atoms[8];
 
@@ -45,7 +50,12 @@ static void cryptoseq_output_event(cryptoseq_object_t *x, const cs_event_t *even
     atom_setlong(&atoms[6], (t_atom_long)event->gate_permille);
     atom_setlong(&atoms[7], (t_atom_long)event->value);
 
-    outlet_anything(x->event_outlet, gensym("event"), 8, atoms);
+    outlet_anything(x->event_outlet, selector, 8, atoms);
+}
+
+static void cryptoseq_output_event(cryptoseq_object_t *x, const cs_event_t *event)
+{
+    cryptoseq_output_event_as(x, gensym("event"), event);
 }
 
 static void cryptoseq_dump(cryptoseq_object_t *x)
@@ -78,12 +88,7 @@ static void cryptoseq_generate(cryptoseq_object_t *x)
 
 static void cryptoseq_setup(cryptoseq_object_t *x)
 {
-    const cs_status_t status = cs_max_model_generate(&x->model);
-
-    cryptoseq_post_status(x, status);
-    if (status == CS_OK) {
-        cryptoseq_dump(x);
-    }
+    cryptoseq_generate(x);
 }
 
 static void cryptoseq_step(cryptoseq_object_t *x, long index)
@@ -97,11 +102,27 @@ static void cryptoseq_step(cryptoseq_object_t *x, long index)
 
     event = cs_max_model_event_at(&x->model, (size_t)index);
     if (event == NULL) {
-        object_error((t_object *)x, "step index out of range");
         return;
     }
 
     cryptoseq_output_event(x, event);
+}
+
+static void cryptoseq_playstep(cryptoseq_object_t *x, long index)
+{
+    const cs_event_t *event;
+
+    if (index < 0) {
+        object_error((t_object *)x, "step index must be non-negative");
+        return;
+    }
+
+    event = cs_max_model_event_at(&x->model, (size_t)index);
+    if (event == NULL) {
+        return;
+    }
+
+    cryptoseq_output_event_as(x, gensym("playevent"), event);
 }
 
 static void cryptoseq_source(cryptoseq_object_t *x, t_symbol *selector, long argc, t_atom *argv)
@@ -299,27 +320,46 @@ static void cryptoseq_length(cryptoseq_object_t *x, long length)
 
 static void cryptoseq_shift(cryptoseq_object_t *x, long shift)
 {
-    if (shift < 0) {
+    const long max_shift = (long)CS_MAX_SEQUENCE_LENGTH - 1L;
+
+    if (!cryptoseq_long_in_range(shift, -max_shift, max_shift)) {
         cryptoseq_post_status(x, CS_ERROR_INVALID_PARAM);
         return;
     }
 
-    cryptoseq_post_status(x, cs_max_model_set_sequence_shift(&x->model, (size_t)shift));
+    cryptoseq_post_status(x, cs_max_model_set_sequence_shift(&x->model, (int32_t)shift));
+}
+
+static void cryptoseq_scene(cryptoseq_object_t *x, long scene)
+{
+    if (!cryptoseq_long_in_range(scene, 0, CS_MAX_SCENE_VALUE)) {
+        cryptoseq_post_status(x, CS_ERROR_INVALID_PARAM);
+        return;
+    }
+
+    cryptoseq_post_status(x, cs_max_model_set_scene(&x->model, (uint8_t)scene));
 }
 
 static void cryptoseq_root(cryptoseq_object_t *x, long root)
 {
-    if (root < 0 || root > 127) {
+    cs_status_t status;
+
+    if (!cryptoseq_long_in_range(root, 0, 127)) {
         cryptoseq_post_status(x, CS_ERROR_INVALID_PARAM);
         return;
     }
 
-    cryptoseq_post_status(x, cs_max_model_set_root_note(&x->model, (uint8_t)root));
+    status = cs_max_model_set_root_note(&x->model, (uint8_t)root);
+    cryptoseq_post_status(x, status);
+    if (status == CS_OK) {
+        object_post((t_object *)x, "cryptoseq: root %ld", root);
+    }
 }
 
 static void cryptoseq_melodyrange(cryptoseq_object_t *x, long low_note, long high_note)
 {
-    if (low_note < 0 || low_note > 127 || high_note < 0 || high_note > 127) {
+    if (!cryptoseq_long_in_range(low_note, 0, 127) ||
+        !cryptoseq_long_in_range(high_note, 0, 127)) {
         cryptoseq_post_status(x, CS_ERROR_INVALID_PARAM);
         return;
     }
@@ -332,17 +372,28 @@ static void cryptoseq_melodyrange(cryptoseq_object_t *x, long low_note, long hig
 
 static void cryptoseq_padcount(cryptoseq_object_t *x, long pad_count)
 {
+    cs_status_t status;
+
     if (pad_count < 1 || pad_count > 128) {
         cryptoseq_post_status(x, CS_ERROR_INVALID_PARAM);
         return;
     }
 
-    cryptoseq_post_status(x, cs_max_model_set_drum_pad_count(&x->model, (uint8_t)pad_count));
+    status = cs_max_model_set_drum_pad_count(&x->model, (uint8_t)pad_count);
+    cryptoseq_post_status(x, status);
+    if (status == CS_OK) {
+        object_post((t_object *)x, "cryptoseq: padcount %ld", pad_count);
+    }
 }
 
 static void cryptoseq_mode(cryptoseq_object_t *x, t_symbol *mode)
 {
-    cryptoseq_post_status(x, cs_max_model_set_mode(&x->model, mode->s_name));
+    const cs_status_t status = cs_max_model_set_mode(&x->model, mode->s_name);
+
+    cryptoseq_post_status(x, status);
+    if (status == CS_OK) {
+        object_post((t_object *)x, "cryptoseq: mode %s", mode->s_name);
+    }
 }
 
 static void cryptoseq_scale(cryptoseq_object_t *x, t_symbol *scale)
@@ -386,9 +437,62 @@ static void cryptoseq_rhythm(cryptoseq_object_t *x, long divisor, long threshold
     );
 }
 
+static void cryptoseq_morphamount(cryptoseq_object_t *x, long amount)
+{
+    if (!cryptoseq_long_in_range(amount, 0, 100)) {
+        cryptoseq_post_status(x, CS_ERROR_INVALID_PARAM);
+        return;
+    }
+
+    cryptoseq_post_status(x, cs_max_model_set_morph_amount(&x->model, (uint8_t)amount));
+}
+
+static void cryptoseq_morphscene(cryptoseq_object_t *x, long scene)
+{
+    if (!cryptoseq_long_in_range(scene, 0, CS_MAX_SCENE_VALUE)) {
+        cryptoseq_post_status(x, CS_ERROR_INVALID_PARAM);
+        return;
+    }
+
+    cryptoseq_post_status(x, cs_max_model_set_morph_scene(&x->model, (uint8_t)scene));
+}
+
+static void cryptoseq_morphmode(cryptoseq_object_t *x, t_symbol *mode)
+{
+    if (mode == NULL) {
+        cryptoseq_post_status(x, CS_ERROR_NULL);
+        return;
+    }
+
+    cryptoseq_post_status(x, cs_max_model_set_morph_mode(&x->model, mode->s_name));
+}
+
+static void cryptoseq_morph(cryptoseq_object_t *x, t_symbol *selector, long argc, t_atom *argv)
+{
+    cs_status_t status;
+
+    (void)selector;
+
+    if (argc <= 0 || argv == NULL) {
+        cryptoseq_post_status(x, CS_ERROR_INVALID_PARAM);
+        return;
+    }
+
+    cryptoseq_morphamount(x, atom_getlong(argv));
+    if (argc >= 2) {
+        cryptoseq_morphscene(x, atom_getlong(argv + 1));
+    }
+    if (argc >= 3) {
+        t_symbol *mode = atom_getsym(argv + 2);
+        status = cs_max_model_set_morph_mode(&x->model, mode->s_name);
+        cryptoseq_post_status(x, status);
+    }
+}
+
 static void cryptoseq_velocity(cryptoseq_object_t *x, long min_velocity, long max_velocity)
 {
-    if (min_velocity < 0 || min_velocity > 127 || max_velocity < 0 || max_velocity > 127) {
+    if (!cryptoseq_long_in_range(min_velocity, 0, 127) ||
+        !cryptoseq_long_in_range(max_velocity, 0, 127)) {
         cryptoseq_post_status(x, CS_ERROR_INVALID_PARAM);
         return;
     }
@@ -401,7 +505,8 @@ static void cryptoseq_velocity(cryptoseq_object_t *x, long min_velocity, long ma
 
 static void cryptoseq_gate(cryptoseq_object_t *x, long min_permille, long max_permille)
 {
-    if (min_permille < 0 || min_permille > 1000 || max_permille < 0 || max_permille > 1000) {
+    if (!cryptoseq_long_in_range(min_permille, 0, 1000) ||
+        !cryptoseq_long_in_range(max_permille, 0, 1000)) {
         cryptoseq_post_status(x, CS_ERROR_INVALID_PARAM);
         return;
     }
@@ -419,7 +524,7 @@ static void cryptoseq_assist(cryptoseq_object_t *x, void *b, long m, long a, cha
     (void)a;
 
     if (m == ASSIST_INLET) {
-        strcpy(s, "messages: source, sourcefile, rsa, p, q, e, length, shift, root, melodyrange, padcount, mode, scale, scaleintervals, rhythm, setup, generate");
+        strcpy(s, "messages: source, sourcefile, rsa, p, q, e, scene, length, shift, root, mode, rhythm, morph, setup, generate");
     } else {
         strcpy(s, "event step active note velocity accent duration gate value");
     }
@@ -462,6 +567,7 @@ void ext_main(void *r)
     class_addmethod(c, (method)cryptoseq_rsa, "rsa", A_LONG, A_LONG, A_LONG, 0);
     class_addmethod(c, (method)cryptoseq_length, "length", A_LONG, 0);
     class_addmethod(c, (method)cryptoseq_shift, "shift", A_LONG, 0);
+    class_addmethod(c, (method)cryptoseq_scene, "scene", A_LONG, 0);
     class_addmethod(c, (method)cryptoseq_root, "root", A_LONG, 0);
     class_addmethod(c, (method)cryptoseq_melodyrange, "melodyrange", A_LONG, A_LONG, 0);
     class_addmethod(c, (method)cryptoseq_melodyrange, "noterange", A_LONG, A_LONG, 0);
@@ -471,12 +577,17 @@ void ext_main(void *r)
     class_addmethod(c, (method)cryptoseq_scaleintervals, "scaleintervals", A_GIMME, 0);
     class_addmethod(c, (method)cryptoseq_scaleintervals, "scale_intervals", A_GIMME, 0);
     class_addmethod(c, (method)cryptoseq_rhythm, "rhythm", A_LONG, A_LONG, 0);
+    class_addmethod(c, (method)cryptoseq_morph, "morph", A_GIMME, 0);
+    class_addmethod(c, (method)cryptoseq_morphamount, "morphamount", A_LONG, 0);
+    class_addmethod(c, (method)cryptoseq_morphscene, "morphscene", A_LONG, 0);
+    class_addmethod(c, (method)cryptoseq_morphmode, "morphmode", A_SYM, 0);
     class_addmethod(c, (method)cryptoseq_velocity, "velocity", A_LONG, A_LONG, 0);
     class_addmethod(c, (method)cryptoseq_gate, "gate", A_LONG, A_LONG, 0);
     class_addmethod(c, (method)cryptoseq_setup, "setup", 0);
     class_addmethod(c, (method)cryptoseq_generate, "generate", 0);
     class_addmethod(c, (method)cryptoseq_dump, "dump", 0);
     class_addmethod(c, (method)cryptoseq_step, "step", A_LONG, 0);
+    class_addmethod(c, (method)cryptoseq_playstep, "playstep", A_LONG, 0);
 
     class_register(CLASS_BOX, c);
     cryptoseq_class = c;

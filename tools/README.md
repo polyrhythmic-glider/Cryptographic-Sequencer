@@ -1,29 +1,49 @@
-# CryptoSeq AMXD pipeline
+# Pipeline AMXD CryptoSeq
 
-Use `Update-CryptoSeqAmxd.ps1` for direct edits to the Ableton device:
+Usa `Update-CryptoSeqAmxd.ps1` per gli interventi diretti sul device Ableton,
+`Patch-CryptoSeqAmxdControls.ps1` per i controlli di performance, e
+`Set-CryptoSeqParameterPersistence.ps1` quando vengono aggiunti o modificati
+parametri Live che devono avere default e salvataggio affidabili:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools/Update-CryptoSeqAmxd.ps1 -Mode Inspect
 powershell -ExecutionPolicy Bypass -File tools/Update-CryptoSeqAmxd.ps1 -Mode PatchAutostart
 powershell -ExecutionPolicy Bypass -File tools/Update-CryptoSeqAmxd.ps1 -Mode PatchUiFinish
+powershell -ExecutionPolicy Bypass -File tools/Patch-CryptoSeqAmxdControls.ps1 -Path "C:\Users\asus\Documents\Ableton\User Library\Presets\MIDI Effects\Max MIDI Effect\CryptoSeqALFA0.1-modular.amxd"
+powershell -ExecutionPolicy Bypass -File tools/Set-CryptoSeqParameterPersistence.ps1 -Path "C:\Users\asus\Documents\Ableton\User Library\Presets\MIDI Effects\Max MIDI Effect\CryptoSeqALFA0.1-modular.amxd"
 ```
 
-Rules:
+Regole:
 
-- Direct `.amxd` patches must update the internal `ptch` chunk length when the file length changes.
-- The script backs up before writing unless `-NoBackup` is passed.
-- Length-changing UI edits belong in Max, then the device must be saved/frozen by Max.
-- Do not copy a `.maxpat` over an `.amxd`.
+- Un `.amxd` non e' JSON puro. E' un contenitore binario `ampf` con chunk
+  `ptch`: i byte `0..31` sono header, il byte `32` e' l'inizio del JSON del
+  patcher.
+- Non eseguire mai `ConvertFrom-Json` sull'intero `.amxd`, ne' sull'intero
+  chunk `ptch` se ci sono byte dopo il JSON. Gli script estraggono solo
+  l'oggetto JSON bilanciato che parte da offset `32`.
+- Le patch dirette su `.amxd` devono aggiornare la lunghezza del chunk `ptch`
+  quando cambia la dimensione del file. Il valore a offset `28` e' un uint32
+  little-endian uguale a `final_file_length - 32`.
+- Non fidarti del fatto che la lunghezza punti solo al JSON: preserva eventuali
+  byte dopo l'oggetto JSON e poi aggiorna la lunghezza del chunk.
+- Gli script fanno backup prima di scrivere, a meno che venga passato
+  `-NoBackup`.
+- Non copiare mai un `.maxpat` sopra un `.amxd`.
 
-The current autostart patch is length-preserving:
+Regola per default e salvataggio:
 
-- `delay 50` -> `delay 99`
-- `obj-218` load order `7` -> `9`
+- I valori di default dei controlli devono stare in
+  `saved_attribute_attributes.valueof.parameter_initial`, con
+  `parameter_initial_enable = 1`. Questo e' cio' che permette il reset con
+  doppio click.
+- Un `loadbang` non deve inviare valori di default ai controlli salvabili,
+  perche' puo' sovrascrivere il ripristino del progetto Ableton.
+- Se serve inizializzare il motore, usa un delay di sync che manda al motore i
+  valori correnti dei controlli, non messaggi hardcoded.
 
-This keeps the hidden start message after the setup burst without changing the AMXD chunk size.
+`Set-CryptoSeqParameterPersistence.ps1` applica questa regola:
 
-`PatchUiFinish` is allowed to change file length because it rewrites the `ptch` chunk length:
-
-- adds editable value boxes for `length`, `density`, and `shift`;
-- expands the source image layer to the full source panel;
-- sets `forceaspect 0` on the source image so the image fills the panel.
+- rende persistenti anche i menu RSA `p`, `q` ed `e`;
+- imposta i default usati da Live per il doppio click;
+- scollega i vecchi setter hardcoded da `loadbang`;
+- aggiunge un sync ritardato dei valori correnti verso il motore.

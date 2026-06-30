@@ -44,6 +44,21 @@ function list(step_index, active, note, velocity, accent, duration, gate, value)
     mgraphics.redraw();
 }
 
+function event()
+{
+    var args = arrayfromargs(arguments);
+
+    list.apply(this, args);
+}
+
+function playevent()
+{
+    var args = arrayfromargs(arguments);
+
+    list.apply(this, args);
+    step(args[0]);
+}
+
 function paint()
 {
     var width = box.rect[2] - box.rect[0];
@@ -70,7 +85,11 @@ function draw_step(x, y, w, h, index, event)
     var active = event && event.active;
     var velocity = event ? clamp(event.velocity, 1, 127) : 0;
     var note = event ? clamp(event.note, 0, 127) : 60;
-    var bar_height = active ? Math.max(4, Math.round((velocity / 127) * (h - 8))) : 3;
+    var gate = event ? clamp(event.gate, 1, 1000) : 1000;
+    var bar_source = (current_mode === "melodic" || current_mode === "melody") ?
+        (velocity / 127) :
+        (gate / 1000);
+    var bar_height = active ? Math.max(4, Math.round(bar_source * (h - 8))) : 3;
     var note_y = y + h - bar_height;
     var hue = (note % 12) / 12;
 

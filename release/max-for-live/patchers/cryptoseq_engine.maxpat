@@ -233,18 +233,21 @@
                                                   "id":  "obj-14",
                                                   "maxclass":  "newobj",
                                                   "numinlets":  2,
-                                                  "numoutlets":  2,
+                                                  "numoutlets":  5,
                                                   "outlettype":  [
+                                                                     "",
+                                                                     "",
+                                                                     "",
                                                                      "",
                                                                      ""
                                                                  ],
                                                   "patching_rect":  [
                                                                         30,
                                                                         105,
-                                                                        75,
+                                                                        245,
                                                                         22
                                                                     ],
-                                                  "text":  "route poly"
+                                                  "text":  "route poly ratchetamount ratchetmax fillmode"
                                               }
                                   },
                                   {
@@ -337,6 +340,78 @@
                                                                     ],
                                                   "text":  "1"
                                               }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-20",
+                                                  "maxclass":  "newobj",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        210,
+                                                                        285,
+                                                                        125,
+                                                                        22
+                                                                    ],
+                                                  "text":  "prepend ratchetamount"
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-21",
+                                                  "maxclass":  "newobj",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        340,
+                                                                        285,
+                                                                        105,
+                                                                        22
+                                                                    ],
+                                                  "text":  "prepend ratchetmax"
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-22",
+                                                  "maxclass":  "newobj",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        450,
+                                                                        285,
+                                                                        95,
+                                                                        22
+                                                                    ],
+                                                  "text":  "prepend fillmode"
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-23",
+                                                  "maxclass":  "newobj",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        330,
+                                                                        75,
+                                                                        85,
+                                                                        22
+                                                                    ],
+                                                  "text":  "prepend length"
+                                              }
                                   }
                               ],
                     "lines":  [
@@ -385,18 +460,6 @@
                                                         "destination":  [
                                                                             "obj-11",
                                                                             0
-                                                                        ]
-                                                    }
-                                  },
-                                  {
-                                      "patchline":  {
-                                                        "source":  [
-                                                                       "obj-8",
-                                                                       0
-                                                                   ],
-                                                        "destination":  [
-                                                                            "obj-9",
-                                                                            1
                                                                         ]
                                                     }
                                   },
@@ -524,7 +587,7 @@
                                       "patchline":  {
                                                         "source":  [
                                                                        "obj-14",
-                                                                       1
+                                                                       4
                                                                    ],
                                                         "destination":  [
                                                                             "obj-5",
@@ -608,6 +671,114 @@
                                       "patchline":  {
                                                         "source":  [
                                                                        "obj-7",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-12",
+                                                                            0
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-14",
+                                                                       1
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-20",
+                                                                            0
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-20",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-10",
+                                                                            2
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-14",
+                                                                       2
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-21",
+                                                                            0
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-21",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-10",
+                                                                            2
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-14",
+                                                                       3
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-22",
+                                                                            0
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-22",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-10",
+                                                                            2
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-3",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-23",
+                                                                            0
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-23",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-10",
+                                                                            2
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-7",
                                                                        1
                                                                    ],
                                                         "destination":  [
@@ -619,12 +790,24 @@
                                   {
                                       "patchline":  {
                                                         "source":  [
-                                                                       "obj-7",
-                                                                       0
+                                                                       "obj-8",
+                                                                       1
                                                                    ],
                                                         "destination":  [
-                                                                            "obj-12",
+                                                                            "obj-11",
                                                                             0
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-8",
+                                                                       1
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-9",
+                                                                            1
                                                                         ]
                                                     }
                                   }

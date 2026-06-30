@@ -3,9 +3,20 @@ inlets = 1;
 outlets = 11;
 
 var MAX_PRIME = 65521;
+var MIN_ROOT_NOTE = 24;
+var MAX_ROOT_NOTE = 96;
+var MIN_MELODY_NOTE = 24;
+var MAX_MELODY_NOTE = 108;
+var MIN_SHIFT = -127;
+var MAX_SHIFT = 127;
 var DEFAULT_P = 251;
 var DEFAULT_Q = 257;
-var DEFAULT_E = 65537;
+var DEFAULT_E = 3;
+var DEFAULT_ROOT = 60;
+var DEFAULT_LENGTH = 16;
+var DEFAULT_DENSITY = 50;
+var DEFAULT_SHIFT = 0;
+var DEFAULT_SCENE = 0;
 var DEFAULT_MELODY_LOW = 60;
 var DEFAULT_MELODY_HIGH = 84;
 var DEFAULT_PAD_COUNT = 16;
@@ -86,7 +97,7 @@ function fill_root_menu(outlet_index, selected)
     var midi;
 
     outlet(outlet_index, "clear");
-    for (midi = 24; midi <= 96; midi += 1) {
+    for (midi = MIN_ROOT_NOTE; midi <= MAX_ROOT_NOTE; midi += 1) {
         outlet(outlet_index, "append", midi_to_note_name(midi));
     }
     outlet(outlet_index, "setsymbol", midi_to_note_name(selected));
@@ -117,25 +128,7 @@ function fill_pad_count_menu(outlet_index, selected)
 function init()
 {
     ensure_primes();
-    current_p = DEFAULT_P;
-    current_q = DEFAULT_Q;
-    current_e = DEFAULT_E;
-    current_mode = "hybrid";
-    current_melody_low = DEFAULT_MELODY_LOW;
-    current_melody_high = DEFAULT_MELODY_HIGH;
-    current_pad_count = DEFAULT_PAD_COUNT;
-    fill_prime_menu(1, current_p);
-    fill_prime_menu(2, current_q);
-    fill_exponent_menu(current_e);
-    fill_root_menu(4, 60);
-    fill_note_menu(6, current_melody_low, 24, 108);
-    fill_note_menu(7, current_melody_high, 24, 108);
-    fill_pad_count_menu(8, current_pad_count);
     show_mode(current_mode);
-    outlet(3, 16);
-    send_checked_rsa();
-    outlet(0, "melodyrange", current_melody_low, current_melody_high);
-    outlet(0, "padcount", current_pad_count);
     outlet(9, "rsa", current_p, current_q, current_e);
     outlet(10, "mode", current_mode);
 }
@@ -143,6 +136,47 @@ function init()
 function bang()
 {
     init();
+}
+
+function defaults()
+{
+    current_p = DEFAULT_P;
+    current_q = DEFAULT_Q;
+    current_e = DEFAULT_E;
+    current_mode = "hybrid";
+    current_melody_low = DEFAULT_MELODY_LOW;
+    current_melody_high = DEFAULT_MELODY_HIGH;
+    current_pad_count = DEFAULT_PAD_COUNT;
+    current_scale = "major";
+    rhythm_threshold = Math.round((rhythm_divisor * DEFAULT_DENSITY) / 100);
+    fill_prime_menu(1, current_p);
+    fill_prime_menu(2, current_q);
+    fill_exponent_menu(current_e);
+    fill_root_menu(4, DEFAULT_ROOT);
+    fill_note_menu(6, current_melody_low, MIN_MELODY_NOTE, MAX_MELODY_NOTE);
+    fill_note_menu(7, current_melody_high, MIN_MELODY_NOTE, MAX_MELODY_NOTE);
+    fill_pad_count_menu(8, current_pad_count);
+    show_mode(current_mode);
+    outlet(3, DEFAULT_LENGTH);
+    send_checked_rsa();
+    outlet(0, "length", DEFAULT_LENGTH);
+    outlet(0, "shift", DEFAULT_SHIFT);
+    outlet(0, "scene", DEFAULT_SCENE);
+    outlet(0, "root", DEFAULT_ROOT);
+    outlet(0, "mode", current_mode);
+    outlet(0, "melodyrange", current_melody_low, current_melody_high);
+    outlet(0, "padcount", current_pad_count);
+    outlet(0, "rhythm", rhythm_divisor, rhythm_threshold);
+    outlet(0, "ratchetamount", 0);
+    outlet(0, "ratchetmax", 1);
+    outlet(0, "fillmode", "off");
+    outlet(0, "fillamount", 0);
+    outlet(0, "filltarget", "all");
+    outlet(0, "morphamount", 0);
+    outlet(0, "morphscene", 1);
+    outlet(0, "morphmode", "all");
+    outlet(9, "rsa", current_p, current_q, current_e);
+    outlet(10, "mode", current_mode);
 }
 
 function p(value)
@@ -228,7 +262,7 @@ function send_length(value)
 
 function shift(value)
 {
-    var parsed = parse_int(value, 0, 127);
+    var parsed = parse_int(value, MIN_SHIFT, MAX_SHIFT);
 
     if (parsed === null) {
         return;
@@ -237,17 +271,87 @@ function shift(value)
     outlet(0, "shift", parsed);
 }
 
+function scene(value)
+{
+    send_int("scene", value, 0, 127);
+}
+
+function ratchetamount(value)
+{
+    send_int("ratchetamount", value, 0, 100);
+}
+
+function ratchetmax(value)
+{
+    send_int("ratchetmax", value, 1, 8);
+}
+
+function fillmode(value)
+{
+    var text = value.toString();
+
+    if (!symbol_is_one_of(text, ["off", "end", "accent", "velocity", "all"])) {
+        post("cryptoseq-ui: ignored fill mode " + text + "\n");
+        return;
+    }
+
+    outlet(0, "fillmode", text);
+}
+
+function fillamount(value)
+{
+    send_int("fillamount", value, 0, 100);
+}
+
+function filltarget(value)
+{
+    var text = value.toString();
+
+    if (text === "al") {
+        text = "all";
+    }
+
+    if (!symbol_is_one_of(text, ["density", "ratchet", "velocity", "gate", "all"])) {
+        post("cryptoseq-ui: ignored fill target " + text + "\n");
+        return;
+    }
+
+    outlet(0, "filltarget", text);
+}
+
+function morphamount(value)
+{
+    send_int("morphamount", value, 0, 100);
+}
+
+function morphscene(value)
+{
+    send_int("morphscene", value, 0, 127);
+}
+
+function morphmode(value)
+{
+    var text = value.toString();
+
+    if (!symbol_is_one_of(text, ["all", "pitch", "rhythm", "velocity"])) {
+        post("cryptoseq-ui: ignored morph mode " + text + "\n");
+        return;
+    }
+
+    outlet(0, "morphmode", text);
+}
+
 function root(value)
 {
     var parsed = note_name_to_midi(value);
 
-    if (parsed !== null && (parsed < 24 || parsed > 96)) {
+    if (parsed !== null && (parsed < MIN_ROOT_NOTE || parsed > MAX_ROOT_NOTE)) {
         post("cryptoseq-ui: ignored out-of-range root " + value + "\n");
         return;
     }
 
     if (parsed === null) {
-        parsed = parse_int(value, 24, 96);
+        parsed = parse_int(value, MIN_ROOT_NOTE, MAX_ROOT_NOTE);
     }
 
     if (parsed === null) {
@@ -339,7 +443,7 @@ function density(value)
 
 function melodylow(value)
 {
-    var parsed = parse_note(value, 0, 127, "melody low");
+    var parsed = parse_note(value, MIN_MELODY_NOTE, MAX_MELODY_NOTE, "melody low");
 
     if (parsed === null) {
         return;
@@ -348,7 +452,7 @@ function melodylow(value)
     current_melody_low = parsed;
     if (current_melody_low > current_melody_high) {
         current_melody_high = current_melody_low;
-        fill_note_menu(7, current_melody_high, 24, 108);
+        fill_note_menu(7, current_melody_high, MIN_MELODY_NOTE, MAX_MELODY_NOTE);
     }
 
     outlet(0, "melodyrange", current_melody_low, current_melody_high);
@@ -356,7 +460,7 @@ function melodylow(value)
 
 function melodyhigh(value)
 {
-    var parsed = parse_note(value, 0, 127, "melody high");
+    var parsed = parse_note(value, MIN_MELODY_NOTE, MAX_MELODY_NOTE, "melody high");
 
     if (parsed === null) {
         return;
@@ -365,7 +469,7 @@ function melodyhigh(value)
     current_melody_high = parsed;
     if (current_melody_high < current_melody_low) {
         current_melody_low = current_melody_high;
-        fill_note_menu(6, current_melody_low, 24, 108);
+        fill_note_menu(6, current_melody_low, MIN_MELODY_NOTE, MAX_MELODY_NOTE);
     }
 
     outlet(0, "melodyrange", current_melody_low, current_melody_high);
@@ -373,9 +477,14 @@ function melodyhigh(value)
 
 function padcount(value)
 {
-    var parsed = parse_int(value, 1, 128);
+    var parsed = parse_int(value, 1, 32);
 
     if (parsed === null) {
+        return;
+    }
+
+    if (!number_is_one_of(parsed, pad_count_candidates)) {
+        post("cryptoseq-ui: ignored unsupported pad count " + value + "\n");
         return;
     }
 
@@ -429,6 +538,32 @@ function parse_int(value, min_value, max_value)
     return parsed;
 }
 
+function symbol_is_one_of(value, allowed)
+{
+    var i;
+
+    for (i = 0; i < allowed.length; i += 1) {
+        if (value === allowed[i]) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function number_is_one_of(value, allowed)
+{
+    var i;
+
+    for (i = 0; i < allowed.length; i += 1) {
+        if (value === allowed[i]) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 function parse_note(value, min_value, max_value, label)
 {
     var parsed = note_name_to_midi(value);
@@ -457,7 +592,9 @@ function show_mode(mode)
         "cs_melody_low_label",
         "cs_melody_low_menu",
         "cs_melody_high_label",
-        "cs_melody_high_menu"
+        "cs_melody_high_menu",
+        "cs_poly_label",
+        "cs_poly_toggle"
     ], !is_melodic);
 
     set_hidden_many([
@@ -495,7 +632,11 @@ function set_hidden(name, hidden)
 
     box = this.patcher.getnamed(name);
     if (box) {
-        box.hidden = hidden ? 1 : 0;
+        try {
+            box.hidden = hidden ? 1 : 0;
+        } catch (err) {
+            post("cryptoseq-ui: could not set hidden for " + name + "\n");
+        }
     }
 }
 

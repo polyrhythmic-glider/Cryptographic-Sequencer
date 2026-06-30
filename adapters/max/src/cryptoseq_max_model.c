@@ -6,6 +6,86 @@ static const int8_t k_major_pentatonic_scale[] = {0, 2, 4, 7, 9};
 static const int8_t k_minor_pentatonic_scale[] = {0, 3, 5, 7, 10};
 static const int8_t k_chromatic_scale[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
 
+static uint32_t mix_u32(uint32_t value)
+{
+    value ^= value >> 16u;
+    value *= 0x7feb352du;
+    value ^= value >> 15u;
+    value *= 0x846ca68bu;
+    value ^= value >> 16u;
+    return value;
+}
+
+static uint8_t blend_u8(uint8_t from, uint8_t to, uint32_t amount)
+{
+    return (uint8_t)(((uint32_t)from * (100u - amount) + (uint32_t)to * amount + 50u) / 100u);
+}
+
+static uint16_t blend_u16(uint16_t from, uint16_t to, uint32_t amount)
+{
+    return (uint16_t)(((uint32_t)from * (100u - amount) + (uint32_t)to * amount + 50u) / 100u);
+}
+
+static int morph_mode_from_string(const char *mode, cs_max_morph_mode_t *out)
+{
+    if (mode == NULL || out == NULL) {
+        return 0;
+    }
+
+    if (strcmp(mode, "all") == 0 || strcmp(mode, "full") == 0) {
+        *out = CS_MAX_MORPH_ALL;
+        return 1;
+    }
+    if (strcmp(mode, "pitch") == 0 || strcmp(mode, "note") == 0) {
+        *out = CS_MAX_MORPH_PITCH;
+        return 1;
+    }
+    if (strcmp(mode, "rhythm") == 0 || strcmp(mode, "active") == 0) {
+        *out = CS_MAX_MORPH_RHYTHM;
+        return 1;
+    }
+    if (strcmp(mode, "velocity") == 0 || strcmp(mode, "vel") == 0) {
+        *out = CS_MAX_MORPH_VELOCITY;
+        return 1;
+    }
+
+    return 0;
+}
+
+static void invalidate_generated_events(cs_max_model_t *model)
+{
+    if (model != NULL) {
+        model->event_count = 0u;
+    }
+}
+
+static size_t normalize_sequence_shift(int32_t shift, size_t length)
+{
+    const int64_t signed_length = (int64_t)length;
+    int64_t normalized;
+
+    if (length == 0u) {
+        return 0u;
+    }
+
+    normalized = (int64_t)shift % signed_length;
+    if (normalized < 0) {
+        normalized += signed_length;
+    }
+
+    return (size_t)normalized;
+}
+
+static void apply_requested_sequence_shift(cs_max_model_t *model)
+{
+    if (model != NULL) {
+        model->params.sequence_shift = normalize_sequence_shift(
+            model->requested_sequence_shift,
+            model->params.length
+        );
+    }
+}
+
 static cs_status_t validate_after_change(cs_max_model_t *model, cs_params_t previous)
 {
     const cs_status_t status = cs_validate_params(&model->params);
@@ -15,7 +95,7 @@ static cs_status_t validate_after_change(cs_max_model_t *model, cs_params_t prev
         return status;
     }
 
-    model->event_count = 0u;
+    invalidate_generated_events(model);
     return CS_OK;
 }
 
@@ -27,6 +107,9 @@ void cs_max_model_init(cs_max_model_t *model)
 
     memset(model, 0, sizeof(*model));
     model->params = cs_default_params();
+    model->requested_sequence_shift = 0;
+    model->morph_scene = 1u;
+    model->morph_mode = CS_MAX_MORPH_ALL;
 }
 
 cs_status_t cs_max_model_set_source_bytes(
@@ -46,8 +129,8 @@ cs_status_t cs_max_model_set_source_bytes(
         return status;
     }
 
+    invalidate_generated_events(model);
     model->has_source = 1u;
-    model->event_count = 0u;
     return CS_OK;
 }
 
@@ -61,8 +144,8 @@ cs_status_t cs_max_model_set_source_digest(
     }
 
     memcpy(model->source_digest, source_digest, CS_SHA256_DIGEST_SIZE);
+    invalidate_generated_events(model);
     model->has_source = 1u;
-    model->event_count = 0u;
     return CS_OK;
 }
 
@@ -118,10 +201,34 @@ cs_status_t cs_max_model_set_length(cs_max_model_t *model, size_t length)
 
     previous = model->params;
     model->params.length = length;
+    apply_requested_sequence_shift(model);
     return validate_after_change(model, previous);
 }
 
-cs_status_t cs_max_model_set_sequence_shift(cs_max_model_t *model, size_t shift)
+cs_status_t cs_max_model_set_sequence_shift(cs_max_model_t *model, int32_t shift)
+{
+    cs_params_t previous;
+    int32_t previous_requested_shift;
+    cs_status_t status;
+
+    if (model == NULL) {
+        return CS_ERROR_NULL;
+    }
+
+    previous = model->params;
+    previous_requested_shift = model->requested_sequence_shift;
+    model->requested_sequence_shift = shift;
+    apply_requested_sequence_shift(model);
+
+    status = validate_after_change(model, previous);
+    if (status != CS_OK) {
+        model->requested_sequence_shift = previous_requested_shift;
+    }
+
+    return status;
+}
+
+cs_status_t cs_max_model_set_scene(cs_max_model_t *model, uint8_t scene)
 {
     cs_params_t previous;
 
@@ -130,7 +237,7 @@ cs_status_t cs_max_model_set_sequence_shift(cs_max_model_t *model, size_t shift)
     }
 
     previous = model->params;
-    model->params.sequence_shift = shift;
+    model->params.scene = scene;
     return validate_after_change(model, previous);
 }
 
@@ -303,9 +410,131 @@ cs_status_t cs_max_model_set_rhythm(cs_max_model_t *model, uint32_t divisor, uin
     return validate_after_change(model, previous);
 }
 
+cs_status_t cs_max_model_set_morph_amount(cs_max_model_t *model, uint8_t amount)
+{
+    if (model == NULL) {
+        return CS_ERROR_NULL;
+    }
+
+    if (amount > 100u) {
+        return CS_ERROR_INVALID_PARAM;
+    }
+
+    model->morph_amount = amount;
+    invalidate_generated_events(model);
+    return CS_OK;
+}
+
+cs_status_t cs_max_model_set_morph_scene(cs_max_model_t *model, uint8_t scene)
+{
+    if (model == NULL) {
+        return CS_ERROR_NULL;
+    }
+
+    if (scene > CS_MAX_SCENE_VALUE) {
+        return CS_ERROR_INVALID_PARAM;
+    }
+
+    model->morph_scene = scene;
+    invalidate_generated_events(model);
+    return CS_OK;
+}
+
+cs_status_t cs_max_model_set_morph_mode(cs_max_model_t *model, const char *mode)
+{
+    cs_max_morph_mode_t parsed;
+
+    if (model == NULL || mode == NULL) {
+        return CS_ERROR_NULL;
+    }
+
+    if (!morph_mode_from_string(mode, &parsed)) {
+        return CS_ERROR_INVALID_PARAM;
+    }
+
+    model->morph_mode = parsed;
+    invalidate_generated_events(model);
+    return CS_OK;
+}
+
+static void apply_morph(
+    cs_max_model_t *model,
+    const cs_event_t *morph_events,
+    size_t event_count
+)
+{
+    size_t i;
+    const uint32_t amount = model->morph_amount;
+
+    if (model->morph_amount == 0u || morph_events == NULL) {
+        return;
+    }
+
+    for (i = 0u; i < event_count; ++i) {
+        const cs_event_t *from_b = &morph_events[i];
+        cs_event_t *event = &model->events[i];
+        const uint32_t selector = mix_u32(
+            event->value ^
+            (from_b->value * 0x9e3779b9u) ^
+            ((uint32_t)i * 0x85ebca6bu) ^
+            ((uint32_t)model->params.scene << 8u) ^
+            (uint32_t)model->morph_scene
+        ) % 100u;
+        const uint8_t blended_note = blend_u8(event->note, from_b->note, amount);
+        const uint8_t blended_velocity = blend_u8(event->velocity, from_b->velocity, amount);
+        const uint16_t blended_duration = blend_u16(
+            event->duration_ticks,
+            from_b->duration_ticks,
+            amount
+        );
+        const uint16_t blended_gate = blend_u16(
+            event->gate_permille,
+            from_b->gate_permille,
+            amount
+        );
+
+        switch (model->morph_mode) {
+        case CS_MAX_MORPH_ALL:
+            if (model->morph_amount == 100u) {
+                *event = *from_b;
+                event->step_index = (uint32_t)i;
+                break;
+            }
+            event->note = blended_note;
+            event->velocity = blended_velocity;
+            event->duration_ticks = blended_duration;
+            event->gate_permille = blended_gate;
+            if (model->morph_amount == 100u || selector < model->morph_amount) {
+                event->active = from_b->active;
+                event->accent = from_b->accent;
+            }
+            break;
+        case CS_MAX_MORPH_PITCH:
+            event->note = blended_note;
+            break;
+        case CS_MAX_MORPH_RHYTHM:
+            event->duration_ticks = blended_duration;
+            event->gate_permille = blended_gate;
+            if (model->morph_amount == 100u || selector < model->morph_amount) {
+                event->active = from_b->active;
+                event->accent = from_b->accent;
+            }
+            break;
+        case CS_MAX_MORPH_VELOCITY:
+            event->velocity = blended_velocity;
+            break;
+        default:
+            break;
+        }
+        event->step_index = (uint32_t)i;
+    }
+}
+
 cs_status_t cs_max_model_generate(cs_max_model_t *model)
 {
     cs_status_t status;
+    cs_event_t morph_events[CS_MAX_SEQUENCE_LENGTH];
+    cs_params_t morph_params;
 
     if (model == NULL) {
         return CS_ERROR_NULL;
@@ -328,6 +557,21 @@ cs_status_t cs_max_model_generate(cs_max_model_t *model)
     }
 
     model->event_count = model->params.length;
+    if (model->morph_amount > 0u) {
+        morph_params = model->params;
+        morph_params.scene = model->morph_scene;
+        status = cs_generate_from_digest(
+            model->source_digest,
+            &morph_params,
+            morph_events,
+            sizeof(morph_events) / sizeof(morph_events[0])
+        );
+        if (status != CS_OK) {
+            model->event_count = 0u;
+            return status;
+        }
+        apply_morph(model, morph_events, model->event_count);
+    }
     return CS_OK;
 }
 

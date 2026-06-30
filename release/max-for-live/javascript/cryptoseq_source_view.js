@@ -218,6 +218,9 @@ function set_image_hidden(hidden)
 
     image_box = this.patcher.getnamed(image_box_name);
     if (image_box) {
-        image_box.hidden = hidden ? 1 : 0;
+        try {
+            image_box.hidden = hidden ? 1 : 0;
+        } catch (err) {
+        }
     }
 }

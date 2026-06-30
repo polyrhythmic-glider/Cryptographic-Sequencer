@@ -5,6 +5,14 @@ param(
     [switch]$NoBackup
 )
 
+# AMXD safety rule:
+# A Max for Live .amxd is an `ampf` binary container, not plain JSON. The
+# current device format stores the patcher in a `ptch` chunk whose JSON starts
+# at byte offset 32, after the binary header. Length-changing edits must rewrite
+# only that embedded patcher JSON and then update the uint32 chunk length at
+# offset 28. Do not pipe the whole .amxd file to ConvertFrom-Json, and do not
+# copy a .maxpat over an .amxd.
+
 $ErrorActionPreference = "Stop"
 
 function Read-DeviceBytes {
@@ -32,6 +40,9 @@ function Get-AsciiHeader {
 function Get-DeviceJson {
     param([byte[]]$Bytes)
 
+    # Extract only the balanced JSON patcher object after the binary AMXD
+    # header. Some devices may have non-JSON suffix bytes after the patcher,
+    # so parsing the whole `ptch` byte range is intentionally avoided.
     $text = [System.Text.Encoding]::UTF8.GetString($Bytes)
     $start = 32
     if ($Bytes.Length -le $start -or [char]$Bytes[$start] -ne "{") {

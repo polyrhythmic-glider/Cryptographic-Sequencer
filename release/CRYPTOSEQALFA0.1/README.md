@@ -12,6 +12,39 @@ Modulo hardware ESP32, per generare sequenze standalone tramite MIDI, gate, trig
 
 Il sistema non e' pensato come strumento di sicurezza crittografica, ma come strumento di composizione generativa ispirato a concetti crittografici.
 
+## Roadmap 0.2
+
+Obiettivo generale: trasformare il device da generatore deterministico a sequencer artistico e performativo, mantenendo la riproducibilita' dei risultati. Ogni nuova funzione deve quindi essere controllabile dal musicista, ma anche ricostruibile a parita' di sorgente e parametri.
+
+### 1. Salt / Scene
+
+Aggiungere un parametro `scene` alla generazione della sequenza.
+
+- Il valore `scene` deve entrare nell'input dell'hash insieme a sorgente, `p`, `q`, `e` e indice dello step.
+- Lo scopo musicale e' ottenere variazioni parallele della stessa sorgente senza cambiare file o primi.
+- La UI deve esporre `Scene` come controllo intero `0..127`.
+- Cambiare scena deve rigenerare la sequenza in modo deterministico.
+
+### 2. Ratchet / Fill
+
+Aggiungere ripetizioni interne allo step generate in modo deterministico.
+
+- Il numero di ratchet puo' dipendere da `value`, `accent` o `velocity`.
+- Servono controlli per quantita' e massimo numero di ripetizioni.
+- UI suggerita: `Ratchet Amount`, `Ratchet Max`, `Fill Mode`.
+- `Fill Mode` puo' agire soprattutto sugli ultimi step della frase o della battuta.
+- Il playback deve restare sincronizzato a Live: le ripetizioni devono stare dentro la durata dello step.
+
+### 3. Morph A/B
+
+Generare due pattern A e B usando `scene` o salt diversi.
+
+- Aggiungere un controllo `Morph 0..100`.
+- Il morph decide quanti step o quanti parametri prendere dal pattern B.
+- La scelta deve essere deterministica, usando una maschera derivata da hash.
+- Modalita' previste: morph completo, `pitch only`, `rhythm only`, `velocity only`.
+- Il morph non deve comportarsi come crossfade casuale: a parita' di parametri deve produrre sempre la stessa sequenza.
+
 # Core C
 
 La repository contiene un primo core C portabile, separato dagli adapter Max for Live ed ESP32. Il core implementa solo la pipeline deterministica:
@@ -68,21 +101,21 @@ Su Linux questa build compila e testa anche il model dell'adapter Max. Non compi
 
 ### Windows Max external build
 
-The real Max external is opt-in and keeps the existing split:
+La compilazione dell'external Max reale e' opzionale e mantiene la separazione architetturale esistente:
 
-- `core/` remains the deterministic generation engine;
-- `cryptoseq_max_model` remains the SDK-free Max-facing state layer;
-- `cryptoseq_max_external.c` is the Cycling '74 Max SDK bridge.
+- `core/` resta il motore deterministico di generazione;
+- `cryptoseq_max_model` resta il layer di stato e comandi Max senza dipendenza dalla Max SDK;
+- `cryptoseq_max_external.c` e' il bridge specifico per la Cycling '74 Max SDK.
 
-Prerequisites:
+Prerequisiti:
 
-- CMake 3.25 or newer on `PATH` for the Max external target.
-- Visual Studio 2022 or Visual Studio Build Tools with the C++ desktop workload.
-- Cycling '74 Max SDK available locally, for example in `C:\dev\max-sdk`.
+- CMake 3.25 o superiore nel `PATH`, necessario per il target Max external.
+- Visual Studio 2022 oppure Visual Studio Build Tools con workload C++ desktop.
+- Cycling '74 Max SDK disponibile localmente, per esempio in `C:\dev\max-sdk`.
 
-The current Cycling '74 SDK fetches `max-sdk-base` during CMake configure. That package provides the Max headers, libraries, and imported target `Max::Max`.
+La SDK Cycling '74 corrente puo' scaricare `max-sdk-base` durante la configurazione CMake. Quel package fornisce header, librerie e target importato `Max::Max`.
 
-From a Developer PowerShell or Developer Command Prompt:
+Da Developer PowerShell o Developer Command Prompt:
 
 ```powershell
 cmake -S . -B build-max -G "Visual Studio 17 2022" -A x64 `
@@ -92,24 +125,24 @@ cmake -S . -B build-max -G "Visual Studio 17 2022" -A x64 `
 cmake --build build-max --config Release --target cryptoseq_max_external
 ```
 
-If CMake cannot fetch `max-sdk-base`, clone it locally and add `-DMAX_SDK_BASE_ROOT="C:\dev\max-sdk-base"` to the configure command.
+Se CMake non riesce a scaricare `max-sdk-base`, clonalo localmente e aggiungi `-DMAX_SDK_BASE_ROOT="C:\dev\max-sdk-base"` al comando di configurazione.
 
-The target builds `cryptoseq.mxe64`, exporting `ext_main` and registering the Max class name `cryptoseq`.
+Il target produce `cryptoseq.mxe64`, esporta `ext_main` e registra in Max la classe `cryptoseq`.
 
-During development, copy the built external to a Max package externals folder:
+Durante lo sviluppo, copia l'external compilato nella cartella `externals` di un package Max:
 
 ```text
 Documents\Max 8\Packages\Cryptographic-Sequencer\externals\cryptoseq.mxe64
 ```
 
-The repository includes ready-to-open Max patches:
+La repository include patch Max gia' apribili:
 
 ```text
 adapters\max\patchers\cryptoseq-test.maxpat
 adapters\max\patchers\cryptoseq-midi-ui.maxpat
 ```
 
-Restart Max, then create an object named `cryptoseq`, or open one of the patches. A manual test patch should connect the outlet to `print cryptoseq` and send:
+Riavvia Max, poi crea un oggetto chiamato `cryptoseq` oppure apri una delle patch. Un test manuale minimale deve collegare l'outlet a `print cryptoseq` e inviare:
 
 ```text
 source demo source
@@ -122,37 +155,82 @@ setup
 generate
 ```
 
-Expected outlet messages use this format:
+I messaggi attesi dall'outlet usano questo formato:
 
 ```text
 event step active note velocity accent duration gate value
 ```
 
-`sourcefile` accepts binary files up to 256 MiB. Files above that limit are rejected and the external reports the error in the Max Console. The Max external hashes files in chunks, so a large source file is not copied into one large RAM buffer.
+`sourcefile` accetta file binari fino a 256 MiB. I file oltre questo limite vengono rifiutati e l'external segnala l'errore nella Max Console. L'external Max calcola l'hash a blocchi, quindi un file grande non viene copiato in un unico grande buffer RAM.
 
-Mode intent in the Max UI:
+Intenzione musicale delle modalita' nella UI Max:
 
-- `melodic`: melodic instruments; root and scale shape the notes.
-- `melodic` also exposes low/high note controls; generated notes stay inside that range.
-- `hybrid`: Drum Rack; rhythm/velocity plus a controllable number of consecutive pads from root, with no scale mapping. The root is the first pad and is anchored on the root step when density is above zero.
-- `rhythm`: single percussion lane; one root note, with no scale mapping.
+- `melodic`: strumenti melodici; root, scala e range di note determinano le altezze.
+- `melodic` espone anche controlli `low note` e `high note`; le note generate restano dentro quel range.
+- `hybrid`: Drum Rack; usa ritmo, velocity e un numero controllabile di pad a partire dalla root, senza mapping di scala. Il pad viene scelto dal valore generato, non dall'ordine lineare degli step.
+- `rhythm`: singola corsia percussiva; una sola root note, senza mapping di scala.
 
-The melodic scale menu can use the device's built-in scale names or `live`. The `live` option follows Ableton Live's global scale intervals through `live.path live_set` and `live.observer scale_intervals`, the same basic mechanism used by Sting 2. This inherits the interval pattern; the root note remains local to CryptoSeq.
+Il menu scala della modalita' melodica puo' usare le scale interne del device oppure `live`. L'opzione `live` prova a seguire gli intervalli della scala globale di Ableton Live solo dopo l'inizializzazione di `live.thisdevice`, poi passa la lista al bridge JavaScript come `scaleintervals`. Viene ereditato il pattern intervallare; la root note resta un controllo locale di CryptoSeq.
 
-The Max for Live UI uses a 1..128 step length knob, sends `rsa p q e` atomically when prime parameters change, sends a silent debounced `setup` after bursts of control changes, and derives MIDI note length from Live tempo, the selected division, event duration, and event gate.
+La UI Max for Live usa un controllo lunghezza `1..128`, invia `rsa p q e` in modo atomico quando cambiano i primi e invia un `setup` debounced dopo raffiche di modifiche. Quel `setup` rigenera il pattern e aggiorna la visualizzazione; nel patcher UI gli eventi di setup/dump sono separati dal gate MIDI, quindi cambiare parametro non deve suonare tutte le note. Il playback MIDI passa solo dagli eventi prodotti dal clock `step`.
 
-The `shift` control rotates the generated sequence by `n` positions without changing the source hash or RSA values. Events that pass the end of the pattern wrap to the beginning in the same order, and their emitted `step` indices are rewritten to the new positions. The 0.1 UI also shows the numeric shift value beside the control.
+I controlli del device sono parametri Live con default espliciti: in Ableton il doppio click riporta il parametro al valore iniziale del sequencer. Il patcher non usa piu' messaggi di default hardcoded su `loadbang` per i parametri salvabili; dopo il caricamento sincronizza verso il motore i valori correnti dei controlli, cosi' un progetto Live salvato con impostazioni specifiche puo' riaprirsi con le stesse impostazioni.
 
-The `poly` toggle is a melodic MIDI output layer. It does not change the deterministic core sequence; when the mode is `melodic`, each active note is emitted as a deterministic triad. In `hybrid` and `rhythm`, it is ignored so Drum Rack and single-percussion use stay monophonic.
+Il controllo `shift` ruota la sequenza generata di `n` posizioni senza cambiare hash della sorgente o valori RSA. Gli eventi che superano la fine del pattern rientrano all'inizio nello stesso ordine, e gli indici `step` emessi vengono riscritti sulle nuove posizioni. La UI 0.1 mostra anche il valore numerico dello shift accanto al controllo.
 
-The 0.1 patcher UI is split into four presentation areas:
+Il toggle `poly` e' un layer di uscita MIDI melodica. Non modifica la sequenza deterministica del core; quando la modalita' e' `melodic`, ogni nota attiva viene emessa come triade deterministica. In `hybrid` e `rhythm` viene ignorato, cosi' Drum Rack e percussione singola restano monofonici.
 
-- source preview with button and drag/drop file loading;
-- RSA controls plus formula/status display for `n`, `phi(n)`, and `gcd(e, phi)`;
-- mode-specific controls for melodic, hybrid, and rhythm use, including the melodic-only `poly` toggle;
-- read-only sequence visualization driven by the real `event` stream.
+### Flusso eventi nella UI Max for Live
 
-The Max project now uses reusable patcher abstractions for service logic: `cryptoseq_auto_setup.maxpat`, `cryptoseq_clock.maxpat`, `cryptoseq_live_scale.maxpat`, and `cryptoseq_midi_out.maxpat`. The main patcher keeps the visible device controls and references these modules instead of embedding their object networks directly.
+L'external `cryptoseq` ha un solo formato di uscita, `event step active note velocity accent duration gate value`. Lo stesso formato viene usato per due scopi diversi:
+
+- aggiornare la visualizzazione del pattern dopo `setup`, `generate`, `dump` o `bang`;
+- suonare il singolo step corrente quando il clock Live manda `step <n>`.
+
+Nel patcher `cryptoseq_engine.maxpat` questi due flussi sono separati. Gli eventi bulk aggiornano il monitor della sequenza ma restano chiusi rispetto al MIDI. Per il playback, il clock usa il messaggio interno `playstep <n>`: l'external risponde con `playevent ...`, che il motore inoltra sia al monitor sia al MIDI. Questa separazione evita raffiche di note quando si cambia un parametro, mentre l'API pubblica `step <n>` continua a emettere il normale `event ...` per test e debug.
+
+Lo step timing e' affidato a `metro 16n @active 1`, quindi segue il transport di Live. Il layer MIDI calcola la durata delle note da divisione, `duration` e `gate`; non interroga direttamente la Live API durante il playback, cosi' evita errori di inizializzazione durante il caricamento del device.
+
+### Funzioni 0.2 implementate
+
+`scene <0..127>` entra nel seed dello step insieme a digest della sorgente, `p`, `q`, `e` e indice. A parita' di file e primi, scene diverse producono variazioni parallele e riproducibili.
+
+Il ratchet/fill e' implementato nel layer MIDI, quindi non cambia il formato evento dell'external:
+
+- `ratchetamount <0..100>` controlla la probabilita'/quantita' di ripetizioni interne allo step;
+- `ratchetmax <1..8>` limita il numero massimo di ripetizioni;
+- `fillmode off|end|accent|velocity` concentra il fill sugli ultimi step, sugli accenti o sulle velocity alte.
+
+Il morph A/B e' deterministico e usa una seconda scena come pattern B:
+
+- `morphamount <0..100>`;
+- `morphscene <0..127>`;
+- `morphmode all|pitch|rhythm|velocity`;
+- `morph <amount> [scene_b] [mode]`.
+
+Con `morphamount 100` e `morphmode all`, il pattern risultante coincide con la scena B. Con valori intermedi, note, velocity, durata e gate vengono interpolati in modo deterministico; i campi discreti come `active` e `accent` usano ancora una maschera deterministica.
+
+Nel pannello performance della UI:
+
+- `scene`: variazione principale A, da `0` a `127`;
+- `ratchet %`: quantita'/probabilita' di ripetizioni interne allo step;
+- `max`: limite massimo di ripetizioni per step;
+- `fill amount`: intensita' del fill, da `0` a `100`;
+- `fill mode`: area o criterio del fill (`off`, `end`, `accent`, `velocity`, `all`);
+- `fill target`: dimensione modificata dal fill (`density`, `ratchet`, `velocity`, `gate`, `all`);
+- `morph %`: percentuale di fusione tra pattern A e pattern B;
+- `scene B`: scena usata per generare il pattern B;
+- `mode`: campo del morph da applicare (`all`, `pitch`, `rhythm`, `velocity`).
+
+La UI del patcher Max for Live e' divisa in cinque aree di presentation:
+
+- anteprima della sorgente con pulsante e caricamento file;
+- controlli RSA piu' display formula/stato per `n`, `phi(n)` e `gcd(e, phi)`;
+- controlli specifici per `melodic`, `hybrid` e `rhythm`, incluso il toggle `poly` solo melodico;
+- visualizzazione read-only della sequenza, guidata dal vero stream `event`;
+- pannello performance 0.2 con `scene`, ratchet/fill e morph A/B.
+
+Il progetto Max usa ora astrazioni riutilizzabili per la logica di servizio: `cryptoseq_auto_setup.maxpat`, `cryptoseq_clock.maxpat`, `cryptoseq_engine.maxpat`, `cryptoseq_live_scale.maxpat` e `cryptoseq_midi_out.maxpat`. Il patcher principale mantiene i controlli visibili del device e richiama questi moduli invece di incorporare direttamente le loro reti di oggetti.
 
 Build consigliata per misurare performance:
 
@@ -446,7 +524,7 @@ $$
 si calcola:
 
 $$
-h_i = H(h_S \parallel p \parallel q \parallel e \parallel i)
+h_i = H(h_S \parallel p \parallel q \parallel e \parallel scene \parallel i)
 $$
 
 dove $\parallel$ indica la concatenazione.
@@ -491,7 +569,7 @@ Il sistema e' deterministico rispetto alla tupla:
 
 $$
 \Theta =
-(S, p, q, e, L, \mathcal{K}, \mathcal{M}, r, mode)
+(S, p, q, e, scene, L, \mathcal{K}, \mathcal{M}, r, mode)
 $$
 
 Questo significa che, a parita' di parametri, il risultato e' sempre lo stesso:
@@ -506,7 +584,7 @@ La funzione globale del sequencer puo' essere indicata come:
 
 $$
 F:
-(S, p, q, e, L, \mathcal{K}, \mathcal{M}, r, mode)
+(S, p, q, e, scene, L, \mathcal{K}, \mathcal{M}, r, mode)
 \rightarrow
 \mathcal{E}
 $$
@@ -754,7 +832,7 @@ $$
 La funzione di espansione hash produce:
 
 $$
-ExpandHash(S, p, q, e, L)
+ExpandHash(S, p, q, e, scene, L)
 =
 (m_0, m_1, \dots, m_{L-1})
 $$
@@ -783,7 +861,7 @@ Quindi:
 $$
 \mathcal{E}
 =
-F(S, p, q, e, L, \mathcal{K}, \mathcal{M}, r, mode)
+F(S, p, q, e, scene, L, \mathcal{K}, \mathcal{M}, r, mode)
 $$
 
 ---
@@ -823,7 +901,7 @@ $$
 si calcola l'hash espanso:
 
 $$
-h_i = H(h_S \parallel p \parallel q \parallel e \parallel i)
+h_i = H(h_S \parallel p \parallel q \parallel e \parallel scene \parallel i)
 $$
 
 L'hash viene convertito in un intero:
@@ -889,7 +967,7 @@ u_i = \mathrm{int}(h_i)
 $$
 
 $$
-h_i = H(h_S \parallel p \parallel q \parallel e \parallel i)
+h_i = H(h_S \parallel p \parallel q \parallel e \parallel scene \parallel i)
 $$
 
 $$
@@ -985,7 +1063,7 @@ $$
 e poi usare:
 
 $$
-h_i = H(h_S \parallel p \parallel q \parallel e \parallel i)
+h_i = H(h_S \parallel p \parallel q \parallel e \parallel scene \parallel i)
 $$
 
 In questo caso il costo diventa:
@@ -1033,7 +1111,7 @@ $$
 e poi:
 
 $$
-h_i = H(h_S \parallel p \parallel q \parallel e \parallel i)
+h_i = H(h_S \parallel p \parallel q \parallel e \parallel scene \parallel i)
 $$
 
 Questo riduce drasticamente il costo computazionale su file grandi.

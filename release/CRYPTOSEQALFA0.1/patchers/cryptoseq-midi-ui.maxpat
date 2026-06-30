@@ -54,6 +54,1838 @@
                     "boxes":  [
                                   {
                                       "box":  {
+                                                  "id":  "obj-20",
+                                                  "items":  [
+                                                                "C0",
+                                                                ",",
+                                                                "C#0",
+                                                                ",",
+                                                                "D0",
+                                                                ",",
+                                                                "D#0",
+                                                                ",",
+                                                                "E0",
+                                                                ",",
+                                                                "F0",
+                                                                ",",
+                                                                "F#0",
+                                                                ",",
+                                                                "G0",
+                                                                ",",
+                                                                "G#0",
+                                                                ",",
+                                                                "A0",
+                                                                ",",
+                                                                "A#0",
+                                                                ",",
+                                                                "B0",
+                                                                ",",
+                                                                "C1",
+                                                                ",",
+                                                                "C#1",
+                                                                ",",
+                                                                "D1",
+                                                                ",",
+                                                                "D#1",
+                                                                ",",
+                                                                "E1",
+                                                                ",",
+                                                                "F1",
+                                                                ",",
+                                                                "F#1",
+                                                                ",",
+                                                                "G1",
+                                                                ",",
+                                                                "G#1",
+                                                                ",",
+                                                                "A1",
+                                                                ",",
+                                                                "A#1",
+                                                                ",",
+                                                                "B1",
+                                                                ",",
+                                                                "C2",
+                                                                ",",
+                                                                "C#2",
+                                                                ",",
+                                                                "D2",
+                                                                ",",
+                                                                "D#2",
+                                                                ",",
+                                                                "E2",
+                                                                ",",
+                                                                "F2",
+                                                                ",",
+                                                                "F#2",
+                                                                ",",
+                                                                "G2",
+                                                                ",",
+                                                                "G#2",
+                                                                ",",
+                                                                "A2",
+                                                                ",",
+                                                                "A#2",
+                                                                ",",
+                                                                "B2",
+                                                                ",",
+                                                                "C3",
+                                                                ",",
+                                                                "C#3",
+                                                                ",",
+                                                                "D3",
+                                                                ",",
+                                                                "D#3",
+                                                                ",",
+                                                                "E3",
+                                                                ",",
+                                                                "F3",
+                                                                ",",
+                                                                "F#3",
+                                                                ",",
+                                                                "G3",
+                                                                ",",
+                                                                "G#3",
+                                                                ",",
+                                                                "A3",
+                                                                ",",
+                                                                "A#3",
+                                                                ",",
+                                                                "B3",
+                                                                ",",
+                                                                "C4",
+                                                                ",",
+                                                                "C#4",
+                                                                ",",
+                                                                "D4",
+                                                                ",",
+                                                                "D#4",
+                                                                ",",
+                                                                "E4",
+                                                                ",",
+                                                                "F4",
+                                                                ",",
+                                                                "F#4",
+                                                                ",",
+                                                                "G4",
+                                                                ",",
+                                                                "G#4",
+                                                                ",",
+                                                                "A4",
+                                                                ",",
+                                                                "A#4",
+                                                                ",",
+                                                                "B4",
+                                                                ",",
+                                                                "C5",
+                                                                ",",
+                                                                "C#5",
+                                                                ",",
+                                                                "D5",
+                                                                ",",
+                                                                "D#5",
+                                                                ",",
+                                                                "E5",
+                                                                ",",
+                                                                "F5",
+                                                                ",",
+                                                                "F#5",
+                                                                ",",
+                                                                "G5",
+                                                                ",",
+                                                                "G#5",
+                                                                ",",
+                                                                "A5",
+                                                                ",",
+                                                                "A#5",
+                                                                ",",
+                                                                "B5",
+                                                                ",",
+                                                                "C6"
+                                                            ],
+                                                  "maxclass":  "umenu",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  3,
+                                                  "outlettype":  [
+                                                                     "int",
+                                                                     "",
+                                                                     ""
+                                                                 ],
+                                                  "parameter_enable":  1,
+                                                  "patching_rect":  [
+                                                                        866.391570806503296,
+                                                                        128.915667414665222,
+                                                                        78.0,
+                                                                        22.0
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            750.152542352676392,
+                                                                            82.06023782491684,
+                                                                            79.518075227737427,
+                                                                            22.0
+                                                                        ],
+                                                  "varname":  "cs_root_menu",
+                                                  "saved_attribute_attributes":  {
+                                                                                     "valueof":  {
+                                                                                                     "parameter_initial":  [
+                                                                                                                               36
+                                                                                                                           ],
+                                                                                                     "parameter_initial_enable":  1,
+                                                                                                     "parameter_longname":  "root note",
+                                                                                                     "parameter_shortname":  "root note",
+                                                                                                     "parameter_mmin":  0,
+                                                                                                     "parameter_mmax":  72,
+                                                                                                     "parameter_type":  0,
+                                                                                                     "parameter_unitstyle":  0
+                                                                                                 }
+                                                                                 }
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-21",
+                                                  "maxclass":  "comment",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  0,
+                                                  "patching_rect":  [
+                                                                        867.891570806503296,
+                                                                        104.819280982017517,
+                                                                        75.0,
+                                                                        20.0
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            751.152542352676392,
+                                                                            49.06023782491684,
+                                                                            75.903617262840271,
+                                                                            20.0
+                                                                        ],
+                                                  "text":  "root note",
+                                                  "varname":  "cs_root_label"
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-24",
+                                                  "items":  [
+                                                                "melodic",
+                                                                ",",
+                                                                "hybrid",
+                                                                ",",
+                                                                "rhythm"
+                                                            ],
+                                                  "maxclass":  "umenu",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  3,
+                                                  "outlettype":  [
+                                                                     "int",
+                                                                     "",
+                                                                     ""
+                                                                 ],
+                                                  "parameter_enable":  1,
+                                                  "patching_rect":  [
+                                                                        756.753012537956238,
+                                                                        128.915667414665222,
+                                                                        100.0,
+                                                                        22.0
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            640.152542352676392,
+                                                                            82.06023782491684,
+                                                                            101.204823017120361,
+                                                                            22.0
+                                                                        ],
+                                                  "saved_attribute_attributes":  {
+                                                                                     "valueof":  {
+                                                                                                     "parameter_initial":  [
+                                                                                                                               1
+                                                                                                                           ],
+                                                                                                     "parameter_initial_enable":  1,
+                                                                                                     "parameter_longname":  "mode",
+                                                                                                     "parameter_shortname":  "mode",
+                                                                                                     "parameter_mmin":  0,
+                                                                                                     "parameter_mmax":  2,
+                                                                                                     "parameter_type":  0,
+                                                                                                     "parameter_unitstyle":  0
+                                                                                                 }
+                                                                                 }
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-25",
+                                                  "maxclass":  "comment",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  0,
+                                                  "patching_rect":  [
+                                                                        756.753012537956238,
+                                                                        104.819280982017517,
+                                                                        70.0,
+                                                                        20.0
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            640.152542352676392,
+                                                                            49.06023782491684,
+                                                                            71.08433997631073,
+                                                                            20.0
+                                                                        ],
+                                                  "text":  "mode"
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "hidden":  1,
+                                                  "id":  "obj-28",
+                                                  "items":  [
+                                                                "major",
+                                                                ",",
+                                                                "minor",
+                                                                ",",
+                                                                "major_pentatonic",
+                                                                ",",
+                                                                "minor_pentatonic",
+                                                                ",",
+                                                                "chromatic"
+                                                            ],
+                                                  "maxclass":  "umenu",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  3,
+                                                  "outlettype":  [
+                                                                     "int",
+                                                                     "",
+                                                                     ""
+                                                                 ],
+                                                  "parameter_enable":  1,
+                                                  "patching_rect":  [
+                                                                        954.343381285667419,
+                                                                        128.915667414665222,
+                                                                        132.0,
+                                                                        22.0
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            843.152542352676392,
+                                                                            82.06023782491684,
+                                                                            133.734944701194763,
+                                                                            22.0
+                                                                        ],
+                                                  "varname":  "cs_scale_menu",
+                                                  "saved_attribute_attributes":  {
+                                                                                     "valueof":  {
+                                                                                                     "parameter_initial":  [
+                                                                                                                               0
+                                                                                                                           ],
+                                                                                                     "parameter_initial_enable":  1,
+                                                                                                     "parameter_longname":  "scale",
+                                                                                                     "parameter_shortname":  "scale",
+                                                                                                     "parameter_mmin":  0,
+                                                                                                     "parameter_mmax":  5,
+                                                                                                     "parameter_type":  0,
+                                                                                                     "parameter_unitstyle":  0
+                                                                                                 }
+                                                                                 }
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "hidden":  1,
+                                                  "id":  "obj-29",
+                                                  "maxclass":  "comment",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  0,
+                                                  "patching_rect":  [
+                                                                        954.343381285667419,
+                                                                        104.819280982017517,
+                                                                        75.0,
+                                                                        20.0
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            843.152542352676392,
+                                                                            49.06023782491684,
+                                                                            75.903617262840271,
+                                                                            20.0
+                                                                        ],
+                                                  "text":  "scale",
+                                                  "varname":  "cs_scale_label"
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-32",
+                                                  "maxclass":  "dial",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     "float"
+                                                                 ],
+                                                  "parameter_enable":  1,
+                                                  "patching_rect":  [
+                                                                        1177.108477234840393,
+                                                                        106.915667414665222,
+                                                                        44.0,
+                                                                        44.0
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            1010.152542352676392,
+                                                                            115.06023782491684,
+                                                                            43.493971228599548,
+                                                                            43.493971228599548
+                                                                        ],
+                                                  "saved_attribute_attributes":  {
+                                                                                     "valueof":  {
+                                                                                                     "parameter_initial":  [
+                                                                                                                               15
+                                                                                                                           ],
+                                                                                                     "parameter_initial_enable":  1,
+                                                                                                     "parameter_longname":  "length knob",
+                                                                                                     "parameter_shortname":  "length knob",
+                                                                                                     "parameter_mmin":  0,
+                                                                                                     "parameter_mmax":  127,
+                                                                                                     "parameter_type":  0,
+                                                                                                     "parameter_unitstyle":  0
+                                                                                                 }
+                                                                                 }
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-33",
+                                                  "maxclass":  "comment",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  0,
+                                                  "patching_rect":  [
+                                                                        1177.108477234840393,
+                                                                        85.228919625282288,
+                                                                        58.0,
+                                                                        20.0
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            1010.152542352676392,
+                                                                            93.06023782491684,
+                                                                            57.831327438354492,
+                                                                            20.0
+                                                                        ],
+                                                  "text":  "length"
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-36",
+                                                  "items":  [
+                                                                "4n",
+                                                                ",",
+                                                                "8n",
+                                                                ",",
+                                                                "16n",
+                                                                ",",
+                                                                "32n"
+                                                            ],
+                                                  "maxclass":  "umenu",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  3,
+                                                  "outlettype":  [
+                                                                     "int",
+                                                                     "",
+                                                                     ""
+                                                                 ],
+                                                  "parameter_enable":  1,
+                                                  "patching_rect":  [
+                                                                        1248.192817211151123,
+                                                                        108.120486736297607,
+                                                                        80.0,
+                                                                        22.0
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            1081.152542352676392,
+                                                                            135.06023782491684,
+                                                                            79.518075227737427,
+                                                                            22.0
+                                                                        ],
+                                                  "saved_attribute_attributes":  {
+                                                                                     "valueof":  {
+                                                                                                     "parameter_initial":  [
+                                                                                                                               2
+                                                                                                                           ],
+                                                                                                     "parameter_initial_enable":  1,
+                                                                                                     "parameter_longname":  "division",
+                                                                                                     "parameter_shortname":  "division",
+                                                                                                     "parameter_mmin":  0,
+                                                                                                     "parameter_mmax":  3,
+                                                                                                     "parameter_type":  0,
+                                                                                                     "parameter_unitstyle":  0
+                                                                                                 }
+                                                                                 }
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-37",
+                                                  "maxclass":  "comment",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  0,
+                                                  "patching_rect":  [
+                                                                        1248.192817211151123,
+                                                                        85.228919625282288,
+                                                                        70.0,
+                                                                        20.0
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            1081.152542352676392,
+                                                                            111.06023782491684,
+                                                                            69.879520654678345,
+                                                                            20.0
+                                                                        ],
+                                                  "text":  "division"
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-40",
+                                                  "maxclass":  "dial",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     "float"
+                                                                 ],
+                                                  "parameter_enable":  1,
+                                                  "patching_rect":  [
+                                                                        1355.421736836433411,
+                                                                        106.915667414665222,
+                                                                        44.0,
+                                                                        44.0
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            1189.152542352676392,
+                                                                            115.06023782491684,
+                                                                            43.493971228599548,
+                                                                            43.493971228599548
+                                                                        ],
+                                                  "size":  101.0,
+                                                  "varname":  "cs_density_dial",
+                                                  "saved_attribute_attributes":  {
+                                                                                     "valueof":  {
+                                                                                                     "parameter_initial":  [
+                                                                                                                               50
+                                                                                                                           ],
+                                                                                                     "parameter_initial_enable":  1,
+                                                                                                     "parameter_longname":  "density",
+                                                                                                     "parameter_shortname":  "density",
+                                                                                                     "parameter_mmin":  0,
+                                                                                                     "parameter_mmax":  100,
+                                                                                                     "parameter_type":  0,
+                                                                                                     "parameter_unitstyle":  0
+                                                                                                 }
+                                                                                 }
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-41",
+                                                  "maxclass":  "comment",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  0,
+                                                  "patching_rect":  [
+                                                                        1354.216917514801025,
+                                                                        85.228919625282288,
+                                                                        70.0,
+                                                                        20.0
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            1186.152542352676392,
+                                                                            93.06023782491684,
+                                                                            69.879520654678345,
+                                                                            20.0
+                                                                        ],
+                                                  "text":  "density %",
+                                                  "varname":  "cs_density_label"
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "hidden":  1,
+                                                  "id":  "obj-80",
+                                                  "items":  [
+                                                                "C0",
+                                                                ",",
+                                                                "C#0",
+                                                                ",",
+                                                                "D0",
+                                                                ",",
+                                                                "D#0",
+                                                                ",",
+                                                                "E0",
+                                                                ",",
+                                                                "F0",
+                                                                ",",
+                                                                "F#0",
+                                                                ",",
+                                                                "G0",
+                                                                ",",
+                                                                "G#0",
+                                                                ",",
+                                                                "A0",
+                                                                ",",
+                                                                "A#0",
+                                                                ",",
+                                                                "B0",
+                                                                ",",
+                                                                "C1",
+                                                                ",",
+                                                                "C#1",
+                                                                ",",
+                                                                "D1",
+                                                                ",",
+                                                                "D#1",
+                                                                ",",
+                                                                "E1",
+                                                                ",",
+                                                                "F1",
+                                                                ",",
+                                                                "F#1",
+                                                                ",",
+                                                                "G1",
+                                                                ",",
+                                                                "G#1",
+                                                                ",",
+                                                                "A1",
+                                                                ",",
+                                                                "A#1",
+                                                                ",",
+                                                                "B1",
+                                                                ",",
+                                                                "C2",
+                                                                ",",
+                                                                "C#2",
+                                                                ",",
+                                                                "D2",
+                                                                ",",
+                                                                "D#2",
+                                                                ",",
+                                                                "E2",
+                                                                ",",
+                                                                "F2",
+                                                                ",",
+                                                                "F#2",
+                                                                ",",
+                                                                "G2",
+                                                                ",",
+                                                                "G#2",
+                                                                ",",
+                                                                "A2",
+                                                                ",",
+                                                                "A#2",
+                                                                ",",
+                                                                "B2",
+                                                                ",",
+                                                                "C3",
+                                                                ",",
+                                                                "C#3",
+                                                                ",",
+                                                                "D3",
+                                                                ",",
+                                                                "D#3",
+                                                                ",",
+                                                                "E3",
+                                                                ",",
+                                                                "F3",
+                                                                ",",
+                                                                "F#3",
+                                                                ",",
+                                                                "G3",
+                                                                ",",
+                                                                "G#3",
+                                                                ",",
+                                                                "A3",
+                                                                ",",
+                                                                "A#3",
+                                                                ",",
+                                                                "B3",
+                                                                ",",
+                                                                "C4",
+                                                                ",",
+                                                                "C#4",
+                                                                ",",
+                                                                "D4",
+                                                                ",",
+                                                                "D#4",
+                                                                ",",
+                                                                "E4",
+                                                                ",",
+                                                                "F4",
+                                                                ",",
+                                                                "F#4",
+                                                                ",",
+                                                                "G4",
+                                                                ",",
+                                                                "G#4",
+                                                                ",",
+                                                                "A4",
+                                                                ",",
+                                                                "A#4",
+                                                                ",",
+                                                                "B4",
+                                                                ",",
+                                                                "C5",
+                                                                ",",
+                                                                "C#5",
+                                                                ",",
+                                                                "D5",
+                                                                ",",
+                                                                "D#5",
+                                                                ",",
+                                                                "E5",
+                                                                ",",
+                                                                "F5",
+                                                                ",",
+                                                                "F#5",
+                                                                ",",
+                                                                "G5",
+                                                                ",",
+                                                                "G#5",
+                                                                ",",
+                                                                "A5",
+                                                                ",",
+                                                                "A#5",
+                                                                ",",
+                                                                "B5",
+                                                                ",",
+                                                                "C6",
+                                                                ",",
+                                                                "C#6",
+                                                                ",",
+                                                                "D6",
+                                                                ",",
+                                                                "D#6",
+                                                                ",",
+                                                                "E6",
+                                                                ",",
+                                                                "F6",
+                                                                ",",
+                                                                "F#6",
+                                                                ",",
+                                                                "G6",
+                                                                ",",
+                                                                "G#6",
+                                                                ",",
+                                                                "A6",
+                                                                ",",
+                                                                "A#6",
+                                                                ",",
+                                                                "B6",
+                                                                ",",
+                                                                "C7"
+                                                            ],
+                                                  "maxclass":  "umenu",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  3,
+                                                  "outlettype":  [
+                                                                     "int",
+                                                                     "",
+                                                                     ""
+                                                                 ],
+                                                  "parameter_enable":  1,
+                                                  "patching_rect":  [
+                                                                        22.0,
+                                                                        366.0,
+                                                                        84.0,
+                                                                        22.0
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            640.152542352676392,
+                                                                            133.06023782491684,
+                                                                            85.542171835899353,
+                                                                            22.0
+                                                                        ],
+                                                  "varname":  "cs_melody_low_menu",
+                                                  "saved_attribute_attributes":  {
+                                                                                     "valueof":  {
+                                                                                                     "parameter_initial":  [
+                                                                                                                               36
+                                                                                                                           ],
+                                                                                                     "parameter_initial_enable":  1,
+                                                                                                     "parameter_longname":  "low note",
+                                                                                                     "parameter_shortname":  "low note",
+                                                                                                     "parameter_mmin":  0,
+                                                                                                     "parameter_mmax":  84,
+                                                                                                     "parameter_type":  0,
+                                                                                                     "parameter_unitstyle":  0
+                                                                                                 }
+                                                                                 }
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "hidden":  1,
+                                                  "id":  "obj-81",
+                                                  "maxclass":  "comment",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  0,
+                                                  "patching_rect":  [
+                                                                        756.753012537956238,
+                                                                        104.819280982017517,
+                                                                        70.0,
+                                                                        20.0
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            640.152542352676392,
+                                                                            111.06023782491684,
+                                                                            71.08433997631073,
+                                                                            20.0
+                                                                        ],
+                                                  "text":  "low note",
+                                                  "varname":  "cs_melody_low_label"
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "hidden":  1,
+                                                  "id":  "obj-83",
+                                                  "items":  [
+                                                                "C0",
+                                                                ",",
+                                                                "C#0",
+                                                                ",",
+                                                                "D0",
+                                                                ",",
+                                                                "D#0",
+                                                                ",",
+                                                                "E0",
+                                                                ",",
+                                                                "F0",
+                                                                ",",
+                                                                "F#0",
+                                                                ",",
+                                                                "G0",
+                                                                ",",
+                                                                "G#0",
+                                                                ",",
+                                                                "A0",
+                                                                ",",
+                                                                "A#0",
+                                                                ",",
+                                                                "B0",
+                                                                ",",
+                                                                "C1",
+                                                                ",",
+                                                                "C#1",
+                                                                ",",
+                                                                "D1",
+                                                                ",",
+                                                                "D#1",
+                                                                ",",
+                                                                "E1",
+                                                                ",",
+                                                                "F1",
+                                                                ",",
+                                                                "F#1",
+                                                                ",",
+                                                                "G1",
+                                                                ",",
+                                                                "G#1",
+                                                                ",",
+                                                                "A1",
+                                                                ",",
+                                                                "A#1",
+                                                                ",",
+                                                                "B1",
+                                                                ",",
+                                                                "C2",
+                                                                ",",
+                                                                "C#2",
+                                                                ",",
+                                                                "D2",
+                                                                ",",
+                                                                "D#2",
+                                                                ",",
+                                                                "E2",
+                                                                ",",
+                                                                "F2",
+                                                                ",",
+                                                                "F#2",
+                                                                ",",
+                                                                "G2",
+                                                                ",",
+                                                                "G#2",
+                                                                ",",
+                                                                "A2",
+                                                                ",",
+                                                                "A#2",
+                                                                ",",
+                                                                "B2",
+                                                                ",",
+                                                                "C3",
+                                                                ",",
+                                                                "C#3",
+                                                                ",",
+                                                                "D3",
+                                                                ",",
+                                                                "D#3",
+                                                                ",",
+                                                                "E3",
+                                                                ",",
+                                                                "F3",
+                                                                ",",
+                                                                "F#3",
+                                                                ",",
+                                                                "G3",
+                                                                ",",
+                                                                "G#3",
+                                                                ",",
+                                                                "A3",
+                                                                ",",
+                                                                "A#3",
+                                                                ",",
+                                                                "B3",
+                                                                ",",
+                                                                "C4",
+                                                                ",",
+                                                                "C#4",
+                                                                ",",
+                                                                "D4",
+                                                                ",",
+                                                                "D#4",
+                                                                ",",
+                                                                "E4",
+                                                                ",",
+                                                                "F4",
+                                                                ",",
+                                                                "F#4",
+                                                                ",",
+                                                                "G4",
+                                                                ",",
+                                                                "G#4",
+                                                                ",",
+                                                                "A4",
+                                                                ",",
+                                                                "A#4",
+                                                                ",",
+                                                                "B4",
+                                                                ",",
+                                                                "C5",
+                                                                ",",
+                                                                "C#5",
+                                                                ",",
+                                                                "D5",
+                                                                ",",
+                                                                "D#5",
+                                                                ",",
+                                                                "E5",
+                                                                ",",
+                                                                "F5",
+                                                                ",",
+                                                                "F#5",
+                                                                ",",
+                                                                "G5",
+                                                                ",",
+                                                                "G#5",
+                                                                ",",
+                                                                "A5",
+                                                                ",",
+                                                                "A#5",
+                                                                ",",
+                                                                "B5",
+                                                                ",",
+                                                                "C6",
+                                                                ",",
+                                                                "C#6",
+                                                                ",",
+                                                                "D6",
+                                                                ",",
+                                                                "D#6",
+                                                                ",",
+                                                                "E6",
+                                                                ",",
+                                                                "F6",
+                                                                ",",
+                                                                "F#6",
+                                                                ",",
+                                                                "G6",
+                                                                ",",
+                                                                "G#6",
+                                                                ",",
+                                                                "A6",
+                                                                ",",
+                                                                "A#6",
+                                                                ",",
+                                                                "B6",
+                                                                ",",
+                                                                "C7"
+                                                            ],
+                                                  "maxclass":  "umenu",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  3,
+                                                  "outlettype":  [
+                                                                     "int",
+                                                                     "",
+                                                                     ""
+                                                                 ],
+                                                  "parameter_enable":  1,
+                                                  "patching_rect":  [
+                                                                        114.0,
+                                                                        366.0,
+                                                                        84.0,
+                                                                        22.0
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            750.152542352676392,
+                                                                            133.06023782491684,
+                                                                            85.542171835899353,
+                                                                            22.0
+                                                                        ],
+                                                  "varname":  "cs_melody_high_menu",
+                                                  "saved_attribute_attributes":  {
+                                                                                     "valueof":  {
+                                                                                                     "parameter_initial":  [
+                                                                                                                               60
+                                                                                                                           ],
+                                                                                                     "parameter_initial_enable":  1,
+                                                                                                     "parameter_longname":  "high note",
+                                                                                                     "parameter_shortname":  "high note",
+                                                                                                     "parameter_mmin":  0,
+                                                                                                     "parameter_mmax":  84,
+                                                                                                     "parameter_type":  0,
+                                                                                                     "parameter_unitstyle":  0
+                                                                                                 }
+                                                                                 }
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "hidden":  1,
+                                                  "id":  "obj-84",
+                                                  "maxclass":  "comment",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  0,
+                                                  "patching_rect":  [
+                                                                        870.391570806503296,
+                                                                        104.819280982017517,
+                                                                        70.0,
+                                                                        20.0
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            750.152542352676392,
+                                                                            111.06023782491684,
+                                                                            71.08433997631073,
+                                                                            20.0
+                                                                        ],
+                                                  "text":  "high note",
+                                                  "varname":  "cs_melody_high_label"
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-86",
+                                                  "items":  [
+                                                                "1",
+                                                                ",",
+                                                                "4",
+                                                                ",",
+                                                                "8",
+                                                                ",",
+                                                                "12",
+                                                                ",",
+                                                                "16",
+                                                                ",",
+                                                                "24",
+                                                                ",",
+                                                                "32"
+                                                            ],
+                                                  "maxclass":  "umenu",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  3,
+                                                  "outlettype":  [
+                                                                     "int",
+                                                                     "",
+                                                                     ""
+                                                                 ],
+                                                  "parameter_enable":  1,
+                                                  "patching_rect":  [
+                                                                        206.0,
+                                                                        366.0,
+                                                                        84.0,
+                                                                        22.0
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            844.152542352676392,
+                                                                            133.06023782491684,
+                                                                            85.542171835899353,
+                                                                            22.0
+                                                                        ],
+                                                  "varname":  "cs_pad_count_menu",
+                                                  "saved_attribute_attributes":  {
+                                                                                     "valueof":  {
+                                                                                                     "parameter_initial":  [
+                                                                                                                               4
+                                                                                                                           ],
+                                                                                                     "parameter_initial_enable":  1,
+                                                                                                     "parameter_longname":  "pad count",
+                                                                                                     "parameter_shortname":  "pad count",
+                                                                                                     "parameter_mmin":  0,
+                                                                                                     "parameter_mmax":  6,
+                                                                                                     "parameter_type":  0,
+                                                                                                     "parameter_unitstyle":  0
+                                                                                                 }
+                                                                                 }
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-87",
+                                                  "maxclass":  "comment",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  0,
+                                                  "patching_rect":  [
+                                                                        954.343381285667419,
+                                                                        104.819280982017517,
+                                                                        75.0,
+                                                                        20.0
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            843.152542352676392,
+                                                                            106.06023782491684,
+                                                                            75.903617262840271,
+                                                                            20.0
+                                                                        ],
+                                                  "text":  "pad count",
+                                                  "varname":  "cs_pad_count_label"
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-47",
+                                                  "maxclass":  "toggle",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     "int"
+                                                                 ],
+                                                  "parameter_enable":  1,
+                                                  "patching_rect":  [
+                                                                        226.506032466888428,
+                                                                        134.939764022827148,
+                                                                        24.0,
+                                                                        24.0
+                                                                    ],
+                                                  "hidden":  0,
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            201,
+                                                                            134,
+                                                                            24,
+                                                                            24
+                                                                        ],
+                                                  "saved_attribute_attributes":  {
+                                                                                     "valueof":  {
+                                                                                                     "parameter_initial":  [
+                                                                                                                               0
+                                                                                                                           ],
+                                                                                                     "parameter_initial_enable":  1,
+                                                                                                     "parameter_longname":  "play",
+                                                                                                     "parameter_shortname":  "play",
+                                                                                                     "parameter_mmin":  0,
+                                                                                                     "parameter_mmax":  1,
+                                                                                                     "parameter_type":  0,
+                                                                                                     "parameter_unitstyle":  0
+                                                                                                 }
+                                                                                 }
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-48",
+                                                  "maxclass":  "comment",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  0,
+                                                  "patching_rect":  [
+                                                                        256.626515507698059,
+                                                                        137.349402666091919,
+                                                                        45.0,
+                                                                        20.0
+                                                                    ],
+                                                  "hidden":  0,
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            232,
+                                                                            136,
+                                                                            45,
+                                                                            20
+                                                                        ],
+                                                  "text":  "play"
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-214",
+                                                  "maxclass":  "dial",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     "int"
+                                                                 ],
+                                                  "parameter_enable":  1,
+                                                  "size":  255,
+                                                  "patching_rect":  [
+                                                                        1445,
+                                                                        106,
+                                                                        44,
+                                                                        44
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            534,
+                                                                            65.5,
+                                                                            31,
+                                                                            31
+                                                                        ],
+                                                  "varname":  "cs_shift_dial",
+                                                  "saved_attribute_attributes":  {
+                                                                                     "valueof":  {
+                                                                                                     "parameter_initial":  [
+                                                                                                                               127
+                                                                                                                           ],
+                                                                                                     "parameter_initial_enable":  1,
+                                                                                                     "parameter_longname":  "shift knob",
+                                                                                                     "parameter_shortname":  "shift knob",
+                                                                                                     "parameter_mmin":  0,
+                                                                                                     "parameter_mmax":  254,
+                                                                                                     "parameter_type":  0,
+                                                                                                     "parameter_unitstyle":  0
+                                                                                                 }
+                                                                                 }
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-215",
+                                                  "maxclass":  "comment",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  0,
+                                                  "patching_rect":  [
+                                                                        1444,
+                                                                        85,
+                                                                        70,
+                                                                        20
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            514,
+                                                                            41.5,
+                                                                            70,
+                                                                            20
+                                                                        ],
+                                                  "text":  "shift"
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-220",
+                                                  "maxclass":  "number",
+                                                  "varname":  "cs_shift_number",
+                                                  "presentation":  1,
+                                                  "parameter_enable":  1,
+                                                  "numinlets":  1,
+                                                  "numoutlets":  2,
+                                                  "outlettype":  [
+                                                                     "",
+                                                                     "bang"
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        1495,
+                                                                        106,
+                                                                        42,
+                                                                        22
+                                                                    ],
+                                                  "presentation_rect":  [
+                                                                            568,
+                                                                            65.5,
+                                                                            36,
+                                                                            22
+                                                                        ],
+                                                  "minimum":  -127,
+                                                  "maximum":  127,
+                                                  "saved_attribute_attributes":  {
+                                                                                     "valueof":  {
+                                                                                                     "parameter_initial":  [
+                                                                                                                               0
+                                                                                                                           ],
+                                                                                                     "parameter_initial_enable":  1,
+                                                                                                     "parameter_longname":  "shift",
+                                                                                                     "parameter_shortname":  "shift",
+                                                                                                     "parameter_mmin":  -127,
+                                                                                                     "parameter_mmax":  127,
+                                                                                                     "parameter_type":  0,
+                                                                                                     "parameter_unitstyle":  0
+                                                                                                 }
+                                                                                 }
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-221",
+                                                  "maxclass":  "toggle",
+                                                  "varname":  "cs_poly_toggle",
+                                                  "presentation":  1,
+                                                  "parameter_enable":  1,
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     "int"
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        1545,
+                                                                        520,
+                                                                        24,
+                                                                        24
+                                                                    ],
+                                                  "presentation_rect":  [
+                                                                            946,
+                                                                            65,
+                                                                            24,
+                                                                            24
+                                                                        ],
+                                                  "saved_attribute_attributes":  {
+                                                                                     "valueof":  {
+                                                                                                     "parameter_initial":  [
+                                                                                                                               0
+                                                                                                                           ],
+                                                                                                     "parameter_initial_enable":  1,
+                                                                                                     "parameter_longname":  "poly",
+                                                                                                     "parameter_shortname":  "poly",
+                                                                                                     "parameter_mmin":  0,
+                                                                                                     "parameter_mmax":  1,
+                                                                                                     "parameter_type":  0,
+                                                                                                     "parameter_unitstyle":  0
+                                                                                                 }
+                                                                                 }
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-222",
+                                                  "maxclass":  "comment",
+                                                  "varname":  "cs_poly_label",
+                                                  "presentation":  1,
+                                                  "text":  "poly",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  0,
+                                                  "patching_rect":  [
+                                                                        1540,
+                                                                        492,
+                                                                        55,
+                                                                        20
+                                                                    ],
+                                                  "presentation_rect":  [
+                                                                            934,
+                                                                            41.5,
+                                                                            55,
+                                                                            20
+                                                                        ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-401",
+                                                  "maxclass":  "comment",
+                                                  "text":  "scene",
+                                                  "presentation":  1,
+                                                  "hidden":  0,
+                                                  "numinlets":  1,
+                                                  "numoutlets":  0,
+                                                  "patching_rect":  [
+                                                                        1520,
+                                                                        751,
+                                                                        45,
+                                                                        18
+                                                                    ],
+                                                  "presentation_rect":  [
+                                                                            1279,
+                                                                            30,
+                                                                            45,
+                                                                            20
+                                                                        ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-402",
+                                                  "maxclass":  "number",
+                                                  "varname":  "cs_scene_number",
+                                                  "presentation":  1,
+                                                  "hidden":  0,
+                                                  "parameter_enable":  1,
+                                                  "numinlets":  1,
+                                                  "numoutlets":  2,
+                                                  "outlettype":  [
+                                                                     "",
+                                                                     "bang"
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        1520,
+                                                                        771,
+                                                                        44,
+                                                                        20
+                                                                    ],
+                                                  "presentation_rect":  [
+                                                                            1279,
+                                                                            51,
+                                                                            44,
+                                                                            22
+                                                                        ],
+                                                  "minimum":  0,
+                                                  "maximum":  127,
+                                                  "saved_attribute_attributes":  {
+                                                                                     "valueof":  {
+                                                                                                     "parameter_initial":  [
+                                                                                                                               0
+                                                                                                                           ],
+                                                                                                     "parameter_initial_enable":  1,
+                                                                                                     "parameter_longname":  "scene",
+                                                                                                     "parameter_shortname":  "scene",
+                                                                                                     "parameter_mmin":  0,
+                                                                                                     "parameter_mmax":  127,
+                                                                                                     "parameter_type":  0,
+                                                                                                     "parameter_unitstyle":  0
+                                                                                                 }
+                                                                                 }
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-404",
+                                                  "maxclass":  "comment",
+                                                  "text":  "ratchet %",
+                                                  "presentation":  1,
+                                                  "hidden":  0,
+                                                  "numinlets":  1,
+                                                  "numoutlets":  0,
+                                                  "patching_rect":  [
+                                                                        1578,
+                                                                        751,
+                                                                        65,
+                                                                        18
+                                                                    ],
+                                                  "presentation_rect":  [
+                                                                            1332,
+                                                                            30,
+                                                                            62,
+                                                                            20
+                                                                        ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-405",
+                                                  "maxclass":  "number",
+                                                  "varname":  "cs_ratchet_amount_number",
+                                                  "presentation":  1,
+                                                  "hidden":  0,
+                                                  "parameter_enable":  1,
+                                                  "numinlets":  1,
+                                                  "numoutlets":  2,
+                                                  "outlettype":  [
+                                                                     "",
+                                                                     "bang"
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        1580,
+                                                                        771,
+                                                                        44,
+                                                                        20
+                                                                    ],
+                                                  "presentation_rect":  [
+                                                                            1332,
+                                                                            51,
+                                                                            44,
+                                                                            22
+                                                                        ],
+                                                  "minimum":  0,
+                                                  "maximum":  100,
+                                                  "saved_attribute_attributes":  {
+                                                                                     "valueof":  {
+                                                                                                     "parameter_initial":  [
+                                                                                                                               0
+                                                                                                                           ],
+                                                                                                     "parameter_initial_enable":  1,
+                                                                                                     "parameter_longname":  "ratchet amount",
+                                                                                                     "parameter_shortname":  "ratchet amount",
+                                                                                                     "parameter_mmin":  0,
+                                                                                                     "parameter_mmax":  100,
+                                                                                                     "parameter_type":  0,
+                                                                                                     "parameter_unitstyle":  0
+                                                                                                 }
+                                                                                 }
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-407",
+                                                  "maxclass":  "comment",
+                                                  "text":  "max",
+                                                  "presentation":  1,
+                                                  "hidden":  0,
+                                                  "numinlets":  1,
+                                                  "numoutlets":  0,
+                                                  "patching_rect":  [
+                                                                        1636,
+                                                                        751,
+                                                                        34,
+                                                                        18
+                                                                    ],
+                                                  "presentation_rect":  [
+                                                                            1390,
+                                                                            30,
+                                                                            35,
+                                                                            20
+                                                                        ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-408",
+                                                  "maxclass":  "number",
+                                                  "varname":  "cs_ratchet_max_number",
+                                                  "presentation":  1,
+                                                  "hidden":  0,
+                                                  "parameter_enable":  1,
+                                                  "numinlets":  1,
+                                                  "numoutlets":  2,
+                                                  "outlettype":  [
+                                                                     "",
+                                                                     "bang"
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        1636,
+                                                                        771,
+                                                                        36,
+                                                                        20
+                                                                    ],
+                                                  "presentation_rect":  [
+                                                                            1390,
+                                                                            51,
+                                                                            36,
+                                                                            22
+                                                                        ],
+                                                  "minimum":  1,
+                                                  "maximum":  8,
+                                                  "saved_attribute_attributes":  {
+                                                                                     "valueof":  {
+                                                                                                     "parameter_initial":  [
+                                                                                                                               1
+                                                                                                                           ],
+                                                                                                     "parameter_initial_enable":  1,
+                                                                                                     "parameter_longname":  "ratchet max",
+                                                                                                     "parameter_shortname":  "ratchet max",
+                                                                                                     "parameter_mmin":  1,
+                                                                                                     "parameter_mmax":  8,
+                                                                                                     "parameter_type":  0,
+                                                                                                     "parameter_unitstyle":  0
+                                                                                                 }
+                                                                                 }
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-410",
+                                                  "maxclass":  "comment",
+                                                  "text":  "fill",
+                                                  "presentation":  1,
+                                                  "hidden":  0,
+                                                  "numinlets":  1,
+                                                  "numoutlets":  0,
+                                                  "patching_rect":  [
+                                                                        1686,
+                                                                        751,
+                                                                        35,
+                                                                        18
+                                                                    ],
+                                                  "presentation_rect":  [
+                                                                            1442,
+                                                                            30,
+                                                                            35,
+                                                                            20
+                                                                        ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-411",
+                                                  "maxclass":  "umenu",
+                                                  "varname":  "cs_fill_mode_menu",
+                                                  "presentation":  1,
+                                                  "hidden":  0,
+                                                  "parameter_enable":  1,
+                                                  "numinlets":  1,
+                                                  "numoutlets":  3,
+                                                  "outlettype":  [
+                                                                     "int",
+                                                                     "",
+                                                                     ""
+                                                                 ],
+                                                  "items":  [
+                                                                "off",
+                                                                ",",
+                                                                "end",
+                                                                ",",
+                                                                "accent",
+                                                                ",",
+                                                                "velocity",
+                                                                ",",
+                                                                "all"
+                                                            ],
+                                                  "patching_rect":  [
+                                                                        1686,
+                                                                        771,
+                                                                        78,
+                                                                        22
+                                                                    ],
+                                                  "presentation_rect":  [
+                                                                            1442,
+                                                                            51,
+                                                                            68,
+                                                                            22
+                                                                        ],
+                                                  "saved_attribute_attributes":  {
+                                                                                     "valueof":  {
+                                                                                                     "parameter_initial":  [
+                                                                                                                               0
+                                                                                                                           ],
+                                                                                                     "parameter_initial_enable":  1,
+                                                                                                     "parameter_longname":  "fill mode",
+                                                                                                     "parameter_shortname":  "fill mode",
+                                                                                                     "parameter_mmin":  0,
+                                                                                                     "parameter_mmax":  4,
+                                                                                                     "parameter_type":  0,
+                                                                                                     "parameter_unitstyle":  0
+                                                                                                 }
+                                                                                 }
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-426",
+                                                  "maxclass":  "comment",
+                                                  "text":  "morph",
+                                                  "presentation":  1,
+                                                  "hidden":  0,
+                                                  "numinlets":  1,
+                                                  "numoutlets":  0,
+                                                  "patching_rect":  [
+                                                                        1520,
+                                                                        846,
+                                                                        60,
+                                                                        18
+                                                                    ],
+                                                  "presentation_rect":  [
+                                                                            1360,
+                                                                            84,
+                                                                            50,
+                                                                            20
+                                                                        ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-427",
+                                                  "maxclass":  "number",
+                                                  "varname":  "cs_morph_amount_number",
+                                                  "presentation":  1,
+                                                  "hidden":  0,
+                                                  "parameter_enable":  1,
+                                                  "numinlets":  1,
+                                                  "numoutlets":  2,
+                                                  "outlettype":  [
+                                                                     "",
+                                                                     "bang"
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        1520,
+                                                                        866,
+                                                                        44,
+                                                                        20
+                                                                    ],
+                                                  "presentation_rect":  [
+                                                                            1395,
+                                                                            109,
+                                                                            44,
+                                                                            22
+                                                                        ],
+                                                  "minimum":  0,
+                                                  "maximum":  100,
+                                                  "saved_attribute_attributes":  {
+                                                                                     "valueof":  {
+                                                                                                     "parameter_initial":  [
+                                                                                                                               0
+                                                                                                                           ],
+                                                                                                     "parameter_initial_enable":  1,
+                                                                                                     "parameter_longname":  "morph amount",
+                                                                                                     "parameter_shortname":  "morph amount",
+                                                                                                     "parameter_mmin":  0,
+                                                                                                     "parameter_mmax":  100,
+                                                                                                     "parameter_type":  0,
+                                                                                                     "parameter_unitstyle":  0
+                                                                                                 }
+                                                                                 }
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-429",
+                                                  "maxclass":  "comment",
+                                                  "text":  "scene B",
+                                                  "presentation":  1,
+                                                  "hidden":  0,
+                                                  "numinlets":  1,
+                                                  "numoutlets":  0,
+                                                  "patching_rect":  [
+                                                                        1580,
+                                                                        846,
+                                                                        55,
+                                                                        18
+                                                                    ],
+                                                  "presentation_rect":  [
+                                                                            1448,
+                                                                            84,
+                                                                            55,
+                                                                            20
+                                                                        ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-430",
+                                                  "maxclass":  "number",
+                                                  "varname":  "cs_morph_scene_number",
+                                                  "presentation":  1,
+                                                  "hidden":  0,
+                                                  "parameter_enable":  1,
+                                                  "numinlets":  1,
+                                                  "numoutlets":  2,
+                                                  "outlettype":  [
+                                                                     "",
+                                                                     "bang"
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        1582,
+                                                                        866,
+                                                                        44,
+                                                                        20
+                                                                    ],
+                                                  "presentation_rect":  [
+                                                                            1448,
+                                                                            105,
+                                                                            44,
+                                                                            22
+                                                                        ],
+                                                  "minimum":  0,
+                                                  "maximum":  127,
+                                                  "saved_attribute_attributes":  {
+                                                                                     "valueof":  {
+                                                                                                     "parameter_initial":  [
+                                                                                                                               1
+                                                                                                                           ],
+                                                                                                     "parameter_initial_enable":  1,
+                                                                                                     "parameter_longname":  "morph scene",
+                                                                                                     "parameter_shortname":  "morph scene",
+                                                                                                     "parameter_mmin":  0,
+                                                                                                     "parameter_mmax":  127,
+                                                                                                     "parameter_type":  0,
+                                                                                                     "parameter_unitstyle":  0
+                                                                                                 }
+                                                                                 }
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-432",
+                                                  "maxclass":  "comment",
+                                                  "text":  "mode",
+                                                  "presentation":  1,
+                                                  "hidden":  0,
+                                                  "numinlets":  1,
+                                                  "numoutlets":  0,
+                                                  "patching_rect":  [
+                                                                        1644,
+                                                                        846,
+                                                                        42,
+                                                                        18
+                                                                    ],
+                                                  "presentation_rect":  [
+                                                                            1510,
+                                                                            84,
+                                                                            45,
+                                                                            20
+                                                                        ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-433",
+                                                  "maxclass":  "umenu",
+                                                  "varname":  "cs_morph_mode_menu",
+                                                  "presentation":  1,
+                                                  "hidden":  0,
+                                                  "parameter_enable":  1,
+                                                  "numinlets":  1,
+                                                  "numoutlets":  3,
+                                                  "outlettype":  [
+                                                                     "int",
+                                                                     "",
+                                                                     ""
+                                                                 ],
+                                                  "items":  [
+                                                                "all",
+                                                                ",",
+                                                                "pitch",
+                                                                ",",
+                                                                "rhythm",
+                                                                ",",
+                                                                "velocity"
+                                                            ],
+                                                  "patching_rect":  [
+                                                                        1644,
+                                                                        866,
+                                                                        82,
+                                                                        22
+                                                                    ],
+                                                  "presentation_rect":  [
+                                                                            1510,
+                                                                            105,
+                                                                            82,
+                                                                            22
+                                                                        ],
+                                                  "saved_attribute_attributes":  {
+                                                                                     "valueof":  {
+                                                                                                     "parameter_initial":  [
+                                                                                                                               0
+                                                                                                                           ],
+                                                                                                     "parameter_initial_enable":  1,
+                                                                                                     "parameter_longname":  "morph mode",
+                                                                                                     "parameter_shortname":  "morph mode",
+                                                                                                     "parameter_mmin":  0,
+                                                                                                     "parameter_mmax":  3,
+                                                                                                     "parameter_type":  0,
+                                                                                                     "parameter_unitstyle":  0
+                                                                                                 }
+                                                                                 }
+                                              }
+                                  },
+                                  {
+                                      "box":  {
                                                   "id":  "obj-1",
                                                   "maxclass":  "newobj",
                                                   "numinlets":  1,
@@ -13302,7 +15134,7 @@
                                                                      "",
                                                                      ""
                                                                  ],
-                                                  "parameter_enable":  0,
+                                                  "parameter_enable":  1,
                                                   "patching_rect":  [
                                                                         367.162651181221008,
                                                                         128.915667414665222,
@@ -13316,7 +15148,22 @@
                                                                             128.06023782491684,
                                                                             92.0,
                                                                             22.0
-                                                                        ]
+                                                                        ],
+                                                  "varname":  "cs_p_menu",
+                                                  "saved_attribute_attributes":  {
+                                                                                     "valueof":  {
+                                                                                                     "parameter_initial":  [
+                                                                                                                               53
+                                                                                                                           ],
+                                                                                                     "parameter_initial_enable":  1,
+                                                                                                     "parameter_longname":  "p prime",
+                                                                                                     "parameter_shortname":  "p prime",
+                                                                                                     "parameter_mmin":  0,
+                                                                                                     "parameter_mmax":  6541,
+                                                                                                     "parameter_type":  0,
+                                                                                                     "parameter_unitstyle":  0
+                                                                                                 }
+                                                                                 }
                                               }
                                   },
                                   {
@@ -26456,7 +28303,7 @@
                                                                      "",
                                                                      ""
                                                                  ],
-                                                  "parameter_enable":  0,
+                                                  "parameter_enable":  1,
                                                   "patching_rect":  [
                                                                         467.162654876708984,
                                                                         128.915667414665222,
@@ -26470,7 +28317,22 @@
                                                                             128.06023782491684,
                                                                             92.0,
                                                                             22.0
-                                                                        ]
+                                                                        ],
+                                                  "varname":  "cs_q_menu",
+                                                  "saved_attribute_attributes":  {
+                                                                                     "valueof":  {
+                                                                                                     "parameter_initial":  [
+                                                                                                                               54
+                                                                                                                           ],
+                                                                                                     "parameter_initial_enable":  1,
+                                                                                                     "parameter_longname":  "q prime",
+                                                                                                     "parameter_shortname":  "q prime",
+                                                                                                     "parameter_mmin":  0,
+                                                                                                     "parameter_mmax":  6541,
+                                                                                                     "parameter_type":  0,
+                                                                                                     "parameter_unitstyle":  0
+                                                                                                 }
+                                                                                 }
                                               }
                                   },
                                   {
@@ -26518,11 +28380,11 @@
                                       "box":  {
                                                   "id":  "obj-16",
                                                   "items":  [
+                                                                "3",
+                                                                ",",
                                                                 "17",
                                                                 ",",
-                                                                "257",
-                                                                ",",
-                                                                "65537"
+                                                                "257"
                                                             ],
                                                   "maxclass":  "umenu",
                                                   "numinlets":  1,
@@ -26532,7 +28394,7 @@
                                                                      "",
                                                                      ""
                                                                  ],
-                                                  "parameter_enable":  0,
+                                                  "parameter_enable":  1,
                                                   "patching_rect":  [
                                                                         567.16265857219696,
                                                                         128.915667414665222,
@@ -26546,7 +28408,22 @@
                                                                             128.06023782491684,
                                                                             92.0,
                                                                             22.0
-                                                                        ]
+                                                                        ],
+                                                  "varname":  "cs_e_menu",
+                                                  "saved_attribute_attributes":  {
+                                                                                     "valueof":  {
+                                                                                                     "parameter_initial":  [
+                                                                                                                               0
+                                                                                                                           ],
+                                                                                                     "parameter_initial_enable":  1,
+                                                                                                     "parameter_longname":  "RSA e",
+                                                                                                     "parameter_shortname":  "RSA e",
+                                                                                                     "parameter_mmin":  0,
+                                                                                                     "parameter_mmax":  2,
+                                                                                                     "parameter_type":  0,
+                                                                                                     "parameter_unitstyle":  0
+                                                                                                 }
+                                                                                 }
                                               }
                                   },
                                   {
@@ -26610,204 +28487,6 @@
                                   },
                                   {
                                       "box":  {
-                                                  "id":  "obj-20",
-                                                  "items":  [
-                                                                "C0",
-                                                                ",",
-                                                                "C#0",
-                                                                ",",
-                                                                "D0",
-                                                                ",",
-                                                                "D#0",
-                                                                ",",
-                                                                "E0",
-                                                                ",",
-                                                                "F0",
-                                                                ",",
-                                                                "F#0",
-                                                                ",",
-                                                                "G0",
-                                                                ",",
-                                                                "G#0",
-                                                                ",",
-                                                                "A0",
-                                                                ",",
-                                                                "A#0",
-                                                                ",",
-                                                                "B0",
-                                                                ",",
-                                                                "C1",
-                                                                ",",
-                                                                "C#1",
-                                                                ",",
-                                                                "D1",
-                                                                ",",
-                                                                "D#1",
-                                                                ",",
-                                                                "E1",
-                                                                ",",
-                                                                "F1",
-                                                                ",",
-                                                                "F#1",
-                                                                ",",
-                                                                "G1",
-                                                                ",",
-                                                                "G#1",
-                                                                ",",
-                                                                "A1",
-                                                                ",",
-                                                                "A#1",
-                                                                ",",
-                                                                "B1",
-                                                                ",",
-                                                                "C2",
-                                                                ",",
-                                                                "C#2",
-                                                                ",",
-                                                                "D2",
-                                                                ",",
-                                                                "D#2",
-                                                                ",",
-                                                                "E2",
-                                                                ",",
-                                                                "F2",
-                                                                ",",
-                                                                "F#2",
-                                                                ",",
-                                                                "G2",
-                                                                ",",
-                                                                "G#2",
-                                                                ",",
-                                                                "A2",
-                                                                ",",
-                                                                "A#2",
-                                                                ",",
-                                                                "B2",
-                                                                ",",
-                                                                "C3",
-                                                                ",",
-                                                                "C#3",
-                                                                ",",
-                                                                "D3",
-                                                                ",",
-                                                                "D#3",
-                                                                ",",
-                                                                "E3",
-                                                                ",",
-                                                                "F3",
-                                                                ",",
-                                                                "F#3",
-                                                                ",",
-                                                                "G3",
-                                                                ",",
-                                                                "G#3",
-                                                                ",",
-                                                                "A3",
-                                                                ",",
-                                                                "A#3",
-                                                                ",",
-                                                                "B3",
-                                                                ",",
-                                                                "C4",
-                                                                ",",
-                                                                "C#4",
-                                                                ",",
-                                                                "D4",
-                                                                ",",
-                                                                "D#4",
-                                                                ",",
-                                                                "E4",
-                                                                ",",
-                                                                "F4",
-                                                                ",",
-                                                                "F#4",
-                                                                ",",
-                                                                "G4",
-                                                                ",",
-                                                                "G#4",
-                                                                ",",
-                                                                "A4",
-                                                                ",",
-                                                                "A#4",
-                                                                ",",
-                                                                "B4",
-                                                                ",",
-                                                                "C5",
-                                                                ",",
-                                                                "C#5",
-                                                                ",",
-                                                                "D5",
-                                                                ",",
-                                                                "D#5",
-                                                                ",",
-                                                                "E5",
-                                                                ",",
-                                                                "F5",
-                                                                ",",
-                                                                "F#5",
-                                                                ",",
-                                                                "G5",
-                                                                ",",
-                                                                "G#5",
-                                                                ",",
-                                                                "A5",
-                                                                ",",
-                                                                "A#5",
-                                                                ",",
-                                                                "B5",
-                                                                ",",
-                                                                "C6"
-                                                            ],
-                                                  "maxclass":  "umenu",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  3,
-                                                  "outlettype":  [
-                                                                     "int",
-                                                                     "",
-                                                                     ""
-                                                                 ],
-                                                  "parameter_enable":  0,
-                                                  "patching_rect":  [
-                                                                        866.391570806503296,
-                                                                        128.915667414665222,
-                                                                        78.0,
-                                                                        22.0
-                                                                    ],
-                                                  "presentation":  1,
-                                                  "presentation_rect":  [
-                                                                            750.152542352676392,
-                                                                            82.06023782491684,
-                                                                            79.518075227737427,
-                                                                            22.0
-                                                                        ],
-                                                  "varname":  "cs_root_menu"
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-21",
-                                                  "maxclass":  "comment",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  0,
-                                                  "patching_rect":  [
-                                                                        867.891570806503296,
-                                                                        104.819280982017517,
-                                                                        75.0,
-                                                                        20.0
-                                                                    ],
-                                                  "presentation":  1,
-                                                  "presentation_rect":  [
-                                                                            751.152542352676392,
-                                                                            49.06023782491684,
-                                                                            75.903617262840271,
-                                                                            20.0
-                                                                        ],
-                                                  "text":  "root note",
-                                                  "varname":  "cs_root_label"
-                                              }
-                                  },
-                                  {
-                                      "box":  {
                                                   "id":  "obj-22",
                                                   "maxclass":  "newobj",
                                                   "numinlets":  1,
@@ -26840,62 +28519,6 @@
                                                                         22.0
                                                                     ],
                                                   "text":  "setsymbol C3"
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-24",
-                                                  "items":  [
-                                                                "melodic",
-                                                                ",",
-                                                                "hybrid",
-                                                                ",",
-                                                                "rhythm"
-                                                            ],
-                                                  "maxclass":  "umenu",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  3,
-                                                  "outlettype":  [
-                                                                     "int",
-                                                                     "",
-                                                                     ""
-                                                                 ],
-                                                  "parameter_enable":  0,
-                                                  "patching_rect":  [
-                                                                        756.753012537956238,
-                                                                        128.915667414665222,
-                                                                        100.0,
-                                                                        22.0
-                                                                    ],
-                                                  "presentation":  1,
-                                                  "presentation_rect":  [
-                                                                            640.152542352676392,
-                                                                            82.06023782491684,
-                                                                            101.204823017120361,
-                                                                            22.0
-                                                                        ]
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-25",
-                                                  "maxclass":  "comment",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  0,
-                                                  "patching_rect":  [
-                                                                        756.753012537956238,
-                                                                        104.819280982017517,
-                                                                        70.0,
-                                                                        20.0
-                                                                    ],
-                                                  "presentation":  1,
-                                                  "presentation_rect":  [
-                                                                            640.152542352676392,
-                                                                            49.06023782491684,
-                                                                            71.08433997631073,
-                                                                            20.0
-                                                                        ],
-                                                  "text":  "mode"
                                               }
                                   },
                                   {
@@ -26936,70 +28559,6 @@
                                   },
                                   {
                                       "box":  {
-                                                  "hidden":  1,
-                                                  "id":  "obj-28",
-                                                  "items":  [
-                                                                "major",
-                                                                ",",
-                                                                "minor",
-                                                                ",",
-                                                                "major_pentatonic",
-                                                                ",",
-                                                                "minor_pentatonic",
-                                                                ",",
-                                                                "chromatic"
-                                                            ],
-                                                  "maxclass":  "umenu",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  3,
-                                                  "outlettype":  [
-                                                                     "int",
-                                                                     "",
-                                                                     ""
-                                                                 ],
-                                                  "parameter_enable":  0,
-                                                  "patching_rect":  [
-                                                                        954.343381285667419,
-                                                                        128.915667414665222,
-                                                                        132.0,
-                                                                        22.0
-                                                                    ],
-                                                  "presentation":  1,
-                                                  "presentation_rect":  [
-                                                                            843.152542352676392,
-                                                                            82.06023782491684,
-                                                                            133.734944701194763,
-                                                                            22.0
-                                                                        ],
-                                                  "varname":  "cs_scale_menu"
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "hidden":  1,
-                                                  "id":  "obj-29",
-                                                  "maxclass":  "comment",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  0,
-                                                  "patching_rect":  [
-                                                                        954.343381285667419,
-                                                                        104.819280982017517,
-                                                                        75.0,
-                                                                        20.0
-                                                                    ],
-                                                  "presentation":  1,
-                                                  "presentation_rect":  [
-                                                                            843.152542352676392,
-                                                                            49.06023782491684,
-                                                                            75.903617262840271,
-                                                                            20.0
-                                                                        ],
-                                                  "text":  "scale",
-                                                  "varname":  "cs_scale_label"
-                                              }
-                                  },
-                                  {
-                                      "box":  {
                                                   "id":  "obj-30",
                                                   "maxclass":  "newobj",
                                                   "numinlets":  1,
@@ -27032,53 +28591,6 @@
                                                                         22.0
                                                                     ],
                                                   "text":  "clear, append major, append minor, append major_pentatonic, append minor_pentatonic, append chromatic, append live, setsymbol major"
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-32",
-                                                  "maxclass":  "dial",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  1,
-                                                  "outlettype":  [
-                                                                     "float"
-                                                                 ],
-                                                  "parameter_enable":  0,
-                                                  "patching_rect":  [
-                                                                        1177.108477234840393,
-                                                                        106.915667414665222,
-                                                                        44.0,
-                                                                        44.0
-                                                                    ],
-                                                  "presentation":  1,
-                                                  "presentation_rect":  [
-                                                                            1010.152542352676392,
-                                                                            115.06023782491684,
-                                                                            43.493971228599548,
-                                                                            43.493971228599548
-                                                                        ]
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-33",
-                                                  "maxclass":  "comment",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  0,
-                                                  "patching_rect":  [
-                                                                        1177.108477234840393,
-                                                                        85.228919625282288,
-                                                                        58.0,
-                                                                        20.0
-                                                                    ],
-                                                  "presentation":  1,
-                                                  "presentation_rect":  [
-                                                                            1010.152542352676392,
-                                                                            93.06023782491684,
-                                                                            57.831327438354492,
-                                                                            20.0
-                                                                        ],
-                                                  "text":  "length"
                                               }
                                   },
                                   {
@@ -27119,64 +28631,6 @@
                                   },
                                   {
                                       "box":  {
-                                                  "id":  "obj-36",
-                                                  "items":  [
-                                                                "4n",
-                                                                ",",
-                                                                "8n",
-                                                                ",",
-                                                                "16n",
-                                                                ",",
-                                                                "32n"
-                                                            ],
-                                                  "maxclass":  "umenu",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  3,
-                                                  "outlettype":  [
-                                                                     "int",
-                                                                     "",
-                                                                     ""
-                                                                 ],
-                                                  "parameter_enable":  0,
-                                                  "patching_rect":  [
-                                                                        1248.192817211151123,
-                                                                        108.120486736297607,
-                                                                        80.0,
-                                                                        22.0
-                                                                    ],
-                                                  "presentation":  1,
-                                                  "presentation_rect":  [
-                                                                            1081.152542352676392,
-                                                                            135.06023782491684,
-                                                                            79.518075227737427,
-                                                                            22.0
-                                                                        ]
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-37",
-                                                  "maxclass":  "comment",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  0,
-                                                  "patching_rect":  [
-                                                                        1248.192817211151123,
-                                                                        85.228919625282288,
-                                                                        70.0,
-                                                                        20.0
-                                                                    ],
-                                                  "presentation":  1,
-                                                  "presentation_rect":  [
-                                                                            1081.152542352676392,
-                                                                            111.06023782491684,
-                                                                            69.879520654678345,
-                                                                            20.0
-                                                                        ],
-                                                  "text":  "division"
-                                              }
-                                  },
-                                  {
-                                      "box":  {
                                                   "id":  "obj-38",
                                                   "maxclass":  "newobj",
                                                   "numinlets":  1,
@@ -27209,56 +28663,6 @@
                                                                         22.0
                                                                     ],
                                                   "text":  "clear, append 4n, append 8n, append 16n, append 32n, setsymbol 16n"
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-40",
-                                                  "maxclass":  "dial",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  1,
-                                                  "outlettype":  [
-                                                                     "float"
-                                                                 ],
-                                                  "parameter_enable":  0,
-                                                  "patching_rect":  [
-                                                                        1355.421736836433411,
-                                                                        106.915667414665222,
-                                                                        44.0,
-                                                                        44.0
-                                                                    ],
-                                                  "presentation":  1,
-                                                  "presentation_rect":  [
-                                                                            1189.152542352676392,
-                                                                            115.06023782491684,
-                                                                            43.493971228599548,
-                                                                            43.493971228599548
-                                                                        ],
-                                                  "size":  101.0,
-                                                  "varname":  "cs_density_dial"
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-41",
-                                                  "maxclass":  "comment",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  0,
-                                                  "patching_rect":  [
-                                                                        1354.216917514801025,
-                                                                        85.228919625282288,
-                                                                        70.0,
-                                                                        20.0
-                                                                    ],
-                                                  "presentation":  1,
-                                                  "presentation_rect":  [
-                                                                            1186.152542352676392,
-                                                                            93.06023782491684,
-                                                                            69.879520654678345,
-                                                                            20.0
-                                                                        ],
-                                                  "text":  "density %",
-                                                  "varname":  "cs_density_label"
                                               }
                                   },
                                   {
@@ -27299,230 +28703,6 @@
                                   },
                                   {
                                       "box":  {
-                                                  "hidden":  1,
-                                                  "id":  "obj-80",
-                                                  "items":  [
-                                                                "C0",
-                                                                ",",
-                                                                "C#0",
-                                                                ",",
-                                                                "D0",
-                                                                ",",
-                                                                "D#0",
-                                                                ",",
-                                                                "E0",
-                                                                ",",
-                                                                "F0",
-                                                                ",",
-                                                                "F#0",
-                                                                ",",
-                                                                "G0",
-                                                                ",",
-                                                                "G#0",
-                                                                ",",
-                                                                "A0",
-                                                                ",",
-                                                                "A#0",
-                                                                ",",
-                                                                "B0",
-                                                                ",",
-                                                                "C1",
-                                                                ",",
-                                                                "C#1",
-                                                                ",",
-                                                                "D1",
-                                                                ",",
-                                                                "D#1",
-                                                                ",",
-                                                                "E1",
-                                                                ",",
-                                                                "F1",
-                                                                ",",
-                                                                "F#1",
-                                                                ",",
-                                                                "G1",
-                                                                ",",
-                                                                "G#1",
-                                                                ",",
-                                                                "A1",
-                                                                ",",
-                                                                "A#1",
-                                                                ",",
-                                                                "B1",
-                                                                ",",
-                                                                "C2",
-                                                                ",",
-                                                                "C#2",
-                                                                ",",
-                                                                "D2",
-                                                                ",",
-                                                                "D#2",
-                                                                ",",
-                                                                "E2",
-                                                                ",",
-                                                                "F2",
-                                                                ",",
-                                                                "F#2",
-                                                                ",",
-                                                                "G2",
-                                                                ",",
-                                                                "G#2",
-                                                                ",",
-                                                                "A2",
-                                                                ",",
-                                                                "A#2",
-                                                                ",",
-                                                                "B2",
-                                                                ",",
-                                                                "C3",
-                                                                ",",
-                                                                "C#3",
-                                                                ",",
-                                                                "D3",
-                                                                ",",
-                                                                "D#3",
-                                                                ",",
-                                                                "E3",
-                                                                ",",
-                                                                "F3",
-                                                                ",",
-                                                                "F#3",
-                                                                ",",
-                                                                "G3",
-                                                                ",",
-                                                                "G#3",
-                                                                ",",
-                                                                "A3",
-                                                                ",",
-                                                                "A#3",
-                                                                ",",
-                                                                "B3",
-                                                                ",",
-                                                                "C4",
-                                                                ",",
-                                                                "C#4",
-                                                                ",",
-                                                                "D4",
-                                                                ",",
-                                                                "D#4",
-                                                                ",",
-                                                                "E4",
-                                                                ",",
-                                                                "F4",
-                                                                ",",
-                                                                "F#4",
-                                                                ",",
-                                                                "G4",
-                                                                ",",
-                                                                "G#4",
-                                                                ",",
-                                                                "A4",
-                                                                ",",
-                                                                "A#4",
-                                                                ",",
-                                                                "B4",
-                                                                ",",
-                                                                "C5",
-                                                                ",",
-                                                                "C#5",
-                                                                ",",
-                                                                "D5",
-                                                                ",",
-                                                                "D#5",
-                                                                ",",
-                                                                "E5",
-                                                                ",",
-                                                                "F5",
-                                                                ",",
-                                                                "F#5",
-                                                                ",",
-                                                                "G5",
-                                                                ",",
-                                                                "G#5",
-                                                                ",",
-                                                                "A5",
-                                                                ",",
-                                                                "A#5",
-                                                                ",",
-                                                                "B5",
-                                                                ",",
-                                                                "C6",
-                                                                ",",
-                                                                "C#6",
-                                                                ",",
-                                                                "D6",
-                                                                ",",
-                                                                "D#6",
-                                                                ",",
-                                                                "E6",
-                                                                ",",
-                                                                "F6",
-                                                                ",",
-                                                                "F#6",
-                                                                ",",
-                                                                "G6",
-                                                                ",",
-                                                                "G#6",
-                                                                ",",
-                                                                "A6",
-                                                                ",",
-                                                                "A#6",
-                                                                ",",
-                                                                "B6",
-                                                                ",",
-                                                                "C7"
-                                                            ],
-                                                  "maxclass":  "umenu",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  3,
-                                                  "outlettype":  [
-                                                                     "int",
-                                                                     "",
-                                                                     ""
-                                                                 ],
-                                                  "parameter_enable":  0,
-                                                  "patching_rect":  [
-                                                                        22.0,
-                                                                        366.0,
-                                                                        84.0,
-                                                                        22.0
-                                                                    ],
-                                                  "presentation":  1,
-                                                  "presentation_rect":  [
-                                                                            640.152542352676392,
-                                                                            133.06023782491684,
-                                                                            85.542171835899353,
-                                                                            22.0
-                                                                        ],
-                                                  "varname":  "cs_melody_low_menu"
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "hidden":  1,
-                                                  "id":  "obj-81",
-                                                  "maxclass":  "comment",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  0,
-                                                  "patching_rect":  [
-                                                                        756.753012537956238,
-                                                                        104.819280982017517,
-                                                                        70.0,
-                                                                        20.0
-                                                                    ],
-                                                  "presentation":  1,
-                                                  "presentation_rect":  [
-                                                                            640.152542352676392,
-                                                                            111.06023782491684,
-                                                                            71.08433997631073,
-                                                                            20.0
-                                                                        ],
-                                                  "text":  "low note",
-                                                  "varname":  "cs_melody_low_label"
-                                              }
-                                  },
-                                  {
-                                      "box":  {
                                                   "id":  "obj-82",
                                                   "maxclass":  "newobj",
                                                   "numinlets":  1,
@@ -27541,230 +28721,6 @@
                                   },
                                   {
                                       "box":  {
-                                                  "hidden":  1,
-                                                  "id":  "obj-83",
-                                                  "items":  [
-                                                                "C0",
-                                                                ",",
-                                                                "C#0",
-                                                                ",",
-                                                                "D0",
-                                                                ",",
-                                                                "D#0",
-                                                                ",",
-                                                                "E0",
-                                                                ",",
-                                                                "F0",
-                                                                ",",
-                                                                "F#0",
-                                                                ",",
-                                                                "G0",
-                                                                ",",
-                                                                "G#0",
-                                                                ",",
-                                                                "A0",
-                                                                ",",
-                                                                "A#0",
-                                                                ",",
-                                                                "B0",
-                                                                ",",
-                                                                "C1",
-                                                                ",",
-                                                                "C#1",
-                                                                ",",
-                                                                "D1",
-                                                                ",",
-                                                                "D#1",
-                                                                ",",
-                                                                "E1",
-                                                                ",",
-                                                                "F1",
-                                                                ",",
-                                                                "F#1",
-                                                                ",",
-                                                                "G1",
-                                                                ",",
-                                                                "G#1",
-                                                                ",",
-                                                                "A1",
-                                                                ",",
-                                                                "A#1",
-                                                                ",",
-                                                                "B1",
-                                                                ",",
-                                                                "C2",
-                                                                ",",
-                                                                "C#2",
-                                                                ",",
-                                                                "D2",
-                                                                ",",
-                                                                "D#2",
-                                                                ",",
-                                                                "E2",
-                                                                ",",
-                                                                "F2",
-                                                                ",",
-                                                                "F#2",
-                                                                ",",
-                                                                "G2",
-                                                                ",",
-                                                                "G#2",
-                                                                ",",
-                                                                "A2",
-                                                                ",",
-                                                                "A#2",
-                                                                ",",
-                                                                "B2",
-                                                                ",",
-                                                                "C3",
-                                                                ",",
-                                                                "C#3",
-                                                                ",",
-                                                                "D3",
-                                                                ",",
-                                                                "D#3",
-                                                                ",",
-                                                                "E3",
-                                                                ",",
-                                                                "F3",
-                                                                ",",
-                                                                "F#3",
-                                                                ",",
-                                                                "G3",
-                                                                ",",
-                                                                "G#3",
-                                                                ",",
-                                                                "A3",
-                                                                ",",
-                                                                "A#3",
-                                                                ",",
-                                                                "B3",
-                                                                ",",
-                                                                "C4",
-                                                                ",",
-                                                                "C#4",
-                                                                ",",
-                                                                "D4",
-                                                                ",",
-                                                                "D#4",
-                                                                ",",
-                                                                "E4",
-                                                                ",",
-                                                                "F4",
-                                                                ",",
-                                                                "F#4",
-                                                                ",",
-                                                                "G4",
-                                                                ",",
-                                                                "G#4",
-                                                                ",",
-                                                                "A4",
-                                                                ",",
-                                                                "A#4",
-                                                                ",",
-                                                                "B4",
-                                                                ",",
-                                                                "C5",
-                                                                ",",
-                                                                "C#5",
-                                                                ",",
-                                                                "D5",
-                                                                ",",
-                                                                "D#5",
-                                                                ",",
-                                                                "E5",
-                                                                ",",
-                                                                "F5",
-                                                                ",",
-                                                                "F#5",
-                                                                ",",
-                                                                "G5",
-                                                                ",",
-                                                                "G#5",
-                                                                ",",
-                                                                "A5",
-                                                                ",",
-                                                                "A#5",
-                                                                ",",
-                                                                "B5",
-                                                                ",",
-                                                                "C6",
-                                                                ",",
-                                                                "C#6",
-                                                                ",",
-                                                                "D6",
-                                                                ",",
-                                                                "D#6",
-                                                                ",",
-                                                                "E6",
-                                                                ",",
-                                                                "F6",
-                                                                ",",
-                                                                "F#6",
-                                                                ",",
-                                                                "G6",
-                                                                ",",
-                                                                "G#6",
-                                                                ",",
-                                                                "A6",
-                                                                ",",
-                                                                "A#6",
-                                                                ",",
-                                                                "B6",
-                                                                ",",
-                                                                "C7"
-                                                            ],
-                                                  "maxclass":  "umenu",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  3,
-                                                  "outlettype":  [
-                                                                     "int",
-                                                                     "",
-                                                                     ""
-                                                                 ],
-                                                  "parameter_enable":  0,
-                                                  "patching_rect":  [
-                                                                        114.0,
-                                                                        366.0,
-                                                                        84.0,
-                                                                        22.0
-                                                                    ],
-                                                  "presentation":  1,
-                                                  "presentation_rect":  [
-                                                                            750.152542352676392,
-                                                                            133.06023782491684,
-                                                                            85.542171835899353,
-                                                                            22.0
-                                                                        ],
-                                                  "varname":  "cs_melody_high_menu"
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "hidden":  1,
-                                                  "id":  "obj-84",
-                                                  "maxclass":  "comment",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  0,
-                                                  "patching_rect":  [
-                                                                        870.391570806503296,
-                                                                        104.819280982017517,
-                                                                        70.0,
-                                                                        20.0
-                                                                    ],
-                                                  "presentation":  1,
-                                                  "presentation_rect":  [
-                                                                            750.152542352676392,
-                                                                            111.06023782491684,
-                                                                            71.08433997631073,
-                                                                            20.0
-                                                                        ],
-                                                  "text":  "high note",
-                                                  "varname":  "cs_melody_high_label"
-                                              }
-                                  },
-                                  {
-                                      "box":  {
                                                   "id":  "obj-85",
                                                   "maxclass":  "newobj",
                                                   "numinlets":  1,
@@ -27779,72 +28735,6 @@
                                                                         22.0
                                                                     ],
                                                   "text":  "prepend melodyhigh"
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-86",
-                                                  "items":  [
-                                                                "1",
-                                                                ",",
-                                                                "4",
-                                                                ",",
-                                                                "8",
-                                                                ",",
-                                                                "12",
-                                                                ",",
-                                                                "16",
-                                                                ",",
-                                                                "24",
-                                                                ",",
-                                                                "32"
-                                                            ],
-                                                  "maxclass":  "umenu",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  3,
-                                                  "outlettype":  [
-                                                                     "int",
-                                                                     "",
-                                                                     ""
-                                                                 ],
-                                                  "parameter_enable":  0,
-                                                  "patching_rect":  [
-                                                                        206.0,
-                                                                        366.0,
-                                                                        84.0,
-                                                                        22.0
-                                                                    ],
-                                                  "presentation":  1,
-                                                  "presentation_rect":  [
-                                                                            844.152542352676392,
-                                                                            133.06023782491684,
-                                                                            85.542171835899353,
-                                                                            22.0
-                                                                        ],
-                                                  "varname":  "cs_pad_count_menu"
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-87",
-                                                  "maxclass":  "comment",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  0,
-                                                  "patching_rect":  [
-                                                                        954.343381285667419,
-                                                                        104.819280982017517,
-                                                                        75.0,
-                                                                        20.0
-                                                                    ],
-                                                  "presentation":  1,
-                                                  "presentation_rect":  [
-                                                                            843.152542352676392,
-                                                                            106.06023782491684,
-                                                                            75.903617262840271,
-                                                                            20.0
-                                                                        ],
-                                                  "text":  "pad count",
-                                                  "varname":  "cs_pad_count_label"
                                               }
                                   },
                                   {
@@ -27916,55 +28806,6 @@
                                   },
                                   {
                                       "box":  {
-                                                  "id":  "obj-47",
-                                                  "maxclass":  "toggle",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  1,
-                                                  "outlettype":  [
-                                                                     "int"
-                                                                 ],
-                                                  "parameter_enable":  0,
-                                                  "patching_rect":  [
-                                                                        226.506032466888428,
-                                                                        134.939764022827148,
-                                                                        24.0,
-                                                                        24.0
-                                                                    ],
-                                                  "hidden":  0,
-                                                  "presentation":  1,
-                                                  "presentation_rect":  [
-                                                                            201,
-                                                                            134,
-                                                                            24,
-                                                                            24
-                                                                        ]
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-48",
-                                                  "maxclass":  "comment",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  0,
-                                                  "patching_rect":  [
-                                                                        256.626515507698059,
-                                                                        137.349402666091919,
-                                                                        45.0,
-                                                                        20.0
-                                                                    ],
-                                                  "hidden":  0,
-                                                  "presentation":  1,
-                                                  "presentation_rect":  [
-                                                                            232,
-                                                                            136,
-                                                                            45,
-                                                                            20
-                                                                        ],
-                                                  "text":  "play"
-                                              }
-                                  },
-                                  {
-                                      "box":  {
                                                   "id":  "obj-78",
                                                   "maxclass":  "newobj",
                                                   "numinlets":  2,
@@ -27997,62 +28838,6 @@
                                                                         22.0
                                                                     ],
                                                   "text":  "delay 50"
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-105",
-                                                  "maxclass":  "fpic",
-                                                  "varname":  "cs_source_image",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  0,
-                                                  "patching_rect":  [
-                                                                        -1.204819321632385,
-                                                                        -7.2289159297943124,
-                                                                        360.24097716808319,
-                                                                        178.31325960159302
-                                                                    ],
-                                                  "presentation":  1,
-                                                  "presentation_rect":  [
-                                                                            -0.847457647323608,
-                                                                            0,
-                                                                            292,
-                                                                            170
-                                                                        ],
-                                                  "hidden":  1,
-                                                  "embed":  0,
-                                                  "autofit":  1,
-                                                  "forceaspect":  0,
-                                                  "ignoreclick":  1
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "border":  0,
-                                                  "filename":  "cryptoseq_source_view.js",
-                                                  "id":  "obj-91",
-                                                  "ignoreclick":  1,
-                                                  "maxclass":  "jsui",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  1,
-                                                  "outlettype":  [
-                                                                     ""
-                                                                 ],
-                                                  "parameter_enable":  0,
-                                                  "patching_rect":  [
-                                                                        -1.204819321632385,
-                                                                        -7.228915929794312,
-                                                                        360.240977168083191,
-                                                                        178.313259601593018
-                                                                    ],
-                                                  "presentation":  1,
-                                                  "presentation_rect":  [
-                                                                            -0.847457647323608,
-                                                                            0.0,
-                                                                            292.0,
-                                                                            170.0
-                                                                        ],
-                                                  "varname":  "cs_source_view"
                                               }
                                   },
                                   {
@@ -28108,93 +28893,6 @@
                                                                         42.0
                                                                     ],
                                                   "varname":  "cs_dropfile"
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "border":  0,
-                                                  "filename":  "cryptoseq_rsa_view.js",
-                                                  "id":  "obj-95",
-                                                  "ignoreclick":  1,
-                                                  "maxclass":  "jsui",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  1,
-                                                  "outlettype":  [
-                                                                     ""
-                                                                 ],
-                                                  "parameter_enable":  0,
-                                                  "patching_rect":  [
-                                                                        351.5,
-                                                                        1.204819321632385,
-                                                                        390.0,
-                                                                        170.0
-                                                                    ],
-                                                  "presentation":  1,
-                                                  "presentation_rect":  [
-                                                                            293.152542352676392,
-                                                                            0.06023782491684,
-                                                                            327.710855484008789,
-                                                                            169.879524350166321
-                                                                        ],
-                                                  "varname":  "cs_rsa_view"
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "border":  0,
-                                                  "filename":  "cryptoseq_mode_view.js",
-                                                  "id":  "obj-96",
-                                                  "ignoreclick":  1,
-                                                  "maxclass":  "jsui",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  1,
-                                                  "outlettype":  [
-                                                                     ""
-                                                                 ],
-                                                  "parameter_enable":  0,
-                                                  "patching_rect":  [
-                                                                        743.5,
-                                                                        1.204819321632385,
-                                                                        357.83133852481842,
-                                                                        170.0
-                                                                    ],
-                                                  "presentation":  1,
-                                                  "presentation_rect":  [
-                                                                            623.152542352676392,
-                                                                            0.06023782491684,
-                                                                            361.445796489715576,
-                                                                            170.0
-                                                                        ],
-                                                  "varname":  "cs_mode_view"
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "border":  0,
-                                                  "filename":  "cryptoseq_sequence_view.js",
-                                                  "id":  "obj-97",
-                                                  "ignoreclick":  1,
-                                                  "maxclass":  "jsui",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  1,
-                                                  "outlettype":  [
-                                                                     ""
-                                                                 ],
-                                                  "parameter_enable":  0,
-                                                  "patching_rect":  [
-                                                                        1103.33133852481842,
-                                                                        1.204819321632385,
-                                                                        369.879531741142273,
-                                                                        170.0
-                                                                    ],
-                                                  "presentation":  1,
-                                                  "presentation_rect":  [
-                                                                            986.152542352676392,
-                                                                            0.06023782491684,
-                                                                            285.0,
-                                                                            170.0
-                                                                        ],
-                                                  "varname":  "cs_sequence_view"
                                               }
                                   },
                                   {
@@ -28319,55 +29017,6 @@
                                   },
                                   {
                                       "box":  {
-                                                  "id":  "obj-214",
-                                                  "maxclass":  "dial",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  1,
-                                                  "outlettype":  [
-                                                                     "int"
-                                                                 ],
-                                                  "parameter_enable":  0,
-                                                  "size":  128,
-                                                  "patching_rect":  [
-                                                                        1445,
-                                                                        106,
-                                                                        44,
-                                                                        44
-                                                                    ],
-                                                  "presentation":  1,
-                                                  "presentation_rect":  [
-                                                                            534,
-                                                                            65.5,
-                                                                            31,
-                                                                            31
-                                                                        ],
-                                                  "varname":  "cs_shift_dial"
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-215",
-                                                  "maxclass":  "comment",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  0,
-                                                  "patching_rect":  [
-                                                                        1444,
-                                                                        85,
-                                                                        70,
-                                                                        20
-                                                                    ],
-                                                  "presentation":  1,
-                                                  "presentation_rect":  [
-                                                                            514,
-                                                                            41.5,
-                                                                            70,
-                                                                            20
-                                                                        ],
-                                                  "text":  "shift"
-                                              }
-                                  },
-                                  {
-                                      "box":  {
                                                   "id":  "obj-216",
                                                   "maxclass":  "newobj",
                                                   "numinlets":  1,
@@ -28399,7 +29048,7 @@
                                                                         35,
                                                                         22
                                                                     ],
-                                                  "text":  "0"
+                                                  "text":  "127"
                                               }
                                   },
                                   {
@@ -28441,82 +29090,6 @@
                                   },
                                   {
                                       "box":  {
-                                                  "id":  "obj-220",
-                                                  "maxclass":  "number",
-                                                  "varname":  "cs_shift_number",
-                                                  "presentation":  1,
-                                                  "parameter_enable":  0,
-                                                  "numinlets":  1,
-                                                  "numoutlets":  2,
-                                                  "outlettype":  [
-                                                                     "",
-                                                                     "bang"
-                                                                 ],
-                                                  "patching_rect":  [
-                                                                        1495,
-                                                                        106,
-                                                                        42,
-                                                                        22
-                                                                    ],
-                                                  "presentation_rect":  [
-                                                                            568,
-                                                                            65.5,
-                                                                            36,
-                                                                            22
-                                                                        ]
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-221",
-                                                  "maxclass":  "toggle",
-                                                  "varname":  "cs_poly_toggle",
-                                                  "presentation":  1,
-                                                  "parameter_enable":  0,
-                                                  "numinlets":  1,
-                                                  "numoutlets":  1,
-                                                  "outlettype":  [
-                                                                     "int"
-                                                                 ],
-                                                  "patching_rect":  [
-                                                                        1545,
-                                                                        520,
-                                                                        24,
-                                                                        24
-                                                                    ],
-                                                  "presentation_rect":  [
-                                                                            946,
-                                                                            65,
-                                                                            24,
-                                                                            24
-                                                                        ]
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-222",
-                                                  "maxclass":  "comment",
-                                                  "varname":  "cs_poly_label",
-                                                  "presentation":  1,
-                                                  "text":  "poly",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  0,
-                                                  "patching_rect":  [
-                                                                        1540,
-                                                                        492,
-                                                                        55,
-                                                                        20
-                                                                    ],
-                                                  "presentation_rect":  [
-                                                                            934,
-                                                                            41.5,
-                                                                            55,
-                                                                            20
-                                                                        ]
-                                              }
-                                  },
-                                  {
-                                      "box":  {
                                                   "id":  "obj-223",
                                                   "maxclass":  "newobj",
                                                   "numinlets":  1,
@@ -28549,6 +29122,844 @@
                                                                         22
                                                                     ],
                                                   "text":  "0"
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-403",
+                                                  "maxclass":  "newobj",
+                                                  "text":  "prepend scene",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        1720,
+                                                                        760,
+                                                                        105,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-406",
+                                                  "maxclass":  "newobj",
+                                                  "text":  "prepend ratchetamount",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        1720,
+                                                                        790,
+                                                                        150,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-409",
+                                                  "maxclass":  "newobj",
+                                                  "text":  "prepend ratchetmax",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        1720,
+                                                                        820,
+                                                                        135,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-412",
+                                                  "maxclass":  "newobj",
+                                                  "text":  "prepend fillmode",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        1720,
+                                                                        850,
+                                                                        125,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-428",
+                                                  "maxclass":  "newobj",
+                                                  "text":  "prepend morphamount",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        2040,
+                                                                        760,
+                                                                        145,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-431",
+                                                  "maxclass":  "newobj",
+                                                  "text":  "prepend morphscene",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        2040,
+                                                                        790,
+                                                                        135,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-434",
+                                                  "maxclass":  "newobj",
+                                                  "text":  "prepend morphmode",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        2040,
+                                                                        820,
+                                                                        130,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-435",
+                                                  "maxclass":  "message",
+                                                  "text":  "0",
+                                                  "numinlets":  2,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        2160,
+                                                                        700,
+                                                                        35,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-436",
+                                                  "maxclass":  "message",
+                                                  "text":  "0",
+                                                  "numinlets":  2,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        2160,
+                                                                        730,
+                                                                        35,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-437",
+                                                  "maxclass":  "message",
+                                                  "text":  "1",
+                                                  "numinlets":  2,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        2160,
+                                                                        760,
+                                                                        35,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-438",
+                                                  "maxclass":  "message",
+                                                  "text":  "clear, append off, append end, append accent, append velocity, append all, setsymbol off",
+                                                  "numinlets":  2,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        2160,
+                                                                        790,
+                                                                        430,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-439",
+                                                  "maxclass":  "message",
+                                                  "text":  "0",
+                                                  "numinlets":  2,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        2160,
+                                                                        820,
+                                                                        35,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-440",
+                                                  "maxclass":  "message",
+                                                  "text":  "1",
+                                                  "numinlets":  2,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        2160,
+                                                                        850,
+                                                                        35,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-441",
+                                                  "maxclass":  "message",
+                                                  "text":  "clear, append all, append pitch, append rhythm, append velocity, setsymbol all",
+                                                  "numinlets":  2,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        2160,
+                                                                        880,
+                                                                        430,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-105",
+                                                  "maxclass":  "fpic",
+                                                  "varname":  "cs_source_image",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  0,
+                                                  "patching_rect":  [
+                                                                        -1.204819321632385,
+                                                                        -7.2289159297943124,
+                                                                        360.24097716808319,
+                                                                        178.31325960159302
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            -0.847457647323608,
+                                                                            0,
+                                                                            292,
+                                                                            170
+                                                                        ],
+                                                  "hidden":  1,
+                                                  "embed":  0,
+                                                  "autofit":  1,
+                                                  "forceaspect":  0,
+                                                  "ignoreclick":  1
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "border":  0,
+                                                  "filename":  "cryptoseq_source_view.js",
+                                                  "id":  "obj-91",
+                                                  "ignoreclick":  1,
+                                                  "maxclass":  "jsui",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "parameter_enable":  0,
+                                                  "patching_rect":  [
+                                                                        -1.204819321632385,
+                                                                        -7.228915929794312,
+                                                                        360.240977168083191,
+                                                                        178.313259601593018
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            -0.847457647323608,
+                                                                            0.0,
+                                                                            292.0,
+                                                                            170.0
+                                                                        ],
+                                                  "varname":  "cs_source_view"
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "border":  0,
+                                                  "filename":  "cryptoseq_rsa_view.js",
+                                                  "id":  "obj-95",
+                                                  "ignoreclick":  1,
+                                                  "maxclass":  "jsui",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "parameter_enable":  0,
+                                                  "patching_rect":  [
+                                                                        351.5,
+                                                                        1.204819321632385,
+                                                                        390.0,
+                                                                        170.0
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            293.152542352676392,
+                                                                            0.06023782491684,
+                                                                            327.710855484008789,
+                                                                            169.879524350166321
+                                                                        ],
+                                                  "varname":  "cs_rsa_view"
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "border":  0,
+                                                  "filename":  "cryptoseq_mode_view.js",
+                                                  "id":  "obj-96",
+                                                  "ignoreclick":  1,
+                                                  "maxclass":  "jsui",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "parameter_enable":  0,
+                                                  "patching_rect":  [
+                                                                        743.5,
+                                                                        1.204819321632385,
+                                                                        357.83133852481842,
+                                                                        170.0
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            623.152542352676392,
+                                                                            0.06023782491684,
+                                                                            361.445796489715576,
+                                                                            170.0
+                                                                        ],
+                                                  "varname":  "cs_mode_view"
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "border":  0,
+                                                  "filename":  "cryptoseq_sequence_view.js",
+                                                  "id":  "obj-97",
+                                                  "ignoreclick":  1,
+                                                  "maxclass":  "jsui",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "parameter_enable":  0,
+                                                  "patching_rect":  [
+                                                                        1103.33133852481842,
+                                                                        1.204819321632385,
+                                                                        369.879531741142273,
+                                                                        170.0
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            986.152542352676392,
+                                                                            0.06023782491684,
+                                                                            285.0,
+                                                                            170.0
+                                                                        ],
+                                                  "varname":  "cs_sequence_view"
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-400",
+                                                  "maxclass":  "jsui",
+                                                  "varname":  "cs_performance_view",
+                                                  "filename":  "cryptoseq_performance_view.js",
+                                                  "border":  0,
+                                                  "ignoreclick":  1,
+                                                  "presentation":  1,
+                                                  "hidden":  0,
+                                                  "parameter_enable":  0,
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        1475,
+                                                                        1.2,
+                                                                        360,
+                                                                        170
+                                                                    ],
+                                                  "presentation_rect":  [
+                                                                            1268,
+                                                                            0.06,
+                                                                            360,
+                                                                            170
+                                                                        ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-451",
+                                                  "maxclass":  "newobj",
+                                                  "text":  "scale 0 254 -127 127",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        1478,
+                                                                        158,
+                                                                        130,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-442",
+                                                  "maxclass":  "comment",
+                                                  "text":  "amount",
+                                                  "presentation":  1,
+                                                  "hidden":  0,
+                                                  "numinlets":  1,
+                                                  "numoutlets":  0,
+                                                  "patching_rect":  [
+                                                                        1780,
+                                                                        751,
+                                                                        75,
+                                                                        18
+                                                                    ],
+                                                  "presentation_rect":  [
+                                                                            1522,
+                                                                            30,
+                                                                            58,
+                                                                            20
+                                                                        ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-443",
+                                                  "maxclass":  "number",
+                                                  "varname":  "cs_fill_amount_number",
+                                                  "presentation":  1,
+                                                  "hidden":  0,
+                                                  "parameter_enable":  1,
+                                                  "numinlets":  1,
+                                                  "numoutlets":  2,
+                                                  "outlettype":  [
+                                                                     "",
+                                                                     "bang"
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        1780,
+                                                                        771,
+                                                                        44,
+                                                                        20
+                                                                    ],
+                                                  "presentation_rect":  [
+                                                                            1522,
+                                                                            51,
+                                                                            44,
+                                                                            22
+                                                                        ],
+                                                  "minimum":  0,
+                                                  "maximum":  100,
+                                                  "saved_attribute_attributes":  {
+                                                                                     "valueof":  {
+                                                                                                     "parameter_initial":  [
+                                                                                                                               0
+                                                                                                                           ],
+                                                                                                     "parameter_initial_enable":  1,
+                                                                                                     "parameter_longname":  "fill amount",
+                                                                                                     "parameter_shortname":  "fill amount",
+                                                                                                     "parameter_mmin":  0,
+                                                                                                     "parameter_mmax":  100,
+                                                                                                     "parameter_type":  0,
+                                                                                                     "parameter_unitstyle":  0
+                                                                                                 }
+                                                                                 }
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-444",
+                                                  "maxclass":  "newobj",
+                                                  "text":  "prepend fillamount",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        1780,
+                                                                        800,
+                                                                        135,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-445",
+                                                  "maxclass":  "comment",
+                                                  "text":  "target",
+                                                  "presentation":  1,
+                                                  "hidden":  0,
+                                                  "numinlets":  1,
+                                                  "numoutlets":  0,
+                                                  "patching_rect":  [
+                                                                        1860,
+                                                                        751,
+                                                                        75,
+                                                                        18
+                                                                    ],
+                                                  "presentation_rect":  [
+                                                                            1279,
+                                                                            84,
+                                                                            48,
+                                                                            20
+                                                                        ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-446",
+                                                  "maxclass":  "umenu",
+                                                  "varname":  "cs_fill_target_menu",
+                                                  "presentation":  1,
+                                                  "hidden":  0,
+                                                  "parameter_enable":  1,
+                                                  "numinlets":  1,
+                                                  "numoutlets":  3,
+                                                  "outlettype":  [
+                                                                     "int",
+                                                                     "",
+                                                                     ""
+                                                                 ],
+                                                  "items":  [
+                                                                "density",
+                                                                ",",
+                                                                "ratchet",
+                                                                ",",
+                                                                "velocity",
+                                                                ",",
+                                                                "gate",
+                                                                ",",
+                                                                "all"
+                                                            ],
+                                                  "patching_rect":  [
+                                                                        1860,
+                                                                        771,
+                                                                        88,
+                                                                        22
+                                                                    ],
+                                                  "presentation_rect":  [
+                                                                            1279,
+                                                                            105,
+                                                                            68,
+                                                                            22
+                                                                        ],
+                                                  "saved_attribute_attributes":  {
+                                                                                     "valueof":  {
+                                                                                                     "parameter_initial":  [
+                                                                                                                               4
+                                                                                                                           ],
+                                                                                                     "parameter_initial_enable":  1,
+                                                                                                     "parameter_longname":  "fill target",
+                                                                                                     "parameter_shortname":  "fill target",
+                                                                                                     "parameter_mmin":  0,
+                                                                                                     "parameter_mmax":  4,
+                                                                                                     "parameter_type":  0,
+                                                                                                     "parameter_unitstyle":  0
+                                                                                                 }
+                                                                                 }
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-447",
+                                                  "maxclass":  "newobj",
+                                                  "text":  "prepend filltarget",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        1860,
+                                                                        800,
+                                                                        130,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-448",
+                                                  "maxclass":  "message",
+                                                  "text":  "0",
+                                                  "numinlets":  2,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        2160,
+                                                                        910,
+                                                                        35,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-449",
+                                                  "maxclass":  "message",
+                                                  "text":  "clear, append density, append ratchet, append velocity, append gate, append all, setsymbol all",
+                                                  "numinlets":  2,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        2160,
+                                                                        940,
+                                                                        520,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-450",
+                                                  "maxclass":  "dial",
+                                                  "varname":  "cs_morph_amount_dial",
+                                                  "presentation":  1,
+                                                  "hidden":  0,
+                                                  "parameter_enable":  1,
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     "int"
+                                                                 ],
+                                                  "size":  101,
+                                                  "patching_rect":  [
+                                                                        1470,
+                                                                        866,
+                                                                        36,
+                                                                        36
+                                                                    ],
+                                                  "presentation_rect":  [
+                                                                            1360,
+                                                                            105,
+                                                                            30,
+                                                                            30
+                                                                        ],
+                                                  "saved_attribute_attributes":  {
+                                                                                     "valueof":  {
+                                                                                                     "parameter_initial":  [
+                                                                                                                               0
+                                                                                                                           ],
+                                                                                                     "parameter_initial_enable":  1,
+                                                                                                     "parameter_longname":  "morph knob",
+                                                                                                     "parameter_shortname":  "morph knob",
+                                                                                                     "parameter_mmin":  0,
+                                                                                                     "parameter_mmax":  100,
+                                                                                                     "parameter_type":  0,
+                                                                                                     "parameter_unitstyle":  0
+                                                                                                 }
+                                                                                 }
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-460",
+                                                  "maxclass":  "button",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     "bang"
+                                                                 ],
+                                                  "parameter_enable":  0,
+                                                  "patching_rect":  [
+                                                                        310,
+                                                                        134,
+                                                                        24,
+                                                                        24
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            255,
+                                                                            134,
+                                                                            24,
+                                                                            24
+                                                                        ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-461",
+                                                  "maxclass":  "comment",
+                                                  "text":  "export",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  0,
+                                                  "patching_rect":  [
+                                                                        340,
+                                                                        137,
+                                                                        50,
+                                                                        20
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            286,
+                                                                            136,
+                                                                            50,
+                                                                            20
+                                                                        ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-462",
+                                                  "maxclass":  "newobj",
+                                                  "text":  "js cryptoseq_clip_export.js",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        2220,
+                                                                        760,
+                                                                        175,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-463",
+                                                  "maxclass":  "message",
+                                                  "text":  "dump",
+                                                  "numinlets":  2,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        2220,
+                                                                        700,
+                                                                        45,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-464",
+                                                  "maxclass":  "newobj",
+                                                  "text":  "delay 100",
+                                                  "numinlets":  2,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     "bang"
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        2280,
+                                                                        700,
+                                                                        70,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-465",
+                                                  "maxclass":  "message",
+                                                  "text":  "exportclip",
+                                                  "numinlets":  2,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        2280,
+                                                                        730,
+                                                                        75,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-520",
+                                                  "maxclass":  "newobj",
+                                                  "text":  "delay 300",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     "bang"
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        2140,
+                                                                        990,
+                                                                        70,
+                                                                        22
+                                                                    ]
                                               }
                                   }
                               ],
@@ -29110,90 +30521,6 @@
                                   {
                                       "patchline":  {
                                                         "destination":  [
-                                                                            "obj-23",
-                                                                            0
-                                                                        ],
-                                                        "hidden":  1,
-                                                        "order":  5,
-                                                        "source":  [
-                                                                       "obj-79",
-                                                                       0
-                                                                   ]
-                                                    }
-                                  },
-                                  {
-                                      "patchline":  {
-                                                        "destination":  [
-                                                                            "obj-27",
-                                                                            0
-                                                                        ],
-                                                        "hidden":  1,
-                                                        "order":  4,
-                                                        "source":  [
-                                                                       "obj-79",
-                                                                       0
-                                                                   ]
-                                                    }
-                                  },
-                                  {
-                                      "patchline":  {
-                                                        "destination":  [
-                                                                            "obj-31",
-                                                                            0
-                                                                        ],
-                                                        "hidden":  1,
-                                                        "order":  3,
-                                                        "source":  [
-                                                                       "obj-79",
-                                                                       0
-                                                                   ]
-                                                    }
-                                  },
-                                  {
-                                      "patchline":  {
-                                                        "destination":  [
-                                                                            "obj-35",
-                                                                            0
-                                                                        ],
-                                                        "hidden":  1,
-                                                        "order":  2,
-                                                        "source":  [
-                                                                       "obj-79",
-                                                                       0
-                                                                   ]
-                                                    }
-                                  },
-                                  {
-                                      "patchline":  {
-                                                        "destination":  [
-                                                                            "obj-39",
-                                                                            0
-                                                                        ],
-                                                        "hidden":  1,
-                                                        "order":  1,
-                                                        "source":  [
-                                                                       "obj-79",
-                                                                       0
-                                                                   ]
-                                                    }
-                                  },
-                                  {
-                                      "patchline":  {
-                                                        "destination":  [
-                                                                            "obj-43",
-                                                                            0
-                                                                        ],
-                                                        "hidden":  1,
-                                                        "order":  0,
-                                                        "source":  [
-                                                                       "obj-79",
-                                                                       0
-                                                                   ]
-                                                    }
-                                  },
-                                  {
-                                      "patchline":  {
-                                                        "destination":  [
                                                                             "obj-82",
                                                                             0
                                                                         ],
@@ -29405,37 +30732,11 @@
                                   {
                                       "patchline":  {
                                                         "source":  [
-                                                                       "obj-214",
-                                                                       0
-                                                                   ],
-                                                        "destination":  [
-                                                                            "obj-216",
-                                                                            0
-                                                                        ],
-                                                        "hidden":  1
-                                                    }
-                                  },
-                                  {
-                                      "patchline":  {
-                                                        "source":  [
                                                                        "obj-216",
                                                                        0
                                                                    ],
                                                         "destination":  [
                                                                             "obj-2",
-                                                                            0
-                                                                        ],
-                                                        "hidden":  1
-                                                    }
-                                  },
-                                  {
-                                      "patchline":  {
-                                                        "source":  [
-                                                                       "obj-79",
-                                                                       0
-                                                                   ],
-                                                        "destination":  [
-                                                                            "obj-217",
                                                                             0
                                                                         ],
                                                         "hidden":  1
@@ -29574,30 +30875,6 @@
                                   {
                                       "patchline":  {
                                                         "source":  [
-                                                                       "obj-214",
-                                                                       0
-                                                                   ],
-                                                        "destination":  [
-                                                                            "obj-220",
-                                                                            0
-                                                                        ]
-                                                    }
-                                  },
-                                  {
-                                      "patchline":  {
-                                                        "source":  [
-                                                                       "obj-217",
-                                                                       0
-                                                                   ],
-                                                        "destination":  [
-                                                                            "obj-220",
-                                                                            0
-                                                                        ]
-                                                    }
-                                  },
-                                  {
-                                      "patchline":  {
-                                                        "source":  [
                                                                        "obj-221",
                                                                        0
                                                                    ],
@@ -29615,18 +30892,6 @@
                                                                    ],
                                                         "destination":  [
                                                                             "obj-219",
-                                                                            0
-                                                                        ]
-                                                    }
-                                  },
-                                  {
-                                      "patchline":  {
-                                                        "source":  [
-                                                                       "obj-79",
-                                                                       0
-                                                                   ],
-                                                        "destination":  [
-                                                                            "obj-224",
                                                                             0
                                                                         ]
                                                     }
@@ -29653,6 +30918,922 @@
                                                                             "obj-219",
                                                                             3
                                                                         ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-402",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-403",
+                                                                            0
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-403",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-2",
+                                                                            0
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-405",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-406",
+                                                                            0
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-406",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-2",
+                                                                            0
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-408",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-409",
+                                                                            0
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-409",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-2",
+                                                                            0
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-411",
+                                                                       1
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-412",
+                                                                            0
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-412",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-2",
+                                                                            0
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-427",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-428",
+                                                                            0
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-428",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-2",
+                                                                            0
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-430",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-431",
+                                                                            0
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-431",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-2",
+                                                                            0
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-433",
+                                                                       1
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-434",
+                                                                            0
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-434",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-2",
+                                                                            0
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-2",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-400",
+                                                                            0
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-435",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-402",
+                                                                            0
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-436",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-405",
+                                                                            0
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-437",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-408",
+                                                                            0
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-438",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-411",
+                                                                            0
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-439",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-427",
+                                                                            0
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-440",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-430",
+                                                                            0
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-441",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-433",
+                                                                            0
+                                                                        ]
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-220",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-216",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  1
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-214",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-451",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-451",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-220",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-443",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-444",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-444",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-2",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-446",
+                                                                       1
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-447",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-447",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-2",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-448",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-443",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-449",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-446",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-450",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-427",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true
+                                                    }
+                                  },
+                                  {
+                                      "source":  [
+                                                     "obj-460",
+                                                     0
+                                                 ],
+                                      "destination":  [
+                                                          "obj-463",
+                                                          0
+                                                      ],
+                                      "hidden":  true
+                                  },
+                                  {
+                                      "source":  [
+                                                     "obj-463",
+                                                     0
+                                                 ],
+                                      "destination":  [
+                                                          "obj-219",
+                                                          0
+                                                      ],
+                                      "hidden":  true
+                                  },
+                                  {
+                                      "source":  [
+                                                     "obj-460",
+                                                     0
+                                                 ],
+                                      "destination":  [
+                                                          "obj-464",
+                                                          0
+                                                      ],
+                                      "hidden":  true
+                                  },
+                                  {
+                                      "source":  [
+                                                     "obj-464",
+                                                     0
+                                                 ],
+                                      "destination":  [
+                                                          "obj-465",
+                                                          0
+                                                      ],
+                                      "hidden":  true
+                                  },
+                                  {
+                                      "source":  [
+                                                     "obj-465",
+                                                     0
+                                                 ],
+                                      "destination":  [
+                                                          "obj-462",
+                                                          0
+                                                      ],
+                                      "hidden":  true
+                                  },
+                                  {
+                                      "source":  [
+                                                     "obj-219",
+                                                     0
+                                                 ],
+                                      "destination":  [
+                                                          "obj-462",
+                                                          0
+                                                      ],
+                                      "hidden":  true
+                                  },
+                                  {
+                                      "source":  [
+                                                     "obj-38",
+                                                     0
+                                                 ],
+                                      "destination":  [
+                                                          "obj-462",
+                                                          0
+                                                      ],
+                                      "hidden":  true
+                                  },
+                                  {
+                                      "source":  [
+                                                     "obj-98",
+                                                     0
+                                                 ],
+                                      "destination":  [
+                                                          "obj-462",
+                                                          0
+                                                      ],
+                                      "hidden":  true
+                                  },
+                                  {
+                                      "source":  [
+                                                     "obj-460",
+                                                     0
+                                                 ],
+                                      "destination":  [
+                                                          "obj-463",
+                                                          0
+                                                      ],
+                                      "hidden":  true
+                                  },
+                                  {
+                                      "source":  [
+                                                     "obj-463",
+                                                     0
+                                                 ],
+                                      "destination":  [
+                                                          "obj-219",
+                                                          0
+                                                      ],
+                                      "hidden":  true
+                                  },
+                                  {
+                                      "source":  [
+                                                     "obj-460",
+                                                     0
+                                                 ],
+                                      "destination":  [
+                                                          "obj-464",
+                                                          0
+                                                      ],
+                                      "hidden":  true
+                                  },
+                                  {
+                                      "source":  [
+                                                     "obj-464",
+                                                     0
+                                                 ],
+                                      "destination":  [
+                                                          "obj-465",
+                                                          0
+                                                      ],
+                                      "hidden":  true
+                                  },
+                                  {
+                                      "source":  [
+                                                     "obj-465",
+                                                     0
+                                                 ],
+                                      "destination":  [
+                                                          "obj-462",
+                                                          0
+                                                      ],
+                                      "hidden":  true
+                                  },
+                                  {
+                                      "source":  [
+                                                     "obj-219",
+                                                     0
+                                                 ],
+                                      "destination":  [
+                                                          "obj-462",
+                                                          0
+                                                      ],
+                                      "hidden":  true
+                                  },
+                                  {
+                                      "source":  [
+                                                     "obj-2",
+                                                     0
+                                                 ],
+                                      "destination":  [
+                                                          "obj-462",
+                                                          0
+                                                      ],
+                                      "hidden":  true
+                                  },
+                                  {
+                                      "source":  [
+                                                     "obj-38",
+                                                     0
+                                                 ],
+                                      "destination":  [
+                                                          "obj-462",
+                                                          0
+                                                      ],
+                                      "hidden":  true
+                                  },
+                                  {
+                                      "source":  [
+                                                     "obj-98",
+                                                     0
+                                                 ],
+                                      "destination":  [
+                                                          "obj-462",
+                                                          0
+                                                      ],
+                                      "hidden":  true
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-1",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-520",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-520",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-10",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true,
+                                                        "order":  0
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-520",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-13",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true,
+                                                        "order":  1
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-520",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-16",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true,
+                                                        "order":  2
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-520",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-20",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true,
+                                                        "order":  3
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-520",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-24",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true,
+                                                        "order":  4
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-520",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-28",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true,
+                                                        "order":  5
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-520",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-32",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true,
+                                                        "order":  6
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-520",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-36",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true,
+                                                        "order":  7
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-520",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-40",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true,
+                                                        "order":  8
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-520",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-80",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true,
+                                                        "order":  9
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-520",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-83",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true,
+                                                        "order":  10
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-520",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-86",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true,
+                                                        "order":  11
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-520",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-214",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true,
+                                                        "order":  12
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-520",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-402",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true,
+                                                        "order":  13
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-520",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-405",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true,
+                                                        "order":  14
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-520",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-408",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true,
+                                                        "order":  15
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-520",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-411",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true,
+                                                        "order":  16
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-520",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-427",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true,
+                                                        "order":  17
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-520",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-430",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true,
+                                                        "order":  18
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-520",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-433",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true,
+                                                        "order":  19
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-520",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-443",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true,
+                                                        "order":  20
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-520",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-446",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true,
+                                                        "order":  21
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-520",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-450",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true,
+                                                        "order":  22
                                                     }
                                   }
                               ],

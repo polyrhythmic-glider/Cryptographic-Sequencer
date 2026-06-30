@@ -81,6 +81,54 @@ static int test_deterministic_generation(void)
     return 0;
 }
 
+static int test_scene_changes_generation_seed(void)
+{
+    static const uint8_t source[] = "scene source";
+    cs_params_t scene_zero = cs_default_params();
+    cs_params_t scene_one = cs_default_params();
+    cs_event_t first[8];
+    cs_event_t second[8];
+    cs_event_t changed[8];
+    cs_status_t status;
+
+    scene_zero.length = 8u;
+    scene_one.length = 8u;
+    scene_one.scene = 1u;
+
+    status = cs_generate_from_bytes(source, sizeof(source) - 1u, &scene_zero, first, 8u);
+    if (expect_status(status, CS_OK, "scene zero first generate")) {
+        return 1;
+    }
+
+    status = cs_generate_from_bytes(source, sizeof(source) - 1u, &scene_zero, second, 8u);
+    if (expect_status(status, CS_OK, "scene zero second generate")) {
+        return 1;
+    }
+
+    if (memcmp(first, second, sizeof(first)) != 0) {
+        fprintf(stderr, "same scene should be deterministic\n");
+        return 1;
+    }
+
+    status = cs_generate_from_bytes(source, sizeof(source) - 1u, &scene_one, changed, 8u);
+    if (expect_status(status, CS_OK, "scene one generate")) {
+        return 1;
+    }
+
+    if (memcmp(first, changed, sizeof(first)) == 0) {
+        fprintf(stderr, "different scene should change generated events\n");
+        return 1;
+    }
+
+    scene_one.scene = CS_MAX_SCENE_VALUE + 1u;
+    status = cs_validate_params(&scene_one);
+    if (expect_status(status, CS_ERROR_INVALID_PARAM, "scene out of range")) {
+        return 1;
+    }
+
+    return 0;
+}
+
 static int test_value_cache_and_remap(void)
 {
     static const uint8_t source[] = {0, 1, 2, 3, 4, 5};
@@ -198,7 +246,7 @@ static int test_root_note_is_reachable_in_each_mode(void)
     params.root_note = 36u;
     params.drum_pad_count = 4u;
     params.rhythm_divisor = 16u;
-    params.rhythm_threshold = 1u;
+    params.rhythm_threshold = params.rhythm_divisor;
     status = cs_map_values(root_pad_values, 4u, &params, events, 4u);
     if (expect_status(status, CS_OK, "hybrid root pad map")) {
         return 1;
@@ -249,6 +297,35 @@ static int test_root_note_is_reachable_in_each_mode(void)
     return 0;
 }
 
+static int test_hybrid_zero_density_silences_root_pad(void)
+{
+    static const uint32_t values[] = {0u, 4u, 8u, 12u};
+    cs_params_t params = cs_default_params();
+    cs_event_t events[4];
+    cs_status_t status;
+    size_t i;
+
+    params.mode = CS_MODE_HYBRID;
+    params.root_note = 36u;
+    params.drum_pad_count = 4u;
+    params.rhythm_divisor = 16u;
+    params.rhythm_threshold = 0u;
+
+    status = cs_map_values(values, 4u, &params, events, 4u);
+    if (expect_status(status, CS_OK, "hybrid zero density root pad map")) {
+        return 1;
+    }
+
+    for (i = 0u; i < 4u; ++i) {
+        if (events[i].note != 36u || events[i].active != 0u) {
+            fprintf(stderr, "hybrid zero density should not force the root pad active\n");
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
 static int test_hybrid_pads_follow_values_not_step_order(void)
 {
     static const uint32_t values[] = {7u, 2u, 5u, 0u};
@@ -273,6 +350,45 @@ static int test_hybrid_pads_follow_values_not_step_order(void)
             fprintf(stderr, "hybrid pads should not follow step order\n");
             return 1;
         }
+    }
+
+    return 0;
+}
+
+static int test_hybrid_density_does_not_collapse_to_root_pad(void)
+{
+    static const uint32_t values[] = {
+        0u, 1u, 2u, 3u,
+        4u, 5u, 6u, 7u,
+        8u, 9u, 10u, 11u,
+        12u, 13u, 14u, 15u
+    };
+    cs_params_t params = cs_default_params();
+    cs_event_t events[16];
+    cs_status_t status;
+    size_t i;
+    uint8_t heard_non_root_pad = 0u;
+
+    params.mode = CS_MODE_HYBRID;
+    params.root_note = 36u;
+    params.drum_pad_count = 4u;
+    params.rhythm_divisor = 4u;
+    params.rhythm_threshold = 1u;
+
+    status = cs_map_values(values, 16u, &params, events, 16u);
+    if (expect_status(status, CS_OK, "hybrid low density pad map")) {
+        return 1;
+    }
+
+    for (i = 0u; i < 16u; ++i) {
+        if (events[i].active != 0u && events[i].note != params.root_note) {
+            heard_non_root_pad = 1u;
+        }
+    }
+
+    if (heard_non_root_pad == 0u) {
+        fprintf(stderr, "hybrid density should not collapse active output to the root pad\n");
+        return 1;
     }
 
     return 0;
@@ -541,6 +657,10 @@ int main(void)
         return 1;
     }
 
+    if (test_scene_changes_generation_seed()) {
+        return 1;
+    }
+
     if (test_value_cache_and_remap()) {
         return 1;
     }
@@ -553,7 +673,15 @@ int main(void)
         return 1;
     }
 
+    if (test_hybrid_zero_density_silences_root_pad()) {
+        return 1;
+    }
+
     if (test_hybrid_pads_follow_values_not_step_order()) {
+        return 1;
+    }
+
+    if (test_hybrid_density_does_not_collapse_to_root_pad()) {
         return 1;
     }
 

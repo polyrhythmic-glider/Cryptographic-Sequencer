@@ -4,7 +4,7 @@
 #include <limits.h>
 #include <string.h>
 
-#define CS_STEP_SEED_SIZE (CS_SHA256_DIGEST_SIZE + 12u)
+#define CS_STEP_SEED_SIZE (CS_SHA256_DIGEST_SIZE + 16u)
 
 static const int8_t k_major_scale[] = {0, 2, 4, 5, 7, 9, 11};
 static const int8_t k_minor_scale[] = {0, 2, 3, 5, 7, 8, 10};
@@ -24,6 +24,16 @@ static uint32_t gcd_u64(uint64_t a, uint64_t b)
         b = rem;
     }
     return (uint32_t)a;
+}
+
+static uint32_t mix_u32(uint32_t value)
+{
+    value ^= value >> 16u;
+    value *= 0x7feb352du;
+    value ^= value >> 15u;
+    value *= 0x846ca68bu;
+    value ^= value >> 16u;
+    return value;
 }
 
 static int is_prime_u32(uint32_t value)
@@ -237,6 +247,7 @@ static void init_generation_context(
     store_be32(ctx->step_seed + CS_SHA256_DIGEST_SIZE, params->p);
     store_be32(ctx->step_seed + CS_SHA256_DIGEST_SIZE + 4u, params->q);
     store_be32(ctx->step_seed + CS_SHA256_DIGEST_SIZE + 8u, params->e);
+    store_be32(ctx->step_seed + CS_SHA256_DIGEST_SIZE + 12u, params->scene);
 
     ctx->modulus = (uint32_t)((uint64_t)params->p * (uint64_t)params->q);
     ctx->exponent = params->e;
@@ -291,17 +302,39 @@ static void map_rhythm_event(uint32_t index, uint32_t value, const cs_params_t *
 
 static void map_hybrid_event(uint32_t index, uint32_t value, const cs_params_t *params, cs_event_t *event)
 {
-    const uint8_t accent = map_rhythm_accent(value, params);
-    const uint8_t is_root_pad = ((value % params->drum_pad_count) == 0u) ? 1u : 0u;
+    const uint32_t rhythm_value = mix_u32(value ^ 0x68796272u);
+    const uint8_t accent = map_rhythm_accent(rhythm_value, params);
 
     event->step_index = index;
     event->value = value;
-    event->active = (is_root_pad && params->rhythm_threshold > 0u) ? 1u : map_rhythm_active(value, params);
+    event->active = map_rhythm_active(rhythm_value, params);
     event->note = map_drum_rack_note(value, params);
-    event->velocity = map_rhythm_velocity(value, accent, params);
+    event->velocity = map_rhythm_velocity(rhythm_value, accent, params);
     event->accent = accent;
-    event->duration_ticks = select_duration(value, params);
-    event->gate_permille = map_gate(value, params);
+    event->duration_ticks = select_duration(rhythm_value, params);
+    event->gate_permille = map_gate(rhythm_value, params);
+}
+
+static cs_status_t map_event_for_mode(
+    uint32_t index,
+    uint32_t value,
+    const cs_params_t *params,
+    cs_event_t *event
+)
+{
+    switch (params->mode) {
+    case CS_MODE_MELODY:
+        map_melody_event(index, value, params, event);
+        return CS_OK;
+    case CS_MODE_RHYTHM:
+        map_rhythm_event(index, value, params, event);
+        return CS_OK;
+    case CS_MODE_HYBRID:
+        map_hybrid_event(index, value, params, event);
+        return CS_OK;
+    default:
+        return CS_ERROR_INVALID_PARAM;
+    }
 }
 
 static cs_status_t map_values_for_mode(
@@ -313,25 +346,14 @@ static cs_status_t map_values_for_mode(
 {
     size_t i;
 
-    switch (params->mode) {
-    case CS_MODE_MELODY:
-        for (i = 0u; i < value_count; ++i) {
-            map_melody_event((uint32_t)i, values[i], params, &events[i]);
+    for (i = 0u; i < value_count; ++i) {
+        const cs_status_t status = map_event_for_mode((uint32_t)i, values[i], params, &events[i]);
+        if (status != CS_OK) {
+            return status;
         }
-        return CS_OK;
-    case CS_MODE_RHYTHM:
-        for (i = 0u; i < value_count; ++i) {
-            map_rhythm_event((uint32_t)i, values[i], params, &events[i]);
-        }
-        return CS_OK;
-    case CS_MODE_HYBRID:
-        for (i = 0u; i < value_count; ++i) {
-            map_hybrid_event((uint32_t)i, values[i], params, &events[i]);
-        }
-        return CS_OK;
-    default:
-        return CS_ERROR_INVALID_PARAM;
     }
+
+    return CS_OK;
 }
 
 static void apply_sequence_shift(cs_event_t *events, size_t length, size_t shift)
@@ -361,28 +383,30 @@ static cs_status_t generate_events_for_mode(
 {
     size_t i;
 
-    switch (params->mode) {
-    case CS_MODE_MELODY:
-        for (i = 0u; i < params->length; ++i) {
-            const uint32_t value = generate_value_for_index(ctx, (uint64_t)i);
-            map_melody_event((uint32_t)i, value, params, &events[i]);
+    for (i = 0u; i < params->length; ++i) {
+        const uint32_t value = generate_value_for_index(ctx, (uint64_t)i);
+        const cs_status_t status = map_event_for_mode((uint32_t)i, value, params, &events[i]);
+        if (status != CS_OK) {
+            return status;
         }
-        return CS_OK;
-    case CS_MODE_RHYTHM:
-        for (i = 0u; i < params->length; ++i) {
-            const uint32_t value = generate_value_for_index(ctx, (uint64_t)i);
-            map_rhythm_event((uint32_t)i, value, params, &events[i]);
-        }
-        return CS_OK;
-    case CS_MODE_HYBRID:
-        for (i = 0u; i < params->length; ++i) {
-            const uint32_t value = generate_value_for_index(ctx, (uint64_t)i);
-            map_hybrid_event((uint32_t)i, value, params, &events[i]);
-        }
-        return CS_OK;
-    default:
-        return CS_ERROR_INVALID_PARAM;
     }
+
+    return CS_OK;
+}
+
+static cs_status_t generate_events_and_apply_shift(
+    const cs_generation_context_t *ctx,
+    const cs_params_t *params,
+    cs_event_t *events
+)
+{
+    const cs_status_t status = generate_events_for_mode(ctx, params, events);
+
+    if (status == CS_OK) {
+        apply_sequence_shift(events, params->length, params->sequence_shift);
+    }
+
+    return status;
 }
 
 const char *cs_status_string(cs_status_t status)
@@ -446,6 +470,7 @@ cs_params_t cs_default_params(void)
     params.e = CS_DEFAULT_EXPONENT;
     params.length = 16u;
     params.sequence_shift = 0u;
+    params.scene = 0u;
     params.mode = CS_MODE_HYBRID;
     params.root_note = 60u;
     params.octave_min = 0;
@@ -480,7 +505,8 @@ cs_status_t cs_validate_params(const cs_params_t *params)
 
     if (params->length == 0u ||
         params->length > CS_MAX_SEQUENCE_LENGTH ||
-        params->e == 0u) {
+        params->e == 0u ||
+        params->scene > CS_MAX_SCENE_VALUE) {
         return CS_ERROR_INVALID_PARAM;
     }
 
@@ -691,12 +717,7 @@ cs_status_t cs_generate_from_digest(
     }
 
     init_generation_context(&ctx, source_digest, params);
-    status = generate_events_for_mode(&ctx, params, events);
-    if (status == CS_OK) {
-        apply_sequence_shift(events, params->length, params->sequence_shift);
-    }
-
-    return status;
+    return generate_events_and_apply_shift(&ctx, params, events);
 }
 
 cs_status_t cs_generate_from_bytes(
@@ -730,10 +751,5 @@ cs_status_t cs_generate_from_bytes(
     }
 
     init_generation_context(&ctx, digest, params);
-    status = generate_events_for_mode(&ctx, params, events);
-    if (status == CS_OK) {
-        apply_sequence_shift(events, params->length, params->sequence_shift);
-    }
-
-    return status;
+    return generate_events_and_apply_shift(&ctx, params, events);
 }

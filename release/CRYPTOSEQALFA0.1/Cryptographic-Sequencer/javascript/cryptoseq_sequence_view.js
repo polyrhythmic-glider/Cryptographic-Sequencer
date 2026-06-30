@@ -44,6 +44,21 @@ function list(step_index, active, note, velocity, accent, duration, gate, value)
     mgraphics.redraw();
 }
 
+function event()
+{
+    var args = arrayfromargs(arguments);
+
+    list.apply(this, args);
+}
+
+function playevent()
+{
+    var args = arrayfromargs(arguments);
+
+    list.apply(this, args);
+    step(args[0]);
+}
+
 function paint()
 {
     var width = box.rect[2] - box.rect[0];

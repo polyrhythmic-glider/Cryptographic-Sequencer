@@ -286,12 +286,15 @@ static int test_max_model_sequence_shift(void)
     static const uint8_t source[] = "shift source";
     cs_max_model_t unshifted;
     cs_max_model_t shifted;
+    cs_max_model_t negative_shifted;
     cs_status_t status;
     uint32_t expected_wrapped_value;
+    uint32_t expected_left_shifted_value;
     const cs_event_t *event;
 
     cs_max_model_init(&unshifted);
     cs_max_model_init(&shifted);
+    cs_max_model_init(&negative_shifted);
 
     status = cs_max_model_set_source_bytes(&unshifted, source, sizeof(source) - 1u);
     if (expect_status(status, CS_OK, "set unshifted source")) {
@@ -300,6 +303,11 @@ static int test_max_model_sequence_shift(void)
 
     status = cs_max_model_set_source_bytes(&shifted, source, sizeof(source) - 1u);
     if (expect_status(status, CS_OK, "set shifted source")) {
+        return 1;
+    }
+
+    status = cs_max_model_set_source_bytes(&negative_shifted, source, sizeof(source) - 1u);
+    if (expect_status(status, CS_OK, "set negative shifted source")) {
         return 1;
     }
 
@@ -313,14 +321,20 @@ static int test_max_model_sequence_shift(void)
         return 1;
     }
 
+    status = cs_max_model_set_length(&negative_shifted, 4u);
+    if (expect_status(status, CS_OK, "set negative shifted length")) {
+        return 1;
+    }
+
     status = cs_max_model_generate(&unshifted);
     if (expect_status(status, CS_OK, "generate unshifted")) {
         return 1;
     }
 
     expected_wrapped_value = cs_max_model_event_at(&unshifted, 3u)->value;
+    expected_left_shifted_value = cs_max_model_event_at(&unshifted, 1u)->value;
 
-    status = cs_max_model_set_sequence_shift(&shifted, 1u);
+    status = cs_max_model_set_sequence_shift(&shifted, 1);
     if (expect_status(status, CS_OK, "set sequence shift")) {
         return 1;
     }
@@ -333,6 +347,210 @@ static int test_max_model_sequence_shift(void)
     event = cs_max_model_event_at(&shifted, 0u);
     if (event == NULL || event->step_index != 0u || event->value != expected_wrapped_value) {
         fprintf(stderr, "max model shift should rotate generated events\n");
+        return 1;
+    }
+
+    status = cs_max_model_set_sequence_shift(&negative_shifted, -1);
+    if (expect_status(status, CS_OK, "set negative sequence shift")) {
+        return 1;
+    }
+
+    status = cs_max_model_generate(&negative_shifted);
+    if (expect_status(status, CS_OK, "generate negative shifted")) {
+        return 1;
+    }
+
+    event = cs_max_model_event_at(&negative_shifted, 0u);
+    if (event == NULL || event->step_index != 0u || event->value != expected_left_shifted_value) {
+        fprintf(stderr, "max model negative shift should rotate generated events left\n");
+        return 1;
+    }
+
+    return 0;
+}
+
+static int test_max_model_scene_changes_sequence(void)
+{
+    static const uint8_t source[] = "scene max source";
+    cs_max_model_t scene_zero;
+    cs_max_model_t scene_one;
+    cs_status_t status;
+    const cs_event_t *zero_event;
+    const cs_event_t *one_event;
+
+    cs_max_model_init(&scene_zero);
+    cs_max_model_init(&scene_one);
+
+    status = cs_max_model_set_source_bytes(&scene_zero, source, sizeof(source) - 1u);
+    if (expect_status(status, CS_OK, "set scene zero source")) {
+        return 1;
+    }
+    status = cs_max_model_set_source_bytes(&scene_one, source, sizeof(source) - 1u);
+    if (expect_status(status, CS_OK, "set scene one source")) {
+        return 1;
+    }
+
+    status = cs_max_model_set_scene(&scene_one, 1u);
+    if (expect_status(status, CS_OK, "set scene one")) {
+        return 1;
+    }
+
+    status = cs_max_model_generate(&scene_zero);
+    if (expect_status(status, CS_OK, "generate scene zero")) {
+        return 1;
+    }
+    status = cs_max_model_generate(&scene_one);
+    if (expect_status(status, CS_OK, "generate scene one")) {
+        return 1;
+    }
+
+    zero_event = cs_max_model_event_at(&scene_zero, 0u);
+    one_event = cs_max_model_event_at(&scene_one, 0u);
+    if (zero_event == NULL || one_event == NULL || zero_event->value == one_event->value) {
+        fprintf(stderr, "scene should change generated value\n");
+        return 1;
+    }
+
+    status = cs_max_model_set_scene(&scene_one, CS_MAX_SCENE_VALUE + 1u);
+    if (expect_status(status, CS_ERROR_INVALID_PARAM, "invalid scene")) {
+        return 1;
+    }
+
+    return 0;
+}
+
+static int test_max_model_morph_full_scene(void)
+{
+    static const uint8_t source[] = "morph source";
+    cs_max_model_t morphed;
+    cs_max_model_t direct_b;
+    cs_status_t status;
+    size_t i;
+
+    cs_max_model_init(&morphed);
+    cs_max_model_init(&direct_b);
+
+    status = cs_max_model_set_source_bytes(&morphed, source, sizeof(source) - 1u);
+    if (expect_status(status, CS_OK, "set morph source")) {
+        return 1;
+    }
+    status = cs_max_model_set_source_bytes(&direct_b, source, sizeof(source) - 1u);
+    if (expect_status(status, CS_OK, "set morph direct source")) {
+        return 1;
+    }
+    status = cs_max_model_set_length(&morphed, 8u);
+    if (expect_status(status, CS_OK, "set morph length")) {
+        return 1;
+    }
+    status = cs_max_model_set_length(&direct_b, 8u);
+    if (expect_status(status, CS_OK, "set morph direct length")) {
+        return 1;
+    }
+    status = cs_max_model_set_morph_amount(&morphed, 100u);
+    if (expect_status(status, CS_OK, "set morph amount")) {
+        return 1;
+    }
+    status = cs_max_model_set_morph_scene(&morphed, 7u);
+    if (expect_status(status, CS_OK, "set morph scene")) {
+        return 1;
+    }
+    status = cs_max_model_set_scene(&direct_b, 7u);
+    if (expect_status(status, CS_OK, "set direct b scene")) {
+        return 1;
+    }
+
+    status = cs_max_model_generate(&morphed);
+    if (expect_status(status, CS_OK, "generate morphed")) {
+        return 1;
+    }
+    status = cs_max_model_generate(&direct_b);
+    if (expect_status(status, CS_OK, "generate direct b")) {
+        return 1;
+    }
+
+    for (i = 0u; i < 8u; ++i) {
+        const cs_event_t *morphed_event = cs_max_model_event_at(&morphed, i);
+        const cs_event_t *direct_event = cs_max_model_event_at(&direct_b, i);
+        if (morphed_event == NULL || direct_event == NULL ||
+            memcmp(morphed_event, direct_event, sizeof(*morphed_event)) != 0) {
+            fprintf(stderr, "full morph at 100 should match scene B\n");
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
+static int test_max_model_morph_pitch_interpolates(void)
+{
+    static const uint8_t source[] = "morph interpolate source";
+    cs_max_model_t scene_a;
+    cs_max_model_t scene_b;
+    cs_max_model_t morphed;
+    cs_status_t status;
+    const cs_event_t *event_a;
+    const cs_event_t *event_b;
+    const cs_event_t *event_morphed;
+    uint8_t expected_note;
+
+    cs_max_model_init(&scene_a);
+    cs_max_model_init(&scene_b);
+    cs_max_model_init(&morphed);
+
+    status = cs_max_model_set_source_bytes(&scene_a, source, sizeof(source) - 1u);
+    if (expect_status(status, CS_OK, "set morph interp scene a source")) {
+        return 1;
+    }
+    status = cs_max_model_set_source_bytes(&scene_b, source, sizeof(source) - 1u);
+    if (expect_status(status, CS_OK, "set morph interp scene b source")) {
+        return 1;
+    }
+    status = cs_max_model_set_source_bytes(&morphed, source, sizeof(source) - 1u);
+    if (expect_status(status, CS_OK, "set morph interp source")) {
+        return 1;
+    }
+
+    status = cs_max_model_set_scene(&scene_b, 9u);
+    if (expect_status(status, CS_OK, "set morph interp scene b")) {
+        return 1;
+    }
+    status = cs_max_model_set_morph_scene(&morphed, 9u);
+    if (expect_status(status, CS_OK, "set morph interp morph scene")) {
+        return 1;
+    }
+    status = cs_max_model_set_morph_mode(&morphed, "pitch");
+    if (expect_status(status, CS_OK, "set morph interp mode")) {
+        return 1;
+    }
+    status = cs_max_model_set_morph_amount(&morphed, 50u);
+    if (expect_status(status, CS_OK, "set morph interp amount")) {
+        return 1;
+    }
+
+    status = cs_max_model_generate(&scene_a);
+    if (expect_status(status, CS_OK, "generate morph interp scene a")) {
+        return 1;
+    }
+    status = cs_max_model_generate(&scene_b);
+    if (expect_status(status, CS_OK, "generate morph interp scene b")) {
+        return 1;
+    }
+    status = cs_max_model_generate(&morphed);
+    if (expect_status(status, CS_OK, "generate morph interp")) {
+        return 1;
+    }
+
+    event_a = cs_max_model_event_at(&scene_a, 0u);
+    event_b = cs_max_model_event_at(&scene_b, 0u);
+    event_morphed = cs_max_model_event_at(&morphed, 0u);
+    if (event_a == NULL || event_b == NULL || event_morphed == NULL) {
+        fprintf(stderr, "morph interpolation events should exist\n");
+        return 1;
+    }
+
+    expected_note = (uint8_t)(((uint32_t)event_a->note + (uint32_t)event_b->note + 1u) / 2u);
+    if (event_morphed->note != expected_note) {
+        fprintf(stderr, "pitch morph amount 50 should interpolate notes\n");
         return 1;
     }
 
@@ -362,6 +580,18 @@ int main(void)
     }
 
     if (test_max_model_sequence_shift()) {
+        return 1;
+    }
+
+    if (test_max_model_scene_changes_sequence()) {
+        return 1;
+    }
+
+    if (test_max_model_morph_full_scene()) {
+        return 1;
+    }
+
+    if (test_max_model_morph_pitch_interpolates()) {
         return 1;
     }
 
