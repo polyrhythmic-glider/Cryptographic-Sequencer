@@ -11,40 +11,6 @@ Max for Live device, per generare sequenze MIDI sincronizzate con Ableton Live.
 Modulo hardware ESP32, per generare sequenze standalone tramite MIDI, gate, trigger e/o CV.
 
 Il sistema non e' pensato come strumento di sicurezza crittografica, ma come strumento di composizione generativa ispirato a concetti crittografici.
-
-## Roadmap 0.2
-
-Obiettivo generale: trasformare il device da generatore deterministico a sequencer artistico e performativo, mantenendo la riproducibilita' dei risultati. Ogni nuova funzione deve quindi essere controllabile dal musicista, ma anche ricostruibile a parita' di sorgente e parametri.
-
-### 1. Salt / Scene
-
-Aggiungere un parametro `scene` alla generazione della sequenza.
-
-- Il valore `scene` deve entrare nell'input dell'hash insieme a sorgente, `p`, `q`, `e` e indice dello step.
-- Lo scopo musicale e' ottenere variazioni parallele della stessa sorgente senza cambiare file o primi.
-- La UI deve esporre `Scene` come controllo intero `0..127`.
-- Cambiare scena deve rigenerare la sequenza in modo deterministico.
-
-### 2. Ratchet / Fill
-
-Aggiungere ripetizioni interne allo step generate in modo deterministico.
-
-- Il numero di ratchet puo' dipendere da `value`, `accent` o `velocity`.
-- Servono controlli per quantita' e massimo numero di ripetizioni.
-- UI suggerita: `Ratchet Amount`, `Ratchet Max`, `Fill Mode`.
-- `Fill Mode` puo' agire soprattutto sugli ultimi step della frase o della battuta.
-- Il playback deve restare sincronizzato a Live: le ripetizioni devono stare dentro la durata dello step.
-
-### 3. Morph A/B
-
-Generare due pattern A e B usando `scene` o salt diversi.
-
-- Aggiungere un controllo `Morph 0..100`.
-- Il morph decide quanti step o quanti parametri prendere dal pattern B.
-- La scelta deve essere deterministica, usando una maschera derivata da hash.
-- Modalita' previste: morph completo, `pitch only`, `rhythm only`, `velocity only`.
-- Il morph non deve comportarsi come crossfade casuale: a parita' di parametri deve produrre sempre la stessa sequenza.
-
 # Core C
 
 La repository contiene un primo core C portabile, separato dagli adapter Max for Live ed ESP32. Il core implementa solo la pipeline deterministica:
