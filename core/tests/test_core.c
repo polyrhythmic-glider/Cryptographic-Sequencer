@@ -394,6 +394,67 @@ static int test_hybrid_density_does_not_collapse_to_root_pad(void)
     return 0;
 }
 
+static int test_crt_split_assigns_hybrid_residues(void)
+{
+    cs_params_t params = cs_default_params();
+    cs_event_t events[1];
+    uint32_t values[1];
+    uint32_t p_residue;
+    uint32_t q_residue;
+    cs_status_t status;
+
+    params.mode = CS_MODE_HYBRID;
+    params.root_note = 36u;
+    params.drum_pad_count = 16u;
+    params.rhythm_divisor = 16u;
+    params.rhythm_threshold = 8u;
+
+    values[0] = (params.p * 5u) + 7u;
+    p_residue = values[0] % params.p;
+    q_residue = values[0] % params.q;
+
+    params.crt_split = CS_CRT_SPLIT_P_PITCH_Q_RHYTHM;
+    status = cs_map_values(values, 1u, &params, events, 1u);
+    if (expect_status(status, CS_OK, "crt p pitch q rhythm map")) {
+        return 1;
+    }
+    if (events[0].note != (uint8_t)(params.root_note + (p_residue % params.drum_pad_count)) ||
+        events[0].active != (uint8_t)((q_residue % params.rhythm_divisor) < params.rhythm_threshold)) {
+        fprintf(stderr, "crt split should map p residue to pad and q residue to rhythm\n");
+        return 1;
+    }
+
+    params.crt_split = CS_CRT_SPLIT_P_RHYTHM_Q_PITCH;
+    status = cs_map_values(values, 1u, &params, events, 1u);
+    if (expect_status(status, CS_OK, "crt p rhythm q pitch map")) {
+        return 1;
+    }
+    if (events[0].note != (uint8_t)(params.root_note + (q_residue % params.drum_pad_count)) ||
+        events[0].active != (uint8_t)((p_residue % params.rhythm_divisor) < params.rhythm_threshold)) {
+        fprintf(stderr, "crt split should map q residue to pad and p residue to rhythm\n");
+        return 1;
+    }
+
+    params.crt_split = CS_CRT_SPLIT_P_MELODY_Q_DRUMS;
+    status = cs_map_values(values, 1u, &params, events, 1u);
+    if (expect_status(status, CS_OK, "crt p melody q drums map")) {
+        return 1;
+    }
+    if (events[0].note != (uint8_t)(params.root_note + (q_residue % params.drum_pad_count)) ||
+        events[0].active != (uint8_t)((p_residue % params.rhythm_divisor) < params.rhythm_threshold)) {
+        fprintf(stderr, "crt melody/drums split should map q residue to drum pad and p residue to structure\n");
+        return 1;
+    }
+
+    params.crt_split = (cs_crt_split_t)99;
+    status = cs_validate_params(&params);
+    if (expect_status(status, CS_ERROR_INVALID_PARAM, "invalid crt split")) {
+        return 1;
+    }
+
+    return 0;
+}
+
 static int test_note_range_controls(void)
 {
     static const uint32_t values[] = {0u, 1u, 2u, 3u, 4u, 5u, 6u, 7u};
@@ -682,6 +743,10 @@ int main(void)
     }
 
     if (test_hybrid_density_does_not_collapse_to_root_pad()) {
+        return 1;
+    }
+
+    if (test_crt_split_assigns_hybrid_residues()) {
         return 1;
     }
 

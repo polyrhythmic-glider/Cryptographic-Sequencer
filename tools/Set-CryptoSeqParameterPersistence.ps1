@@ -342,7 +342,8 @@ function Apply-Persistence {
         @{ id = "obj-433"; name = "morph mode"; value = @(0); min = 0; max = 3 },
         @{ id = "obj-443"; name = "fill amount"; value = @(0); min = 0; max = 100 },
         @{ id = "obj-446"; name = "fill target"; value = @(4); min = 0; max = 4 },
-        @{ id = "obj-450"; name = "morph knob"; value = @(0); min = 0; max = 100 }
+        @{ id = "obj-450"; name = "morph knob"; value = @(0); min = 0; max = 100 },
+        @{ id = "obj-531"; name = "CRT split"; value = @(0); min = 0; max = 3 }
     )
     foreach ($entry in $defaults) {
         Set-ParameterDefault (Find-Box $patcher $entry.id) $entry.name $entry.value $entry.min $entry.max
@@ -360,13 +361,20 @@ function Apply-Persistence {
         maxclass = "newobj"; text = "delay 300"; numinlets = 1; numoutlets = 1
         outlettype = @("bang"); patching_rect = @(2140.0, 990.0, 70.0, 22.0)
     }))
+    Add-BoxIfMissing $patcher (New-Box "obj-521" ([ordered]@{
+        maxclass = "newobj"; text = "prepend padcountindex"; numinlets = 1; numoutlets = 1
+        outlettype = @(""); patching_rect = @(840.0, 790.0, 150.0, 22.0)
+    }))
     Add-LineIfMissing $patcher "obj-1" 0 "obj-520" 0 $null
+    Add-LineIfMissing $patcher "obj-86" 0 "obj-521" 0 $null
+    Add-LineIfMissing $patcher "obj-521" 0 "obj-2" 0 $null
 
     $syncTargets = @(
         "obj-10", "obj-13", "obj-16", "obj-20", "obj-24", "obj-28",
         "obj-32", "obj-36", "obj-40", "obj-80", "obj-83", "obj-86",
         "obj-214", "obj-402", "obj-405", "obj-408", "obj-411",
-        "obj-427", "obj-430", "obj-433", "obj-443", "obj-446", "obj-450"
+        "obj-427", "obj-430", "obj-433", "obj-443", "obj-446", "obj-450",
+        "obj-531"
     )
     for ($i = 0; $i -lt $syncTargets.Count; $i += 1) {
         if (Find-Box $patcher $syncTargets[$i]) {
@@ -374,6 +382,7 @@ function Apply-Persistence {
         }
     }
     [void]$changes.Add("delayed current-parameter sync added")
+    [void]$changes.Add("pad count index fallback added")
 
     return $changes
 }

@@ -85,6 +85,16 @@ function Inspect-Patcher {
     }
 
     foreach ($lineWrapper in @($Patcher.lines)) {
+        if (-not $lineWrapper.PSObject.Properties["patchline"]) {
+            [pscustomobject]@{
+                Patcher = $Path
+                Problem = "malformed patchline"
+                ObjectId = ""
+                OtherId = ""
+                OtherLabel = ""
+            }
+            continue
+        }
         $line = $lineWrapper.patchline
         if (-not $line) {
             continue

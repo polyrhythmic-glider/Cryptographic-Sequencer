@@ -419,6 +419,43 @@ static int test_max_model_scene_changes_sequence(void)
     return 0;
 }
 
+static int test_max_model_crt_split_parsing(void)
+{
+    cs_max_model_t model;
+    cs_status_t status;
+
+    cs_max_model_init(&model);
+
+    status = cs_max_model_set_crt_split(&model, "p_pitch_q_rhythm");
+    if (expect_status(status, CS_OK, "set crt split p pitch q rhythm")) {
+        return 1;
+    }
+    if (model.params.crt_split != CS_CRT_SPLIT_P_PITCH_Q_RHYTHM) {
+        fprintf(stderr, "crt split parser should set p pitch q rhythm\n");
+        return 1;
+    }
+
+    status = cs_max_model_set_crt_split(&model, "p-rhythm-q-pitch");
+    if (expect_status(status, CS_OK, "set crt split alias")) {
+        return 1;
+    }
+    if (model.params.crt_split != CS_CRT_SPLIT_P_RHYTHM_Q_PITCH) {
+        fprintf(stderr, "crt split parser should accept hyphenated alias\n");
+        return 1;
+    }
+
+    status = cs_max_model_set_crt_split(&model, "not_a_split");
+    if (expect_status(status, CS_ERROR_INVALID_PARAM, "invalid crt split string")) {
+        return 1;
+    }
+    if (model.params.crt_split != CS_CRT_SPLIT_P_RHYTHM_Q_PITCH) {
+        fprintf(stderr, "invalid crt split should preserve previous value\n");
+        return 1;
+    }
+
+    return 0;
+}
+
 static int test_max_model_morph_full_scene(void)
 {
     static const uint8_t source[] = "morph source";
@@ -584,6 +621,10 @@ int main(void)
     }
 
     if (test_max_model_scene_changes_sequence()) {
+        return 1;
+    }
+
+    if (test_max_model_crt_split_parsing()) {
         return 1;
     }
 

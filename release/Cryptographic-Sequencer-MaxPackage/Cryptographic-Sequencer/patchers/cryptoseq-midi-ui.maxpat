@@ -1886,6 +1886,335 @@
                                   },
                                   {
                                       "box":  {
+                                                  "id":  "obj-442",
+                                                  "maxclass":  "comment",
+                                                  "text":  "amount",
+                                                  "presentation":  1,
+                                                  "hidden":  0,
+                                                  "numinlets":  1,
+                                                  "numoutlets":  0,
+                                                  "patching_rect":  [
+                                                                        1780,
+                                                                        751,
+                                                                        75,
+                                                                        18
+                                                                    ],
+                                                  "presentation_rect":  [
+                                                                            1522,
+                                                                            30,
+                                                                            58,
+                                                                            20
+                                                                        ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-443",
+                                                  "maxclass":  "number",
+                                                  "varname":  "cs_fill_amount_number",
+                                                  "presentation":  1,
+                                                  "hidden":  0,
+                                                  "parameter_enable":  1,
+                                                  "numinlets":  1,
+                                                  "numoutlets":  2,
+                                                  "outlettype":  [
+                                                                     "",
+                                                                     "bang"
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        1780,
+                                                                        771,
+                                                                        44,
+                                                                        20
+                                                                    ],
+                                                  "presentation_rect":  [
+                                                                            1522,
+                                                                            51,
+                                                                            44,
+                                                                            22
+                                                                        ],
+                                                  "minimum":  0,
+                                                  "maximum":  100,
+                                                  "saved_attribute_attributes":  {
+                                                                                     "valueof":  {
+                                                                                                     "parameter_initial":  [
+                                                                                                                               0
+                                                                                                                           ],
+                                                                                                     "parameter_initial_enable":  1,
+                                                                                                     "parameter_longname":  "fill amount",
+                                                                                                     "parameter_shortname":  "fill amount",
+                                                                                                     "parameter_mmin":  0,
+                                                                                                     "parameter_mmax":  100,
+                                                                                                     "parameter_type":  0,
+                                                                                                     "parameter_unitstyle":  0
+                                                                                                 }
+                                                                                 }
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-445",
+                                                  "maxclass":  "comment",
+                                                  "text":  "target",
+                                                  "presentation":  1,
+                                                  "hidden":  0,
+                                                  "numinlets":  1,
+                                                  "numoutlets":  0,
+                                                  "patching_rect":  [
+                                                                        1860,
+                                                                        751,
+                                                                        75,
+                                                                        18
+                                                                    ],
+                                                  "presentation_rect":  [
+                                                                            1279,
+                                                                            84,
+                                                                            48,
+                                                                            20
+                                                                        ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-446",
+                                                  "maxclass":  "umenu",
+                                                  "varname":  "cs_fill_target_menu",
+                                                  "presentation":  1,
+                                                  "hidden":  0,
+                                                  "parameter_enable":  1,
+                                                  "numinlets":  1,
+                                                  "numoutlets":  3,
+                                                  "outlettype":  [
+                                                                     "int",
+                                                                     "",
+                                                                     ""
+                                                                 ],
+                                                  "items":  [
+                                                                "density",
+                                                                ",",
+                                                                "ratchet",
+                                                                ",",
+                                                                "velocity",
+                                                                ",",
+                                                                "gate",
+                                                                ",",
+                                                                "all"
+                                                            ],
+                                                  "patching_rect":  [
+                                                                        1860,
+                                                                        771,
+                                                                        88,
+                                                                        22
+                                                                    ],
+                                                  "presentation_rect":  [
+                                                                            1279,
+                                                                            105,
+                                                                            68,
+                                                                            22
+                                                                        ],
+                                                  "saved_attribute_attributes":  {
+                                                                                     "valueof":  {
+                                                                                                     "parameter_initial":  [
+                                                                                                                               4
+                                                                                                                           ],
+                                                                                                     "parameter_initial_enable":  1,
+                                                                                                     "parameter_longname":  "fill target",
+                                                                                                     "parameter_shortname":  "fill target",
+                                                                                                     "parameter_mmin":  0,
+                                                                                                     "parameter_mmax":  4,
+                                                                                                     "parameter_type":  0,
+                                                                                                     "parameter_unitstyle":  0
+                                                                                                 }
+                                                                                 }
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-450",
+                                                  "maxclass":  "dial",
+                                                  "varname":  "cs_morph_amount_dial",
+                                                  "presentation":  1,
+                                                  "hidden":  0,
+                                                  "parameter_enable":  1,
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     "int"
+                                                                 ],
+                                                  "size":  101,
+                                                  "patching_rect":  [
+                                                                        1470,
+                                                                        866,
+                                                                        36,
+                                                                        36
+                                                                    ],
+                                                  "presentation_rect":  [
+                                                                            1360,
+                                                                            105,
+                                                                            30,
+                                                                            30
+                                                                        ],
+                                                  "saved_attribute_attributes":  {
+                                                                                     "valueof":  {
+                                                                                                     "parameter_initial":  [
+                                                                                                                               0
+                                                                                                                           ],
+                                                                                                     "parameter_initial_enable":  1,
+                                                                                                     "parameter_longname":  "morph knob",
+                                                                                                     "parameter_shortname":  "morph knob",
+                                                                                                     "parameter_mmin":  0,
+                                                                                                     "parameter_mmax":  100,
+                                                                                                     "parameter_type":  0,
+                                                                                                     "parameter_unitstyle":  0
+                                                                                                 }
+                                                                                 }
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-460",
+                                                  "maxclass":  "button",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     "bang"
+                                                                 ],
+                                                  "parameter_enable":  0,
+                                                  "patching_rect":  [
+                                                                        310,
+                                                                        134,
+                                                                        24,
+                                                                        24
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            204,
+                                                                            133.59322357177734,
+                                                                            24,
+                                                                            24
+                                                                        ],
+                                                  "hidden":  0
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-461",
+                                                  "maxclass":  "comment",
+                                                  "text":  "export",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  0,
+                                                  "patching_rect":  [
+                                                                        340,
+                                                                        137,
+                                                                        50,
+                                                                        20
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            230,
+                                                                            135.59322357177734,
+                                                                            50,
+                                                                            20
+                                                                        ],
+                                                  "hidden":  0
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-530",
+                                                  "maxclass":  "comment",
+                                                  "text":  "CRT split",
+                                                  "patching_rect":  [
+                                                                        1740,
+                                                                        846,
+                                                                        70,
+                                                                        18
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            930,
+                                                                            137,
+                                                                            62,
+                                                                            20
+                                                                        ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-531",
+                                                  "maxclass":  "umenu",
+                                                  "varname":  "cs_crt_split_menu",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  3,
+                                                  "outlettype":  [
+                                                                     "int",
+                                                                     "",
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        1740,
+                                                                        866,
+                                                                        190,
+                                                                        22
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            995,
+                                                                            137,
+                                                                            190,
+                                                                            22
+                                                                        ],
+                                                  "parameter_enable":  1,
+                                                  "items":  [
+                                                                "off",
+                                                                ",",
+                                                                "p_pitch_q_rhythm",
+                                                                ",",
+                                                                "p_rhythm_q_pitch",
+                                                                ",",
+                                                                "p_melody_q_drums"
+                                                            ],
+                                                  "saved_attribute_attributes":  {
+                                                                                     "valueof":  {
+                                                                                                     "parameter_initial":  [
+                                                                                                                               0
+                                                                                                                           ],
+                                                                                                     "parameter_initial_enable":  1,
+                                                                                                     "parameter_longname":  "CRT split",
+                                                                                                     "parameter_shortname":  "CRT split",
+                                                                                                     "parameter_mmin":  0,
+                                                                                                     "parameter_mmax":  3,
+                                                                                                     "parameter_type":  0,
+                                                                                                     "parameter_unitstyle":  0
+                                                                                                 }
+                                                                                 }
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-466",
+                                                  "maxclass":  "comment",
+                                                  "text":  "export ready",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  0,
+                                                  "patching_rect":  [
+                                                                        2410,
+                                                                        760,
+                                                                        95,
+                                                                        20
+                                                                    ],
+                                                  "presentation":  1,
+                                                  "presentation_rect":  [
+                                                                            204,
+                                                                            157,
+                                                                            95,
+                                                                            12
+                                                                        ],
+                                                  "hidden":  0
+                                              }
+                                  },
+                                  {
+                                      "box":  {
                                                   "id":  "obj-1",
                                                   "maxclass":  "newobj",
                                                   "numinlets":  1,
@@ -29378,6 +29707,222 @@
                                   },
                                   {
                                       "box":  {
+                                                  "id":  "obj-451",
+                                                  "maxclass":  "newobj",
+                                                  "text":  "scale 0 254 -127 127",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        1478,
+                                                                        158,
+                                                                        130,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-444",
+                                                  "maxclass":  "newobj",
+                                                  "text":  "prepend fillamount",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        1780,
+                                                                        800,
+                                                                        135,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-447",
+                                                  "maxclass":  "newobj",
+                                                  "text":  "prepend filltarget",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        1860,
+                                                                        800,
+                                                                        130,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-448",
+                                                  "maxclass":  "message",
+                                                  "text":  "0",
+                                                  "numinlets":  2,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        2160,
+                                                                        910,
+                                                                        35,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-449",
+                                                  "maxclass":  "message",
+                                                  "text":  "clear, append density, append ratchet, append velocity, append gate, append all, setsymbol all",
+                                                  "numinlets":  2,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        2160,
+                                                                        940,
+                                                                        520,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-462",
+                                                  "maxclass":  "newobj",
+                                                  "text":  "js cryptoseq_clip_export.js",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        2220,
+                                                                        760,
+                                                                        175,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-463",
+                                                  "maxclass":  "message",
+                                                  "text":  "dump",
+                                                  "numinlets":  2,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        2220,
+                                                                        700,
+                                                                        45,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-464",
+                                                  "maxclass":  "newobj",
+                                                  "text":  "delay 250",
+                                                  "numinlets":  2,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     "bang"
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        2280,
+                                                                        700,
+                                                                        70,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-465",
+                                                  "maxclass":  "message",
+                                                  "text":  "exportclip",
+                                                  "numinlets":  2,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        2280,
+                                                                        730,
+                                                                        75,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-520",
+                                                  "maxclass":  "newobj",
+                                                  "text":  "delay 300",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     "bang"
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        2140,
+                                                                        990,
+                                                                        70,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-521",
+                                                  "maxclass":  "newobj",
+                                                  "text":  "prepend padcountindex",
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ],
+                                                  "patching_rect":  [
+                                                                        840,
+                                                                        790,
+                                                                        150,
+                                                                        22
+                                                                    ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
+                                                  "id":  "obj-532",
+                                                  "maxclass":  "newobj",
+                                                  "text":  "prepend crtsplit",
+                                                  "patching_rect":  [
+                                                                        2040,
+                                                                        850,
+                                                                        130,
+                                                                        22
+                                                                    ],
+                                                  "numinlets":  1,
+                                                  "numoutlets":  1,
+                                                  "outlettype":  [
+                                                                     ""
+                                                                 ]
+                                              }
+                                  },
+                                  {
+                                      "box":  {
                                                   "id":  "obj-105",
                                                   "maxclass":  "fpic",
                                                   "varname":  "cs_source_image",
@@ -29547,419 +30092,6 @@
                                                                             360,
                                                                             170
                                                                         ]
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-451",
-                                                  "maxclass":  "newobj",
-                                                  "text":  "scale 0 254 -127 127",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  1,
-                                                  "outlettype":  [
-                                                                     ""
-                                                                 ],
-                                                  "patching_rect":  [
-                                                                        1478,
-                                                                        158,
-                                                                        130,
-                                                                        22
-                                                                    ]
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-442",
-                                                  "maxclass":  "comment",
-                                                  "text":  "amount",
-                                                  "presentation":  1,
-                                                  "hidden":  0,
-                                                  "numinlets":  1,
-                                                  "numoutlets":  0,
-                                                  "patching_rect":  [
-                                                                        1780,
-                                                                        751,
-                                                                        75,
-                                                                        18
-                                                                    ],
-                                                  "presentation_rect":  [
-                                                                            1522,
-                                                                            30,
-                                                                            58,
-                                                                            20
-                                                                        ]
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-443",
-                                                  "maxclass":  "number",
-                                                  "varname":  "cs_fill_amount_number",
-                                                  "presentation":  1,
-                                                  "hidden":  0,
-                                                  "parameter_enable":  1,
-                                                  "numinlets":  1,
-                                                  "numoutlets":  2,
-                                                  "outlettype":  [
-                                                                     "",
-                                                                     "bang"
-                                                                 ],
-                                                  "patching_rect":  [
-                                                                        1780,
-                                                                        771,
-                                                                        44,
-                                                                        20
-                                                                    ],
-                                                  "presentation_rect":  [
-                                                                            1522,
-                                                                            51,
-                                                                            44,
-                                                                            22
-                                                                        ],
-                                                  "minimum":  0,
-                                                  "maximum":  100,
-                                                  "saved_attribute_attributes":  {
-                                                                                     "valueof":  {
-                                                                                                     "parameter_initial":  [
-                                                                                                                               0
-                                                                                                                           ],
-                                                                                                     "parameter_initial_enable":  1,
-                                                                                                     "parameter_longname":  "fill amount",
-                                                                                                     "parameter_shortname":  "fill amount",
-                                                                                                     "parameter_mmin":  0,
-                                                                                                     "parameter_mmax":  100,
-                                                                                                     "parameter_type":  0,
-                                                                                                     "parameter_unitstyle":  0
-                                                                                                 }
-                                                                                 }
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-444",
-                                                  "maxclass":  "newobj",
-                                                  "text":  "prepend fillamount",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  1,
-                                                  "outlettype":  [
-                                                                     ""
-                                                                 ],
-                                                  "patching_rect":  [
-                                                                        1780,
-                                                                        800,
-                                                                        135,
-                                                                        22
-                                                                    ]
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-445",
-                                                  "maxclass":  "comment",
-                                                  "text":  "target",
-                                                  "presentation":  1,
-                                                  "hidden":  0,
-                                                  "numinlets":  1,
-                                                  "numoutlets":  0,
-                                                  "patching_rect":  [
-                                                                        1860,
-                                                                        751,
-                                                                        75,
-                                                                        18
-                                                                    ],
-                                                  "presentation_rect":  [
-                                                                            1279,
-                                                                            84,
-                                                                            48,
-                                                                            20
-                                                                        ]
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-446",
-                                                  "maxclass":  "umenu",
-                                                  "varname":  "cs_fill_target_menu",
-                                                  "presentation":  1,
-                                                  "hidden":  0,
-                                                  "parameter_enable":  1,
-                                                  "numinlets":  1,
-                                                  "numoutlets":  3,
-                                                  "outlettype":  [
-                                                                     "int",
-                                                                     "",
-                                                                     ""
-                                                                 ],
-                                                  "items":  [
-                                                                "density",
-                                                                ",",
-                                                                "ratchet",
-                                                                ",",
-                                                                "velocity",
-                                                                ",",
-                                                                "gate",
-                                                                ",",
-                                                                "all"
-                                                            ],
-                                                  "patching_rect":  [
-                                                                        1860,
-                                                                        771,
-                                                                        88,
-                                                                        22
-                                                                    ],
-                                                  "presentation_rect":  [
-                                                                            1279,
-                                                                            105,
-                                                                            68,
-                                                                            22
-                                                                        ],
-                                                  "saved_attribute_attributes":  {
-                                                                                     "valueof":  {
-                                                                                                     "parameter_initial":  [
-                                                                                                                               4
-                                                                                                                           ],
-                                                                                                     "parameter_initial_enable":  1,
-                                                                                                     "parameter_longname":  "fill target",
-                                                                                                     "parameter_shortname":  "fill target",
-                                                                                                     "parameter_mmin":  0,
-                                                                                                     "parameter_mmax":  4,
-                                                                                                     "parameter_type":  0,
-                                                                                                     "parameter_unitstyle":  0
-                                                                                                 }
-                                                                                 }
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-447",
-                                                  "maxclass":  "newobj",
-                                                  "text":  "prepend filltarget",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  1,
-                                                  "outlettype":  [
-                                                                     ""
-                                                                 ],
-                                                  "patching_rect":  [
-                                                                        1860,
-                                                                        800,
-                                                                        130,
-                                                                        22
-                                                                    ]
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-448",
-                                                  "maxclass":  "message",
-                                                  "text":  "0",
-                                                  "numinlets":  2,
-                                                  "numoutlets":  1,
-                                                  "outlettype":  [
-                                                                     ""
-                                                                 ],
-                                                  "patching_rect":  [
-                                                                        2160,
-                                                                        910,
-                                                                        35,
-                                                                        22
-                                                                    ]
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-449",
-                                                  "maxclass":  "message",
-                                                  "text":  "clear, append density, append ratchet, append velocity, append gate, append all, setsymbol all",
-                                                  "numinlets":  2,
-                                                  "numoutlets":  1,
-                                                  "outlettype":  [
-                                                                     ""
-                                                                 ],
-                                                  "patching_rect":  [
-                                                                        2160,
-                                                                        940,
-                                                                        520,
-                                                                        22
-                                                                    ]
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-450",
-                                                  "maxclass":  "dial",
-                                                  "varname":  "cs_morph_amount_dial",
-                                                  "presentation":  1,
-                                                  "hidden":  0,
-                                                  "parameter_enable":  1,
-                                                  "numinlets":  1,
-                                                  "numoutlets":  1,
-                                                  "outlettype":  [
-                                                                     "int"
-                                                                 ],
-                                                  "size":  101,
-                                                  "patching_rect":  [
-                                                                        1470,
-                                                                        866,
-                                                                        36,
-                                                                        36
-                                                                    ],
-                                                  "presentation_rect":  [
-                                                                            1360,
-                                                                            105,
-                                                                            30,
-                                                                            30
-                                                                        ],
-                                                  "saved_attribute_attributes":  {
-                                                                                     "valueof":  {
-                                                                                                     "parameter_initial":  [
-                                                                                                                               0
-                                                                                                                           ],
-                                                                                                     "parameter_initial_enable":  1,
-                                                                                                     "parameter_longname":  "morph knob",
-                                                                                                     "parameter_shortname":  "morph knob",
-                                                                                                     "parameter_mmin":  0,
-                                                                                                     "parameter_mmax":  100,
-                                                                                                     "parameter_type":  0,
-                                                                                                     "parameter_unitstyle":  0
-                                                                                                 }
-                                                                                 }
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-460",
-                                                  "maxclass":  "button",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  1,
-                                                  "outlettype":  [
-                                                                     "bang"
-                                                                 ],
-                                                  "parameter_enable":  0,
-                                                  "patching_rect":  [
-                                                                        310,
-                                                                        134,
-                                                                        24,
-                                                                        24
-                                                                    ],
-                                                  "presentation":  1,
-                                                  "presentation_rect":  [
-                                                                            255,
-                                                                            134,
-                                                                            24,
-                                                                            24
-                                                                        ]
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-461",
-                                                  "maxclass":  "comment",
-                                                  "text":  "export",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  0,
-                                                  "patching_rect":  [
-                                                                        340,
-                                                                        137,
-                                                                        50,
-                                                                        20
-                                                                    ],
-                                                  "presentation":  1,
-                                                  "presentation_rect":  [
-                                                                            286,
-                                                                            136,
-                                                                            50,
-                                                                            20
-                                                                        ]
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-462",
-                                                  "maxclass":  "newobj",
-                                                  "text":  "js cryptoseq_clip_export.js",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  1,
-                                                  "outlettype":  [
-                                                                     ""
-                                                                 ],
-                                                  "patching_rect":  [
-                                                                        2220,
-                                                                        760,
-                                                                        175,
-                                                                        22
-                                                                    ]
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-463",
-                                                  "maxclass":  "message",
-                                                  "text":  "dump",
-                                                  "numinlets":  2,
-                                                  "numoutlets":  1,
-                                                  "outlettype":  [
-                                                                     ""
-                                                                 ],
-                                                  "patching_rect":  [
-                                                                        2220,
-                                                                        700,
-                                                                        45,
-                                                                        22
-                                                                    ]
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-464",
-                                                  "maxclass":  "newobj",
-                                                  "text":  "delay 100",
-                                                  "numinlets":  2,
-                                                  "numoutlets":  1,
-                                                  "outlettype":  [
-                                                                     "bang"
-                                                                 ],
-                                                  "patching_rect":  [
-                                                                        2280,
-                                                                        700,
-                                                                        70,
-                                                                        22
-                                                                    ]
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-465",
-                                                  "maxclass":  "message",
-                                                  "text":  "exportclip",
-                                                  "numinlets":  2,
-                                                  "numoutlets":  1,
-                                                  "outlettype":  [
-                                                                     ""
-                                                                 ],
-                                                  "patching_rect":  [
-                                                                        2280,
-                                                                        730,
-                                                                        75,
-                                                                        22
-                                                                    ]
-                                              }
-                                  },
-                                  {
-                                      "box":  {
-                                                  "id":  "obj-520",
-                                                  "maxclass":  "newobj",
-                                                  "text":  "delay 300",
-                                                  "numinlets":  1,
-                                                  "numoutlets":  1,
-                                                  "outlettype":  [
-                                                                     "bang"
-                                                                 ],
-                                                  "patching_rect":  [
-                                                                        2140,
-                                                                        990,
-                                                                        70,
-                                                                        22
-                                                                    ]
                                               }
                                   }
                               ],
@@ -31315,193 +31447,6 @@
                                                     }
                                   },
                                   {
-                                      "source":  [
-                                                     "obj-460",
-                                                     0
-                                                 ],
-                                      "destination":  [
-                                                          "obj-463",
-                                                          0
-                                                      ],
-                                      "hidden":  true
-                                  },
-                                  {
-                                      "source":  [
-                                                     "obj-463",
-                                                     0
-                                                 ],
-                                      "destination":  [
-                                                          "obj-219",
-                                                          0
-                                                      ],
-                                      "hidden":  true
-                                  },
-                                  {
-                                      "source":  [
-                                                     "obj-460",
-                                                     0
-                                                 ],
-                                      "destination":  [
-                                                          "obj-464",
-                                                          0
-                                                      ],
-                                      "hidden":  true
-                                  },
-                                  {
-                                      "source":  [
-                                                     "obj-464",
-                                                     0
-                                                 ],
-                                      "destination":  [
-                                                          "obj-465",
-                                                          0
-                                                      ],
-                                      "hidden":  true
-                                  },
-                                  {
-                                      "source":  [
-                                                     "obj-465",
-                                                     0
-                                                 ],
-                                      "destination":  [
-                                                          "obj-462",
-                                                          0
-                                                      ],
-                                      "hidden":  true
-                                  },
-                                  {
-                                      "source":  [
-                                                     "obj-219",
-                                                     0
-                                                 ],
-                                      "destination":  [
-                                                          "obj-462",
-                                                          0
-                                                      ],
-                                      "hidden":  true
-                                  },
-                                  {
-                                      "source":  [
-                                                     "obj-38",
-                                                     0
-                                                 ],
-                                      "destination":  [
-                                                          "obj-462",
-                                                          0
-                                                      ],
-                                      "hidden":  true
-                                  },
-                                  {
-                                      "source":  [
-                                                     "obj-98",
-                                                     0
-                                                 ],
-                                      "destination":  [
-                                                          "obj-462",
-                                                          0
-                                                      ],
-                                      "hidden":  true
-                                  },
-                                  {
-                                      "source":  [
-                                                     "obj-460",
-                                                     0
-                                                 ],
-                                      "destination":  [
-                                                          "obj-463",
-                                                          0
-                                                      ],
-                                      "hidden":  true
-                                  },
-                                  {
-                                      "source":  [
-                                                     "obj-463",
-                                                     0
-                                                 ],
-                                      "destination":  [
-                                                          "obj-219",
-                                                          0
-                                                      ],
-                                      "hidden":  true
-                                  },
-                                  {
-                                      "source":  [
-                                                     "obj-460",
-                                                     0
-                                                 ],
-                                      "destination":  [
-                                                          "obj-464",
-                                                          0
-                                                      ],
-                                      "hidden":  true
-                                  },
-                                  {
-                                      "source":  [
-                                                     "obj-464",
-                                                     0
-                                                 ],
-                                      "destination":  [
-                                                          "obj-465",
-                                                          0
-                                                      ],
-                                      "hidden":  true
-                                  },
-                                  {
-                                      "source":  [
-                                                     "obj-465",
-                                                     0
-                                                 ],
-                                      "destination":  [
-                                                          "obj-462",
-                                                          0
-                                                      ],
-                                      "hidden":  true
-                                  },
-                                  {
-                                      "source":  [
-                                                     "obj-219",
-                                                     0
-                                                 ],
-                                      "destination":  [
-                                                          "obj-462",
-                                                          0
-                                                      ],
-                                      "hidden":  true
-                                  },
-                                  {
-                                      "source":  [
-                                                     "obj-2",
-                                                     0
-                                                 ],
-                                      "destination":  [
-                                                          "obj-462",
-                                                          0
-                                                      ],
-                                      "hidden":  true
-                                  },
-                                  {
-                                      "source":  [
-                                                     "obj-38",
-                                                     0
-                                                 ],
-                                      "destination":  [
-                                                          "obj-462",
-                                                          0
-                                                      ],
-                                      "hidden":  true
-                                  },
-                                  {
-                                      "source":  [
-                                                     "obj-98",
-                                                     0
-                                                 ],
-                                      "destination":  [
-                                                          "obj-462",
-                                                          0
-                                                      ],
-                                      "hidden":  true
-                                  },
-                                  {
                                       "patchline":  {
                                                         "source":  [
                                                                        "obj-1",
@@ -31834,6 +31779,201 @@
                                                                         ],
                                                         "hidden":  true,
                                                         "order":  22
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-86",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-521",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-521",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-2",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-531",
+                                                                       1
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-532",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  1
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-532",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-2",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  1
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-520",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-531",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  1
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-460",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-463",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-463",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-219",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-460",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-464",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-464",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-465",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-465",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-462",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-219",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-462",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-2",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-462",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-38",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-462",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-98",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-462",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true
+                                                    }
+                                  },
+                                  {
+                                      "patchline":  {
+                                                        "source":  [
+                                                                       "obj-462",
+                                                                       0
+                                                                   ],
+                                                        "destination":  [
+                                                                            "obj-466",
+                                                                            0
+                                                                        ],
+                                                        "hidden":  true
                                                     }
                                   }
                               ],

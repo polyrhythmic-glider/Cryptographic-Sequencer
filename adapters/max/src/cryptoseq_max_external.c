@@ -396,6 +396,16 @@ static void cryptoseq_mode(cryptoseq_object_t *x, t_symbol *mode)
     }
 }
 
+static void cryptoseq_crtsplit(cryptoseq_object_t *x, t_symbol *split)
+{
+    const cs_status_t status = cs_max_model_set_crt_split(&x->model, split->s_name);
+
+    cryptoseq_post_status(x, status);
+    if (status == CS_OK) {
+        object_post((t_object *)x, "cryptoseq: crtsplit %s", split->s_name);
+    }
+}
+
 static void cryptoseq_scale(cryptoseq_object_t *x, t_symbol *scale)
 {
     cryptoseq_post_status(x, cs_max_model_set_scale(&x->model, scale->s_name));
@@ -524,7 +534,7 @@ static void cryptoseq_assist(cryptoseq_object_t *x, void *b, long m, long a, cha
     (void)a;
 
     if (m == ASSIST_INLET) {
-        strcpy(s, "messages: source, sourcefile, rsa, p, q, e, scene, length, shift, root, mode, rhythm, morph, setup, generate");
+        strcpy(s, "messages: source, sourcefile, rsa, p, q, e, scene, length, shift, root, mode, crtsplit, rhythm, morph, setup, generate");
     } else {
         strcpy(s, "event step active note velocity accent duration gate value");
     }
@@ -573,6 +583,9 @@ void ext_main(void *r)
     class_addmethod(c, (method)cryptoseq_melodyrange, "noterange", A_LONG, A_LONG, 0);
     class_addmethod(c, (method)cryptoseq_padcount, "padcount", A_LONG, 0);
     class_addmethod(c, (method)cryptoseq_mode, "mode", A_SYM, 0);
+    class_addmethod(c, (method)cryptoseq_crtsplit, "crtsplit", A_SYM, 0);
+    class_addmethod(c, (method)cryptoseq_crtsplit, "crtsplitmode", A_SYM, 0);
+    class_addmethod(c, (method)cryptoseq_crtsplit, "crt", A_SYM, 0);
     class_addmethod(c, (method)cryptoseq_scale, "scale", A_SYM, 0);
     class_addmethod(c, (method)cryptoseq_scaleintervals, "scaleintervals", A_GIMME, 0);
     class_addmethod(c, (method)cryptoseq_scaleintervals, "scale_intervals", A_GIMME, 0);

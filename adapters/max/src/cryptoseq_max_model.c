@@ -52,6 +52,38 @@ static int morph_mode_from_string(const char *mode, cs_max_morph_mode_t *out)
     return 0;
 }
 
+static int crt_split_from_string(const char *split, cs_crt_split_t *out)
+{
+    if (split == NULL || out == NULL) {
+        return 0;
+    }
+
+    if (strcmp(split, "off") == 0 || strcmp(split, "none") == 0) {
+        *out = CS_CRT_SPLIT_OFF;
+        return 1;
+    }
+    if (strcmp(split, "p_pitch_q_rhythm") == 0 ||
+        strcmp(split, "p-pitch-q-rhythm") == 0 ||
+        strcmp(split, "pitch_rhythm") == 0) {
+        *out = CS_CRT_SPLIT_P_PITCH_Q_RHYTHM;
+        return 1;
+    }
+    if (strcmp(split, "p_rhythm_q_pitch") == 0 ||
+        strcmp(split, "p-rhythm-q-pitch") == 0 ||
+        strcmp(split, "rhythm_pitch") == 0) {
+        *out = CS_CRT_SPLIT_P_RHYTHM_Q_PITCH;
+        return 1;
+    }
+    if (strcmp(split, "p_melody_q_drums") == 0 ||
+        strcmp(split, "p-melody-q-drums") == 0 ||
+        strcmp(split, "melody_drums") == 0) {
+        *out = CS_CRT_SPLIT_P_MELODY_Q_DRUMS;
+        return 1;
+    }
+
+    return 0;
+}
+
 static void invalidate_generated_events(cs_max_model_t *model)
 {
     if (model != NULL) {
@@ -261,6 +293,24 @@ cs_status_t cs_max_model_set_mode(cs_max_model_t *model, const char *mode)
         return CS_ERROR_INVALID_PARAM;
     }
 
+    return validate_after_change(model, previous);
+}
+
+cs_status_t cs_max_model_set_crt_split(cs_max_model_t *model, const char *split)
+{
+    cs_params_t previous;
+    cs_crt_split_t parsed;
+
+    if (model == NULL || split == NULL) {
+        return CS_ERROR_NULL;
+    }
+
+    if (!crt_split_from_string(split, &parsed)) {
+        return CS_ERROR_INVALID_PARAM;
+    }
+
+    previous = model->params;
+    model->params.crt_split = parsed;
     return validate_after_change(model, previous);
 }
 

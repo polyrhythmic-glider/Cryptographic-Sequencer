@@ -13,11 +13,13 @@ var fill_amount = 0;
 var fill_mode = "off";
 var fill_target = "all";
 var tempo_cache = DEFAULT_TEMPO;
+var step_ms_cache = interval_to_ms(current_interval, tempo_cache);
 var scheduled_tasks = [];
 
 function interval(value)
 {
     current_interval = value.toString();
+    update_step_ms_cache();
 }
 
 function tempo(value)
@@ -27,6 +29,7 @@ function tempo(value)
     if (!isNaN(parsed) && parsed > 0) {
         DEFAULT_TEMPO = parsed;
         tempo_cache = parsed;
+        update_step_ms_cache();
     }
 }
 
@@ -109,7 +112,7 @@ function list(step, active, note, velocity, accent, duration, gate, value)
     var ratchet_duration;
     var i;
 
-    step_ms = interval_to_ms(current_interval, current_tempo());
+    step_ms = step_ms_cache;
     duration_units = Math.max(1, parse_int_or(duration, 1));
     gate_scale = Math.max(0.05, Math.min(1, parse_int_or(gate, 1000) / 1000));
     duration_ms = Math.max(20, Math.round(step_ms * duration_units * gate_scale));
@@ -183,13 +186,15 @@ function emit_voice_set(note, velocity, duration_ms, value)
 
 function emit_voice_set_later(note, velocity, duration_ms, value, delay_ms)
 {
-    var task = new Task(function() {
+    var task;
+
+    task = new Task(function() {
         emit_voice_set(note, velocity, duration_ms, value);
+        remove_task(task);
     }, this);
 
     scheduled_tasks.push(task);
     task.schedule(Math.max(1, delay_ms));
-    cleanup_tasks();
 }
 
 function emit_note(note, velocity, duration_ms)
@@ -335,10 +340,15 @@ function clamp_int(value, min_value, max_value, fallback)
     return Math.max(min_value, Math.min(max_value, parsed));
 }
 
-function cleanup_tasks()
+function remove_task(task)
 {
-    if (scheduled_tasks.length > 64) {
-        scheduled_tasks = scheduled_tasks.slice(scheduled_tasks.length - 32);
+    var i;
+
+    for (i = scheduled_tasks.length - 1; i >= 0; i -= 1) {
+        if (scheduled_tasks[i] === task) {
+            scheduled_tasks.splice(i, 1);
+            return;
+        }
     }
 }
 
@@ -359,6 +369,11 @@ function mode_is_melodic()
 function current_tempo()
 {
     return tempo_cache;
+}
+
+function update_step_ms_cache()
+{
+    step_ms_cache = interval_to_ms(current_interval, tempo_cache);
 }
 
 function interval_to_ms(interval_name, bpm)

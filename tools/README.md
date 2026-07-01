@@ -3,14 +3,22 @@
 Usa `Update-CryptoSeqAmxd.ps1` per gli interventi diretti sul device Ableton,
 `Patch-CryptoSeqAmxdControls.ps1` per i controlli di performance, e
 `Set-CryptoSeqParameterPersistence.ps1` quando vengono aggiunti o modificati
-parametri Live che devono avere default e salvataggio affidabili:
+parametri Live che devono avere default e salvataggio affidabili. Usa
+`Add-CryptoSeqCrtSplit.ps1` quando va aggiunto o ripristinato il controllo
+CRT Split nei patcher/AMXD di release. Usa
+`Install-CryptoSeqAbletonPreset.ps1` per reinstallare il preset visibile in
+Ableton e allineare il package Max. Usa `Test-CryptoSeqRelease.ps1` prima di
+consegnare una build:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools/Update-CryptoSeqAmxd.ps1 -Mode Inspect
 powershell -ExecutionPolicy Bypass -File tools/Update-CryptoSeqAmxd.ps1 -Mode PatchAutostart
 powershell -ExecutionPolicy Bypass -File tools/Update-CryptoSeqAmxd.ps1 -Mode PatchUiFinish
 powershell -ExecutionPolicy Bypass -File tools/Patch-CryptoSeqAmxdControls.ps1 -Path "C:\Users\asus\Documents\Ableton\User Library\Presets\MIDI Effects\Max MIDI Effect\CryptoSeqALFA0.1-modular.amxd"
+powershell -ExecutionPolicy Bypass -File tools/Add-CryptoSeqCrtSplit.ps1
 powershell -ExecutionPolicy Bypass -File tools/Set-CryptoSeqParameterPersistence.ps1 -Path "C:\Users\asus\Documents\Ableton\User Library\Presets\MIDI Effects\Max MIDI Effect\CryptoSeqALFA0.1-modular.amxd"
+powershell -ExecutionPolicy Bypass -File tools/Test-CryptoSeqRelease.ps1
+powershell -ExecutionPolicy Bypass -File tools/Install-CryptoSeqAbletonPreset.ps1 -ArchiveOtherCryptoSeqPresets
 ```
 
 Regole:
@@ -29,6 +37,14 @@ Regole:
 - Gli script fanno backup prima di scrivere, a meno che venga passato
   `-NoBackup`.
 - Non copiare mai un `.maxpat` sopra un `.amxd`.
+- Nella cartella Ableton `Max MIDI Effect` deve restare un solo preset
+  CryptoSeq visibile: `CryptoSeqALFA0.1-modular.amxd`. I backup `.amxd` nella
+  stessa cartella vengono mostrati dal browser di Ableton come device diversi
+  e possono far caricare versioni vecchie.
+- Se il preset Ableton attivo e' stato modificato a mano in Max, trattalo come
+  sorgente di verita' per il layout UI: ispezionalo, poi copia l'intero `.amxd`
+  attivo sopra gli `.amxd` di release. Non rilanciare `Install-*` prima di
+  averlo promosso, altrimenti la release vecchia sovrascrive il lavoro manuale.
 
 Regola per default e salvataggio:
 
@@ -47,3 +63,16 @@ Regola per default e salvataggio:
 - imposta i default usati da Live per il doppio click;
 - scollega i vecchi setter hardcoded da `loadbang`;
 - aggiunge un sync ritardato dei valori correnti verso il motore.
+
+`Install-CryptoSeqAbletonPreset.ps1` applica la release corrente alla macchina
+di test:
+
+- copia `release/CRYPTOSEQALFA0.1/CryptoSeqALFA0.1-modular.amxd` nella User
+  Library di Ableton;
+- se richiesto con `-ArchiveOtherCryptoSeqPresets`, sposta fuori dal browser
+  Ableton tutte le altre copie `CryptoSeq*.amxd`;
+- riallinea `javascript/`, `patchers/` ed eventuale external nel package Max;
+- salva i backup dentro `backups/ableton-presets-<timestamp>`.
+
+Se cambia solo un file JavaScript e vuoi preservare il layout `.amxd` attivo,
+copia solo quel JS nel package Max invece di reinstallare il preset.

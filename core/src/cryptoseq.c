@@ -237,6 +237,84 @@ static uint8_t map_rhythm_velocity(uint32_t value, uint8_t accent, const cs_para
     return clamp_u8_int((int)raw, 1, 127);
 }
 
+static uint32_t crt_p_residue(uint32_t value, const cs_params_t *params)
+{
+    return value % params->p;
+}
+
+static uint32_t crt_q_residue(uint32_t value, const cs_params_t *params)
+{
+    return value % params->q;
+}
+
+static void select_pitch_rhythm_values(
+    uint32_t value,
+    const cs_params_t *params,
+    uint32_t *pitch_value,
+    uint32_t *rhythm_value
+)
+{
+    const uint32_t p_residue = crt_p_residue(value, params);
+    const uint32_t q_residue = crt_q_residue(value, params);
+
+    switch (params->crt_split) {
+    case CS_CRT_SPLIT_OFF:
+        *pitch_value = value;
+        *rhythm_value = value;
+        break;
+    case CS_CRT_SPLIT_P_PITCH_Q_RHYTHM:
+        *pitch_value = p_residue;
+        *rhythm_value = q_residue;
+        break;
+    case CS_CRT_SPLIT_P_RHYTHM_Q_PITCH:
+        *pitch_value = q_residue;
+        *rhythm_value = p_residue;
+        break;
+    case CS_CRT_SPLIT_P_MELODY_Q_DRUMS:
+        *pitch_value = p_residue;
+        *rhythm_value = q_residue;
+        break;
+    default:
+        *pitch_value = value;
+        *rhythm_value = value;
+        break;
+    }
+}
+
+static void select_hybrid_values(
+    uint32_t value,
+    const cs_params_t *params,
+    uint32_t *pad_value,
+    uint32_t *rhythm_value
+)
+{
+    const uint32_t p_residue = crt_p_residue(value, params);
+    const uint32_t q_residue = crt_q_residue(value, params);
+
+    switch (params->crt_split) {
+    case CS_CRT_SPLIT_OFF:
+        *pad_value = value;
+        *rhythm_value = mix_u32(value ^ 0x68796272u);
+        break;
+    case CS_CRT_SPLIT_P_PITCH_Q_RHYTHM:
+        *pad_value = p_residue;
+        *rhythm_value = q_residue;
+        break;
+    case CS_CRT_SPLIT_P_RHYTHM_Q_PITCH:
+        *pad_value = q_residue;
+        *rhythm_value = p_residue;
+        break;
+    case CS_CRT_SPLIT_P_MELODY_Q_DRUMS:
+        *pad_value = q_residue;
+        *rhythm_value = p_residue;
+        break;
+    default:
+        *pad_value = value;
+        *rhythm_value = mix_u32(value ^ 0x68796272u);
+        break;
+    }
+}
+
 static void init_generation_context(
     cs_generation_context_t *ctx,
     const uint8_t source_digest[CS_SHA256_DIGEST_SIZE],
@@ -276,39 +354,54 @@ static uint32_t generate_value_for_index(
 
 static void map_melody_event(uint32_t index, uint32_t value, const cs_params_t *params, cs_event_t *event)
 {
-    event->step_index = index;
-    event->value = value;
-    event->active = map_rhythm_active(value, params);
-    event->note = map_melodic_note(value, params);
-    event->velocity = map_melodic_velocity(value, params);
-    event->accent = 0u;
-    event->duration_ticks = select_duration(value, params);
-    event->gate_permille = map_gate(value, params);
-}
+    uint32_t pitch_value;
+    uint32_t rhythm_value;
 
-static void map_rhythm_event(uint32_t index, uint32_t value, const cs_params_t *params, cs_event_t *event)
-{
-    const uint8_t accent = map_rhythm_accent(value, params);
-
-    event->step_index = index;
-    event->value = value;
-    event->active = map_rhythm_active(value, params);
-    event->note = params->root_note;
-    event->velocity = map_rhythm_velocity(value, accent, params);
-    event->accent = accent;
-    event->duration_ticks = select_duration(value, params);
-    event->gate_permille = map_gate(value, params);
-}
-
-static void map_hybrid_event(uint32_t index, uint32_t value, const cs_params_t *params, cs_event_t *event)
-{
-    const uint32_t rhythm_value = mix_u32(value ^ 0x68796272u);
-    const uint8_t accent = map_rhythm_accent(rhythm_value, params);
+    select_pitch_rhythm_values(value, params, &pitch_value, &rhythm_value);
 
     event->step_index = index;
     event->value = value;
     event->active = map_rhythm_active(rhythm_value, params);
-    event->note = map_drum_rack_note(value, params);
+    event->note = map_melodic_note(pitch_value, params);
+    event->velocity = map_melodic_velocity(pitch_value, params);
+    event->accent = 0u;
+    event->duration_ticks = select_duration(rhythm_value, params);
+    event->gate_permille = map_gate(rhythm_value, params);
+}
+
+static void map_rhythm_event(uint32_t index, uint32_t value, const cs_params_t *params, cs_event_t *event)
+{
+    uint32_t pitch_value;
+    uint32_t rhythm_value;
+    uint8_t accent;
+
+    select_pitch_rhythm_values(value, params, &pitch_value, &rhythm_value);
+    (void)pitch_value;
+    accent = map_rhythm_accent(rhythm_value, params);
+
+    event->step_index = index;
+    event->value = value;
+    event->active = map_rhythm_active(rhythm_value, params);
+    event->note = params->root_note;
+    event->velocity = map_rhythm_velocity(rhythm_value, accent, params);
+    event->accent = accent;
+    event->duration_ticks = select_duration(rhythm_value, params);
+    event->gate_permille = map_gate(rhythm_value, params);
+}
+
+static void map_hybrid_event(uint32_t index, uint32_t value, const cs_params_t *params, cs_event_t *event)
+{
+    uint32_t pad_value;
+    uint32_t rhythm_value;
+    uint8_t accent;
+
+    select_hybrid_values(value, params, &pad_value, &rhythm_value);
+    accent = map_rhythm_accent(rhythm_value, params);
+
+    event->step_index = index;
+    event->value = value;
+    event->active = map_rhythm_active(rhythm_value, params);
+    event->note = map_drum_rack_note(pad_value, params);
     event->velocity = map_rhythm_velocity(rhythm_value, accent, params);
     event->accent = accent;
     event->duration_ticks = select_duration(rhythm_value, params);
@@ -472,6 +565,7 @@ cs_params_t cs_default_params(void)
     params.sequence_shift = 0u;
     params.scene = 0u;
     params.mode = CS_MODE_HYBRID;
+    params.crt_split = CS_CRT_SPLIT_OFF;
     params.root_note = 60u;
     params.octave_min = 0;
     params.octave_count = 2u;
@@ -513,6 +607,13 @@ cs_status_t cs_validate_params(const cs_params_t *params)
     if (params->mode != CS_MODE_MELODY &&
         params->mode != CS_MODE_RHYTHM &&
         params->mode != CS_MODE_HYBRID) {
+        return CS_ERROR_INVALID_PARAM;
+    }
+
+    if (params->crt_split != CS_CRT_SPLIT_OFF &&
+        params->crt_split != CS_CRT_SPLIT_P_PITCH_Q_RHYTHM &&
+        params->crt_split != CS_CRT_SPLIT_P_RHYTHM_Q_PITCH &&
+        params->crt_split != CS_CRT_SPLIT_P_MELODY_Q_DRUMS) {
         return CS_ERROR_INVALID_PARAM;
     }
 

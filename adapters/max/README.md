@@ -25,6 +25,7 @@ Su Linux possiamo compilare e testare `cryptoseq_max_model`, che non dipende dal
 - `melodyrange`
 - `padcount`
 - `mode`
+- `crtsplit`
 - `scale`
 - `scaleintervals`
 - `rhythm`
@@ -47,6 +48,13 @@ I modi sono pensati cosi:
 
 `density` e' disponibile in tutte e tre le modalita' e controlla quanti step sono attivi.
 
+`crtsplit off|p_pitch_q_rhythm|p_rhythm_q_pitch|p_melody_q_drums` controlla come il core usa i residui CRT del valore cifrato:
+
+- `off`: mapping storico dal valore completo.
+- `p_pitch_q_rhythm`: `c_i mod p` pilota pitch/pad, `c_i mod q` pilota ritmo e articolazione.
+- `p_rhythm_q_pitch`: `c_i mod p` pilota ritmo e articolazione, `c_i mod q` pilota pitch/pad.
+- `p_melody_q_drums`: modo contestuale; in `melodic` mette `p` sulla parte melodica e `q` sulla struttura, in `hybrid` mette `q` sulla scelta dei pad Drum Rack e `p` sulla struttura ritmica.
+
 ## Flusso eventi e MIDI
 
 L'external emette sempre messaggi nel formato:
@@ -65,7 +73,9 @@ Nel patcher UI questo stream viene usato in due modi:
 
 Lo step timing segue Live tramite `metro 16n @active 1`. Il layer MIDI calcola la durata delle note da divisione, `duration` e `gate` senza interrogare direttamente la Live API durante il playback; questo evita errori `Live API is not initialized` quando il device viene caricato.
 
-Per esportare come clip MIDI: seleziona/clicca un clip slot MIDI vuoto nella stessa traccia o nella destinazione desiderata, poi premi `export` nel device. Se lo slot e' vuoto, viene creata una clip lunga quanto il pattern; se contiene gia' una clip, le note selezionate vengono rimpiazzate dal pattern CryptoSeq.
+Per esportare come clip MIDI: seleziona/clicca un clip slot MIDI vuoto nella stessa traccia o nella destinazione desiderata, poi premi `export` nel device. Se lo slot e' vuoto, viene creata una clip lunga quanto il pattern; se contiene gia' una clip, le note vengono rimpiazzate dal pattern CryptoSeq. Lo status vicino al pulsante mostra `select slot`, `no notes`, `exporting <n>`, `exported <n>` o `export failed`. Il nome della clip include mode, scene e CRT Split.
+
+Se la console stampa `get: no valid object set` durante l'export, di solito Ableton non ha un clip slot MIDI evidenziato o la Live API non ha ancora un oggetto valido. Seleziona un clip slot MIDI e riprova.
 
 ## Funzioni 0.2
 
@@ -99,6 +109,17 @@ Nel pannello performance della UI i controlli sono:
 - `morph %`: percentuale di fusione verso il pattern B;
 - `scene B`: scena usata per generare il pattern B;
 - `mode`: modo del morph, tra `all`, `pitch`, `rhythm`, `velocity`.
+- `CRT split`: separazione dei residui modulari di `p` e `q` tra dimensioni melodiche e ritmiche.
+
+## Funzioni 0.3
+
+CRT Split e' implementato nel core C e quindi resta riproducibile anche fuori da Max. Il formato evento non cambia:
+
+```text
+event step active note velocity accent duration gate value
+```
+
+Il campo `value` resta il cifrato originale `c_i`; i residui `c_i mod p` e `c_i mod q` vengono usati solo internamente per decidere pitch/pad e ritmo in base al modo selezionato. Cambiare `CRT split` rigenera subito il pattern, come morph, perche' modifica l'identita' musicale della sequenza.
 
 `scaleintervals` accetta una lista di intervalli cromatici, per esempio `scaleintervals 0 2 4 5 7 9 11`. La patch Max for Live usa questo messaggio per ereditare la scala globale di Ableton Live: `cryptoseq_live_scale.maxpat` aspetta che `live.thisdevice` segnali l'inizializzazione del device, poi legge gli intervalli Live e li passa al bridge JavaScript. La root resta un controllo locale del device.
 
@@ -121,6 +142,7 @@ shift 0
 mode hybrid
 root 60
 padcount 16
+crtsplit p_pitch_q_rhythm
 ratchetamount 30
 ratchetmax 4
 fillmode end
@@ -150,7 +172,7 @@ Il toggle `poly` e' un layer MIDI della UI melodica: non cambia la sequenza gene
 - L'oggetto `cryptoseq` viene trovato dal package installato.
 - Il clock Live fa avanzare gli step e produce note MIDI.
 - Cambiare parametri rigenera la visualizzazione senza suonare l'intero pattern.
-- I controlli 0.2 sono visibili nel pannello performance e modificano la sequenza in modo riproducibile.
+- I controlli performance 0.2/0.3 sono visibili e modificano la sequenza in modo riproducibile.
 
 ## Build Windows con Max SDK
 
@@ -206,11 +228,17 @@ cryptoseq
 Questo repository include due patch pronte da aprire:
 
 - `patchers/cryptoseq-test.maxpat`: smoke test minimale per eventi/MIDI.
-- `patchers/cryptoseq-midi-ui.maxpat`: UI 0.2 suonabile con file source, menu dei primi, controlli specifici per modalita', monitor della sequenza, pannello performance, knob length, shift, toggle poly melodico e divisione. La UI e' armata automaticamente; in presentation non ci sono bottoni generate/play.
+- `patchers/cryptoseq-midi-ui.maxpat`: UI suonabile con file source, menu dei primi, controlli specifici per modalita', monitor della sequenza, pannello performance, knob length, shift, toggle poly melodico e divisione. La UI e' armata automaticamente; in presentation non ci sono bottoni generate/play.
 
 La patch UI invia un `setup` debounced poco dopo i cambi parametro, cosi' il playback non continua a usare una sequenza vecchia. `setup` aggiorna anche il monitor della sequenza, ma `cryptoseq_engine.maxpat` tiene chiuso il gate MIDI per quegli eventi bulk. Il playback e' armato al caricamento, quindi il device segue il clock di Live senza bottoni generate/play separati nella UI. Inoltre mantiene `p` e `q` diversi e invia `rsa p q e` in modo atomico dopo aver filtrato il menu `e` su esponenti stile RSA coprimi con `phi(n) = (p - 1)(q - 1)`.
 
+Se `p/q` non produce nessun esponente valido nella lista del menu, per esempio `2/3`, la UI stampa `no valid exponent`, svuota il menu `e` e non invia un nuovo `rsa`. `ignored non-coprime e` e' un log atteso quando un valore ripristinato da Live non e' coprimo con `phi(n)`.
+
 I controlli esposti in UI sono parametri Live con `parameter_initial_enable = 1`: in Ableton il doppio click torna al valore di default del device appena aperto. I valori non vengono piu' forzati da messaggi hardcoded su `loadbang`; al caricamento il patcher aspetta il ripristino dei parametri Live e poi sincronizza verso il motore i valori correnti dei controlli. In questo modo un set salvato con impostazioni specifiche del device deve riaprirsi con le stesse impostazioni.
+
+Per ridurre micro-lag durante il playback, i pannelli `jsui` non ridisegnano piu' a ogni singolo evento: il monitor della sequenza e il pannello performance accorpano i refresh in piccoli frame. Il layer MIDI mantiene in cache la durata dello step e libera i Task del ratchet appena hanno suonato. Il bridge Live Scale interroga la Live API ogni 5 secondi, cosi' resta fuori dal percorso MIDI critico. Il morph fa eccezione: invia ancora `setup` immediati, perche' quel parametro deve risultare fluido e reattivo durante l'esecuzione.
+
+Per lag residui, controllare prima redraw `jsui`, chiamate Live API, `setup` duplicati e Task MIDI pendenti. Non mettere morph dietro debounce: e' l'unico controllo che deve restare immediato. Per una misura rapida, invia `stats` a `cryptoseq_engine_router.js` e guarda in Max Console il numero di setup immediati.
 
 Il controllo length della UI e' un knob da 1 a 128 step. Anche i messaggi manuali `length` in questo percorso UI sono limitati a 1..128.
 
@@ -222,7 +250,7 @@ La UI ha cinque aree di presentation:
 - pannello RSA, con controlli p/q/e e visualizzazione formula `n`, `phi(n)`, `gcd(e, phi)`;
 - pannello mode, con controlli nascosti o mostrati per melodic, hybrid e rhythm, incluso toggle `poly` solo per melodic;
 - monitor della sequenza, pilotato dall'output reale `event` dell'external;
-- pannello performance 0.2, con `scene`, `ratchet amount`, `ratchet max`, `fill mode`, `fill target`, `morph amount`, `morph scene B` e `morph mode`.
+- pannello performance 0.2/0.3, con `scene`, ratchet/fill, morph A/B e `CRT split`.
 
 Crea una patch Max con un oggetto `cryptoseq` e collega il suo outlet a `print cryptoseq`.
 
@@ -253,3 +281,11 @@ Controlli manuali richiesti dentro Max o Ableton Live:
 - `step 0` emette solo il primo evento.
 - `dump` e `bang` emettono la sequenza generata corrente.
 - Nel device UI, muovere un parametro aggiorna il monitor ma non deve suonare tutte le note.
+- In hybrid, con pad count 16, density 100, ratchet 0, fill off e morph 0, `CRT split` deve cambiare pattern/pad confrontando `off`, `p_pitch_q_rhythm` e `p_rhythm_q_pitch`.
+
+Se Ableton carica una versione vecchia del device, controllare la cartella
+`Documents\Ableton\User Library\Presets\MIDI Effects\Max MIDI Effect`: deve
+contenere un solo preset CryptoSeq visibile, `CryptoSeqALFA0.1-modular.amxd`.
+Backup `.amxd` nella stessa cartella vengono mostrati da Ableton come device
+separati. La procedura consigliata e'
+`tools\Install-CryptoSeqAbletonPreset.ps1 -ArchiveOtherCryptoSeqPresets`.

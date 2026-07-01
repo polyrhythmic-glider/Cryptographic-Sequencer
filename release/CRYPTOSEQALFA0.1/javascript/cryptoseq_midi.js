@@ -9,13 +9,17 @@ var current_length = 16;
 var poly_enabled = 0;
 var ratchet_amount = 0;
 var ratchet_max = 1;
+var fill_amount = 0;
 var fill_mode = "off";
+var fill_target = "all";
 var tempo_cache = DEFAULT_TEMPO;
+var step_ms_cache = interval_to_ms(current_interval, tempo_cache);
 var scheduled_tasks = [];
 
 function interval(value)
 {
     current_interval = value.toString();
+    update_step_ms_cache();
 }
 
 function tempo(value)
@@ -25,6 +29,7 @@ function tempo(value)
     if (!isNaN(parsed) && parsed > 0) {
         DEFAULT_TEMPO = parsed;
         tempo_cache = parsed;
+        update_step_ms_cache();
     }
 }
 
@@ -64,6 +69,30 @@ function fillmode(value)
     fill_mode = value.toString();
 }
 
+function fillamount(value)
+{
+    fill_amount = clamp_int(value, 0, 100, fill_amount);
+}
+
+function filltarget(value)
+{
+    var text = value.toString();
+
+    if (text === "al") {
+        text = "all";
+    }
+
+    if (
+        text === "density" ||
+        text === "ratchet" ||
+        text === "velocity" ||
+        text === "gate" ||
+        text === "all"
+    ) {
+        fill_target = text;
+    }
+}
+
 function list(step, active, note, velocity, accent, duration, gate, value)
 {
     var duration_ms;
@@ -83,7 +112,7 @@ function list(step, active, note, velocity, accent, duration, gate, value)
     var ratchet_duration;
     var i;
 
-    step_ms = interval_to_ms(current_interval, current_tempo());
+    step_ms = step_ms_cache;
     duration_units = Math.max(1, parse_int_or(duration, 1));
     gate_scale = Math.max(0.05, Math.min(1, parse_int_or(gate, 1000) / 1000));
     duration_ms = Math.max(20, Math.round(step_ms * duration_units * gate_scale));
@@ -94,7 +123,7 @@ function list(step, active, note, velocity, accent, duration, gate, value)
     parsed_accent = parse_int_or(accent, 0);
     parsed_value = parseInt(value, 10);
     fill_strength = fill_probability(parsed_step, parsed_accent, parsed_velocity);
-    fill_active = fill_hits(fill_strength, parsed_value);
+    fill_active = target_allows("density") && fill_hits(fill_strength, parsed_value);
 
     if (!parsed_active && !fill_active) {
         return;
@@ -102,13 +131,18 @@ function list(step, active, note, velocity, accent, duration, gate, value)
 
     if (!parsed_active && fill_active) {
         parsed_velocity = clamp_midi(Math.max(40, Math.round(parsed_velocity * 0.75)));
-    } else if (fill_active) {
+    } else if (target_allows("velocity") && fill_hits(fill_strength, parsed_value ^ 0x5e1ec7)) {
         parsed_velocity = clamp_midi(parsed_velocity + Math.floor(fill_strength / 10));
+    }
+
+    if (target_allows("gate") && fill_hits(fill_strength, parsed_value ^ 0x6a7e)) {
+        gate_scale = Math.max(0.05, gate_scale * (1 - (fill_strength / 300)));
+        duration_ms = Math.max(20, Math.round(step_ms * duration_units * gate_scale));
     }
 
     ratchets = Math.max(
         ratchet_count(parsed_accent, parsed_velocity, parsed_value),
-        fill_ratchet_count(fill_strength, parsed_value)
+        target_allows("ratchet") ? fill_ratchet_count(fill_strength, parsed_value) : 1
     );
     ratchet_spacing = step_ms / ratchets;
     ratchet_duration = Math.max(20, Math.round(ratchet_spacing * gate_scale));
@@ -133,6 +167,10 @@ function playevent()
     list.apply(this, args);
 }
 
+function anything()
+{
+}
+
 function emit_voice_set(note, velocity, duration_ms, value)
 {
     var third;
@@ -148,13 +186,15 @@ function emit_voice_set(note, velocity, duration_ms, value)
 
 function emit_voice_set_later(note, velocity, duration_ms, value, delay_ms)
 {
-    var task = new Task(function() {
+    var task;
+
+    task = new Task(function() {
         emit_voice_set(note, velocity, duration_ms, value);
+        remove_task(task);
     }, this);
 
     scheduled_tasks.push(task);
     task.schedule(Math.max(1, delay_ms));
-    cleanup_tasks();
 }
 
 function emit_note(note, velocity, duration_ms)
@@ -186,8 +226,9 @@ function fill_probability(step, accent, velocity)
 {
     var tail;
     var position;
+    var strength = 0;
 
-    if (fill_mode === "off") {
+    if (fill_mode === "off" || fill_amount <= 0) {
         return 0;
     }
 
@@ -202,21 +243,18 @@ function fill_probability(step, accent, velocity)
         }
 
         position = step - (current_length - tail);
-        return Math.min(100, 35 + Math.round((65 * (position + 1)) / tail));
-    }
-
-    if (fill_mode === "accent") {
-        return Math.min(100, Math.max(0, accent) * 28);
-    }
-
-    if (fill_mode === "velocity") {
-        if (velocity < 72) {
-            return 0;
+        strength = Math.min(100, 35 + Math.round((65 * (position + 1)) / tail));
+    } else if (fill_mode === "accent") {
+        strength = Math.min(100, Math.max(0, accent) * 28);
+    } else if (fill_mode === "velocity") {
+        if (velocity >= 72) {
+            strength = Math.min(100, (velocity - 72) * 2);
         }
-        return Math.min(100, (velocity - 72) * 2);
+    } else if (fill_mode === "all") {
+        strength = 100;
     }
 
-    return 0;
+    return Math.round((strength * fill_amount) / 100);
 }
 
 function fill_hits(strength, value)
@@ -238,6 +276,11 @@ function fill_ratchet_count(strength, value)
 
     max_extra = Math.max(1, ratchet_max - 1);
     return 2 + positive_mod(mix32(value ^ 0xf111), max_extra);
+}
+
+function target_allows(target)
+{
+    return fill_target === "all" || fill_target === target;
 }
 
 function is_end_fill_step(step)
@@ -297,10 +340,15 @@ function clamp_int(value, min_value, max_value, fallback)
     return Math.max(min_value, Math.min(max_value, parsed));
 }
 
-function cleanup_tasks()
+function remove_task(task)
 {
-    if (scheduled_tasks.length > 64) {
-        scheduled_tasks = scheduled_tasks.slice(scheduled_tasks.length - 32);
+    var i;
+
+    for (i = scheduled_tasks.length - 1; i >= 0; i -= 1) {
+        if (scheduled_tasks[i] === task) {
+            scheduled_tasks.splice(i, 1);
+            return;
+        }
     }
 }
 
@@ -321,6 +369,11 @@ function mode_is_melodic()
 function current_tempo()
 {
     return tempo_cache;
+}
+
+function update_step_ms_cache()
+{
+    step_ms_cache = interval_to_ms(current_interval, tempo_cache);
 }
 
 function interval_to_ms(interval_name, bpm)

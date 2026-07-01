@@ -14,11 +14,16 @@ var midi_controls = {
 };
 
 var immediate_setup_controls = {
+    crtsplit: 1,
+    crt: 1,
     morphamount: 1,
     morphscene: 1,
     morphmode: 1,
     morph: 1
 };
+var routed_count = 0;
+var immediate_setup_count = 0;
+var last_control = "";
 
 function anything()
 {
@@ -37,10 +42,20 @@ function anything()
 
     if (goes_to_core) {
         outlet.apply(this, [0, name].concat(args));
+        routed_count += 1;
+        last_control = name;
         if (immediate_setup_controls[name]) {
+            immediate_setup_count += 1;
             outlet(0, "setup");
         }
     }
+}
+
+function stats()
+{
+    post("cryptoseq-router: routed " + routed_count +
+        ", immediate setup " + immediate_setup_count +
+        ", last " + last_control + "\n");
 }
 
 function msg_int(value)

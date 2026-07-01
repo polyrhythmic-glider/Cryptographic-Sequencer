@@ -36,6 +36,13 @@ typedef enum cs_mode_t {
     CS_MODE_HYBRID = 2
 } cs_mode_t;
 
+typedef enum cs_crt_split_t {
+    CS_CRT_SPLIT_OFF = 0,
+    CS_CRT_SPLIT_P_PITCH_Q_RHYTHM = 1,
+    CS_CRT_SPLIT_P_RHYTHM_Q_PITCH = 2,
+    CS_CRT_SPLIT_P_MELODY_Q_DRUMS = 3
+} cs_crt_split_t;
+
 typedef struct cs_params_t {
     uint32_t p;
     uint32_t q;
@@ -44,6 +51,7 @@ typedef struct cs_params_t {
     size_t sequence_shift;
     uint8_t scene;
     cs_mode_t mode;
+    cs_crt_split_t crt_split;
 
     uint8_t root_note;
     int8_t octave_min;

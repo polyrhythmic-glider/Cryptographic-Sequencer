@@ -1,0 +1,297 @@
+Cryptographic-Sequencer Codex Notes
+Last updated: 2026-07-01
+
+Purpose
+- Keep a compact project memory for future Codex work.
+- Update this file whenever the Max for Live device, release pipeline, or core
+  behavior changes in a meaningful way.
+
+Current device
+- Main Ableton preset:
+  C:\Users\asus\Documents\Ableton\User Library\Presets\MIDI Effects\Max MIDI Effect\CryptoSeqALFA0.1-modular.amxd
+- Only one visible CryptoSeq preset should remain in that Ableton folder.
+- Old visible presets were archived under:
+  backups\ableton-presets-20260701-000131\archived-visible-presets
+- Main release AMXD:
+  release\CRYPTOSEQALFA0.1\CryptoSeqALFA0.1-modular.amxd
+- Max package:
+  C:\Users\asus\Documents\Max 8\Packages\Cryptographic-Sequencer
+
+AMXD safety rule
+- .amxd is not plain JSON.
+- It is an ampf binary container; patcher JSON starts at byte offset 32.
+- The ptch chunk length at byte offset 28 must be updated after length-changing edits.
+- Never copy a .maxpat over an .amxd.
+- Prefer the scripts in tools/ for AMXD edits.
+
+Install / cleanup pipeline
+- Reinstall the active Ableton preset and align the Max package with:
+  powershell -ExecutionPolicy Bypass -File tools\Install-CryptoSeqAbletonPreset.ps1 -ArchiveOtherCryptoSeqPresets
+- This script backs up the current preset, archives other visible CryptoSeq*.amxd
+  presets, copies the release AMXD, and updates package javascript/patchers/externals.
+
+Persistence rules
+- Live parameters need parameter_initial_enable = 1 for double-click reset.
+- Defaults must live in parameter metadata, not hardcoded loadbang messages.
+- Startup sync should send current control values to the engine after Live has
+  restored saved device state.
+- Use tools\Set-CryptoSeqParameterPersistence.ps1 after adding Live parameters.
+
+Known UI/runtime decisions
+- Hybrid mode uses pad count for Drum Rack pads; padcountindex fallback is needed
+  so menu index 4 correctly maps to padcount 16 on startup.
+- Morph is performance-critical and intentionally sends immediate setup for
+  morphamount/morphscene/morphmode/morph to feel fluid.
+- Other setup-heavy parameter changes should generally use debounce.
+- Sequence and performance jsui panels coalesce redraws to reduce micro-lag.
+- MIDI JS caches step duration and removes ratchet Tasks after they fire.
+- Live Scale polling is intentionally slow (5000 ms) and should stay out of the
+  MIDI-critical path.
+- CRT Split is a core parameter exposed by Max message `crtsplit <symbol>`.
+  Valid symbols are `off`, `p_pitch_q_rhythm`, `p_rhythm_q_pitch`, and
+  `p_melody_q_drums`. It triggers immediate setup because it changes the
+  musical identity of the generated pattern.
+
+Architecture boundaries
+- core/: deterministic generation.
+- adapters/max/src + include/cryptoseq_max_model.*: Max-facing state/model
+  without SDK dependency.
+- adapters/max/src/cryptoseq_max_external.c: Max SDK bridge.
+- adapters/max/javascript/: UI, routing, MIDI, Live API helpers.
+- adapters/max/patchers/: Max patcher modules.
+- release/: distributable Max package and AMXD copies.
+
+Validation checklist after Max/M4L edits
+- Inspect active/release AMXD with tools\Inspect-AmxdPatchcords.ps1.
+- Dump parameter defaults with tools\Dump-CryptoSeqMaxParams.ps1 when changing UI controls.
+- Confirm only one CryptoSeq*.amxd is visible in Ableton's Max MIDI Effect preset folder.
+- Confirm active AMXD hash matches release AMXD when installing a release.
+- Confirm package JS hashes match adapters/max/javascript sources after updates.
+- In Ableton: load a fresh CryptoSeqALFA0.1-modular device, verify hybrid opens
+  with pad count 16 actually sounding multiple pads, not only one.
+- For CRT Split: in hybrid mode, compare `off`, `p_pitch_q_rhythm`, and
+  `p_rhythm_q_pitch`; pad choices and active rhythm should change in different
+  ways without changing the event output format.
+
+Implemented feature: CRT Split
+- Core enum: `cs_crt_split_t`.
+- Core param: `cs_params_t.crt_split`, default `CS_CRT_SPLIT_OFF`.
+- Model setter: `cs_max_model_set_crt_split`.
+- External messages: `crtsplit`, `crtsplitmode`, and `crt`.
+- Max UI parameter: `cs_crt_split_menu`, default `off`, in the performance panel.
+- Tooling: `tools\Add-CryptoSeqCrtSplit.ps1` patches `.maxpat` and AMXD safely.
+- Verification on 2026-07-01:
+  - `cmake --build build --config Release` passed.
+  - `ctest --test-dir build -C Release --output-on-failure` passed.
+  - `cmake --build build-max-vs --config Release --target cryptoseq_max_external` passed.
+  - `dumpbin /exports` showed `ext_main`.
+  - release AMXD patchcord inspection reported 0 problems.
+  - installed Ableton preset hash matched release AMXD.
+  - installed package JS/external hashes matched repo/build outputs.
+
+Handoff: CRT Split/export visibility fix
+- 2026-07-01 root cause: the controls existed and were wired, but the active
+  Ableton preset was still an older AMXD. In that preset, `CRT split` was at
+  presentation x=1279/1342 and the release fix was not installed.
+- UI fix in release/source:
+  - `obj-460` export button at presentation rect `1245,137,24,24`.
+  - `obj-461` export label at `1273,139,50,20`.
+  - `obj-530` CRT Split label at `930,137,62,20`.
+  - `obj-531` CRT Split menu at `995,137,190,22`.
+  - these controls are ordered before large `jsui`/`fpic` presentation panels
+    so they render in front, not behind.
+- Scripts updated:
+  - `tools\Add-CryptoSeqClipExport.ps1`
+  - `tools\Add-CryptoSeqCrtSplit.ps1`
+  Both now set the visible coordinates and move presentation controls before
+  panel/image boxes.
+- Installed on 2026-07-01 with:
+  `powershell -ExecutionPolicy Bypass -File tools\Install-CryptoSeqAbletonPreset.ps1 -ArchiveOtherCryptoSeqPresets`
+- Post-install verification:
+  - Active Ableton preset hash matches
+    `release\CRYPTOSEQALFA0.1\CryptoSeqALFA0.1-modular.amxd`:
+    `55B23DF6616F38249E1B3729A077E1231F7A566149B30295E11CD83D5D692B00`.
+  - Active preset has `obj-460/461/530/531` before panel objects and at the
+    coordinates above.
+  - Only one visible `CryptoSeq*.amxd` remains in Ableton's Max MIDI Effect
+    preset folder.
+- If Ableton Live was open during install, remove/reinsert the device or
+  restart Live before checking the UI.
+- CRT Split Ableton test to run manually: hybrid, pad count 16, density 100,
+  ratchet 0, fill off, morph 0, Drum Rack with distinct pads; compare `off`,
+  `p_pitch_q_rhythm`, and `p_rhythm_q_pitch`.
+
+Handoff: first-release polish after manual UI edits
+- 2026-07-01: user manually adjusted the active Ableton AMXD UI. Treat the
+  active preset as the source of truth for UI placement unless the user says
+  otherwise.
+- Active preset promoted back into release AMXDs:
+  - `release\CRYPTOSEQALFA0.1\CryptoSeqALFA0.1-modular.amxd`
+  - `release\max-for-live\CryptoSeqALFA0.1-modular.amxd`
+- Active/release AMXD hash after promotion:
+  `6A789E0C73DC5861B4321EE5A4055BD7879A9D922FE27D73ECA508390E2AD7F6`.
+- AMXD inspection after promotion:
+  - `release\CRYPTOSEQALFA0.1\CryptoSeqALFA0.1-modular.amxd`: 134 boxes,
+    138 lines, 0 problems.
+  - `release\max-for-live\CryptoSeqALFA0.1-modular.amxd`: 134 boxes,
+    138 lines, 0 problems.
+- Fixed `cryptoseq_ui.js` crash from Max log:
+  `Javascript TypeError: selected is null, line 689`.
+  Cause: `p=2` and `q=3` produce no valid exponent in the UI candidate list,
+  so `fill_exponent_menu()` received `null` and called `toString()`.
+  Fix: clear the menu and return when no exponent is available; do not send
+  a new `rsa` message.
+- Synchronized `cryptoseq_ui.js` across adapters, release copies, and the
+  installed Max package. Current JS hash:
+  `9483DEFDC5292D5A29B9B6FADD5EA01346CE7BC92E85E9E879D1E34CAB81D4BD`.
+- README files updated with release/test notes, expected RSA invalid-combo
+  logs, export slot warning, and lag triage guidance.
+- Verification:
+  - `cmake --build build --config Release` passed.
+  - `ctest --test-dir build -C Release --output-on-failure` passed.
+- Note: `node` is not installed on this machine, so JS syntax was not checked
+  with `node --check`.
+
+Handoff: export button wiring repair
+- 2026-07-01: export button was visible but did nothing. Root cause: the active
+  AMXD had lost the patchcords from `obj-460` to the export chain.
+- A first repair pass added bare line objects like
+  `{"source":["obj-460",0],...}`. Max ignores those because valid patcher
+  lines must be wrapped as `{"patchline":{...}}`.
+- Fixed `tools\Add-CryptoSeqClipExport.ps1` so `Add-LineIfMissing` always
+  appends wrapped `patchline` objects and preserves existing manual
+  `presentation_rect` / `patching_rect` for `obj-460` and `obj-461`.
+- Repaired active Ableton preset and release AMXDs. Current active/release
+  hash:
+  `A28E146F754AE77C97CBBD6594B822F055839AEC0D5F5D8F5C8CC7DCE6119324`.
+- Active AMXD now has 134 boxes, 147 lines, and these export patchlines:
+  `obj-460 -> obj-463 -> obj-219`, `obj-460 -> obj-464 -> obj-465 -> obj-462`,
+  plus `obj-219`, `obj-2`, `obj-38`, and `obj-98` feeding `obj-462`.
+- If testing in Ableton after this repair, remove/reinsert the device or
+  restart Live so the patched AMXD is loaded.
+
+Handoff: Ponytail release hardening pass
+- 2026-07-01 total pass found the AMXDs were clean, but all checked `.maxpat`
+  copies still had 9 malformed bare line entries from the export repair era.
+- Re-ran the corrected `tools\Add-CryptoSeqClipExport.ps1` on:
+  - `adapters\max\patchers\cryptoseq-midi-ui.maxpat`
+  - release patcher copies
+  - installed Max package patcher
+- All checked `.maxpat` copies now have 131 boxes, 143 lines, 0 bare line
+  entries, and matching hash
+  `FC5A93817338A98D15002F366ABC4745D6455E94332441566C31B78DED60CF4B`.
+- `tools\Inspect-AmxdPatchcords.ps1` now reports malformed line entries
+  without a `patchline` wrapper instead of silently accepting them.
+- `.gitignore` now ignores generated `*.bak-*` files and `backups/` so script
+  backups do not swamp `git status`.
+- Installed Max package `cryptoseq-midi-ui.maxpat` was updated to match the
+  repaired source patcher.
+- Verification after hardening:
+  - `cmake --build build --config Release` passed.
+  - `ctest --test-dir build -C Release --output-on-failure` passed.
+  - `cmake --build build-max-vs --config Release --target cryptoseq_max_external` passed.
+  - Active Ableton AMXD, `release\CRYPTOSEQALFA0.1` AMXD, and
+    `release\max-for-live` AMXD share hash
+    `A28E146F754AE77C97CBBD6594B822F055839AEC0D5F5D8F5C8CC7DCE6119324`.
+  - Release AMXD inspection reports 134 boxes, 147 lines, 0 problems.
+- Skipped destructive cleanup of existing backup files; they are now ignored
+  but still available for rollback.
+
+Handoff: RC polish pass
+- 2026-07-01: implemented the release-minded Ponytail plan.
+- Export:
+  - `cryptoseq_clip_export.js` now reports short status strings through its
+    outlet and Max Console: `select slot`, `no notes`, `exporting`,
+    `exported <n>`, `export failed`, etc.
+  - exported clip names now include mode, scene, and CRT Split.
+  - Live API `get` calls are guarded so missing highlighted slots produce a
+    controlled `select slot` status instead of opaque Max API errors.
+- UI patching:
+  - `tools\Add-CryptoSeqClipExport.ps1` now adds `obj-466` export status
+    comment and connects `obj-462 -> obj-466`.
+  - stale export coordinates with presentation x > 1000 are reset to the
+    compact manual layout; existing compact manual positions are preserved.
+- Lag triage:
+  - `cryptoseq_engine_router.js` accepts `stats` and prints routed control
+    count, immediate setup count, and last routed control. Use only for
+    diagnosis; morph remains immediate.
+- Release docs/tooling:
+  - added `PRESETS.md` with Drum Rack CRT Demo, Minimal Rhythm, Melodic Safe,
+    and Morph Scene Check starting points.
+  - added `RELEASE_CHECKLIST.md`.
+  - added `tools\Test-CryptoSeqRelease.ps1` for build/test/external/AMXD/maxpat
+    checks.
+- Propagated runtime/docs to release folders and installed Max package.
+- Verification:
+  - `powershell -ExecutionPolicy Bypass -File tools\Test-CryptoSeqRelease.ps1`
+    passed.
+  - PowerShell parse check for all `tools/*.ps1` passed.
+  - Active Ableton AMXD and both release AMXDs share hash
+    `8E3C2EC2FD3365B181EC65A5C344D510ED7E99B7820AF66D8644EA45394BDC6B`.
+  - release AMXD inspection: 135 boxes, 148 lines, 0 problems.
+  - JS copies are aligned across adapters/release/package.
+
+Handoff: empty exported clip fix
+- 2026-07-01: user reported that export created an empty MIDI clip.
+- Root cause addressed in `cryptoseq_clip_export.js`: note writing now tries
+  the Live 11+ dictionary API first (`remove_notes_extended` +
+  `add_new_notes`) and falls back to the legacy
+  `replace_selected_notes` / `notes` / `note` / `done` path.
+- The note dictionary is kept alive and reused instead of being freed right
+  after `add_new_notes`, because Live API dict arguments are passed by name.
+- Export status now reports `exporting <n>` before writing notes, so Ableton
+  tests can distinguish "no events collected" from "write failed/empty clip".
+- Live API clip ids are normalized from both `id 123` and `["id", 123]`
+  forms before assigning `LiveAPI.id`.
+- Export button dump delay was increased from 100 ms to 250 ms in
+  `tools\Add-CryptoSeqClipExport.ps1` and all source/release/package patcher
+  copies, giving the engine dump more time to populate the JS event cache.
+- Installed the validated release into the active Ableton preset and Max
+  package on 2026-07-01.
+- Verification:
+  - `powershell -ExecutionPolicy Bypass -File tools\Test-CryptoSeqRelease.ps1`
+    passed.
+  - Active Ableton preset inspection: 135 boxes, 148 lines, 0 problems.
+  - Active Ableton preset hash matches release AMXD:
+    `CB5922DE64FD5226D331422AECB3DA1418C3B14AB598B40EA5AA77F5465898CE`.
+  - Installed package `cryptoseq_clip_export.js` hash matches source:
+    `DA6217B98B35A544E6907AFA909D46217CCA23577A169D801FCCDD4518FF71DF`.
+  - Installed package `cryptoseq-midi-ui.maxpat` hash matches source and
+    contains `delay 250`.
+  - `cscript //Nologo //E:JScript adapters\max\javascript\cryptoseq_clip_export.js`
+    passed as a basic JavaScript parse check.
+- `node` is not installed on this machine, so JS syntax was not checked with
+  `node --check`.
+- In Ableton Live, remove/reinsert the device or restart Live before testing
+  if the device was already loaded.
+
+Handoff: Sting 2 export comparison
+- 2026-07-01: user reported exported MIDI clips still had no visible notes.
+- Local reference checked:
+  `C:\Users\asus\Documents\Ableton\User Library\Max4Live\Sting 2.amxd`.
+- Sting 2 uses a Max patcher path with `dict` -> `prepend call add_new_notes`
+  -> `live.object`. The important message shape is
+  `call add_new_notes dictionary <dictname>`, not just
+  `call add_new_notes <dictname>`.
+- Fixed `cryptoseq_clip_export.js` to call:
+  `clip.call("add_new_notes", "dictionary", dict.name)`.
+- Also added the neutral Live note fields Sting includes:
+  `probability: 1`, `velocity_deviation: 0`, `release_velocity: 64`.
+  Do not add `note_id` for new notes.
+- JS copies were synchronized across adapters, release folders, and installed
+  Max package. Current `cryptoseq_clip_export.js` hash:
+  `F54CC5E650E504C3367712A5C62AC092E9CB5B762944F02724E42D9238478820`.
+- Verification:
+  - `cscript //Nologo //E:JScript adapters\max\javascript\cryptoseq_clip_export.js`
+    passed.
+  - `powershell -ExecutionPolicy Bypass -File tools\Test-CryptoSeqRelease.ps1`
+    passed.
+  - Active Ableton preset inspection: 135 boxes, 148 lines, 0 problems.
+  - Active Ableton preset contains `js cryptoseq_clip_export.js`,
+    `delay 250`, `exportclip`, and no `delay 100`.
+- Note: active Ableton AMXD hash currently differs from release AMXD, likely
+  because the active preset was saved/edited manually after install. Do not
+  overwrite it unless the user asks; the export note-writing fix is in the
+  package JS.
+- In Ableton, remove/reinsert the device or restart Live before retesting,
+  otherwise the loaded JS may still be the old one.

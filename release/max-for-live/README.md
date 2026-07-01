@@ -45,6 +45,28 @@ Generare due pattern A e B usando `scene` o salt diversi.
 - Modalita' previste: morph completo, `pitch only`, `rhythm only`, `velocity only`.
 - Il morph non deve comportarsi come crossfade casuale: a parita' di parametri deve produrre sempre la stessa sequenza.
 
+## Roadmap 0.3
+
+Obiettivo generale: rendere piu' percepibile l'identita' matematica della sequenza, facendo sentire il ruolo separato dei due numeri primi invece di usarli solo come parametri nascosti.
+
+### 5. CRT Split
+
+Usare separatamente i residui del valore cifrato `c_i` rispetto ai due primi:
+
+```text
+a_i = c_i mod p
+b_i = c_i mod q
+```
+
+Il controllo `CRT split` decide se e come questi residui vengono assegnati a dimensioni musicali diverse:
+
+- `off`: comportamento storico; il mapping usa il valore cifrato completo.
+- `p_pitch_q_rhythm`: il residuo rispetto a `p` controlla pitch/pad, il residuo rispetto a `q` controlla ritmo, durata, gate e accenti.
+- `p_rhythm_q_pitch`: scambia i ruoli; `p` controlla il ritmo e `q` controlla pitch/pad.
+- `p_melody_q_drums`: in `melodic` usa `p` come sorgente melodica e `q` come struttura ritmica; in `hybrid` usa `q` per scegliere i pad Drum Rack e `p` per la struttura ritmica.
+
+Lo scopo musicale e' poter ascoltare cosa cambia quando si muove `p` o `q`: non solo una variazione generica del pattern, ma una separazione tra identita' melodica e identita' ritmica/percussiva.
+
 # Core C
 
 La repository contiene un primo core C portabile, separato dagli adapter Max for Live ed ESP32. Il core implementa solo la pipeline deterministica:
@@ -174,11 +196,19 @@ Il menu scala della modalita' melodica puo' usare le scale interne del device op
 
 La UI Max for Live usa un controllo lunghezza `1..128`, invia `rsa p q e` in modo atomico quando cambiano i primi e invia un `setup` debounced dopo raffiche di modifiche. Quel `setup` rigenera il pattern e aggiorna la visualizzazione; nel patcher UI gli eventi di setup/dump sono separati dal gate MIDI, quindi cambiare parametro non deve suonare tutte le note. Il playback MIDI passa solo dagli eventi prodotti dal clock `step`.
 
+Se la coppia `p/q` non ammette nessun esponente nella lista del menu, per esempio `p=2` e `q=3`, la UI stampa `no valid exponent` e non invia un nuovo `rsa` al motore. Un `ignored non-coprime e` e' normale quando Live ripristina o l'utente prova un valore non coprimo con `phi(n)`.
+
 I controlli del device sono parametri Live con default espliciti: in Ableton il doppio click riporta il parametro al valore iniziale del sequencer. Il patcher non usa piu' messaggi di default hardcoded su `loadbang` per i parametri salvabili; dopo il caricamento sincronizza verso il motore i valori correnti dei controlli, cosi' un progetto Live salvato con impostazioni specifiche puo' riaprirsi con le stesse impostazioni.
+
+Il percorso UI/MIDI e' ottimizzato per il playback: i pannelli grafici accorpano i redraw invece di ridisegnare ogni evento, il layer MIDI tiene in cache il tempo dello step liberando i Task del ratchet appena sono stati eseguiti, e il bridge Live Scale interroga la Live API ogni 5 secondi invece di stare nel percorso MIDI critico. Il morph fa eccezione: invia ancora `setup` immediati, perche' quel parametro deve risultare fluido e reattivo durante l'esecuzione.
+
+Lag residui vanno cercati prima nel percorso Max/JS, non nel core: controllare redraw `jsui`, chiamate Live API, `setup` ripetuti e Task MIDI. Non spostare morph su debounce: deve restare immediato.
 
 Il controllo `shift` ruota la sequenza generata di `n` posizioni senza cambiare hash della sorgente o valori RSA. Gli eventi che superano la fine del pattern rientrano all'inizio nello stesso ordine, e gli indici `step` emessi vengono riscritti sulle nuove posizioni. La UI 0.1 mostra anche il valore numerico dello shift accanto al controllo.
 
 Il toggle `poly` e' un layer di uscita MIDI melodica. Non modifica la sequenza deterministica del core; quando la modalita' e' `melodic`, ogni nota attiva viene emessa come triade deterministica. In `hybrid` e `rhythm` viene ignorato, cosi' Drum Rack e percussione singola restano monofonici.
+
+Il controllo `CRT split` e' un parametro del core, non un effetto MIDI successivo. Con `off` la mappatura resta quella storica. Con gli altri modi, l'evento mantiene comunque il campo `value` originale, ma pitch/pad e ritmo vengono derivati dai residui `value mod p` e `value mod q`. Cambiare `CRT split` rigenera subito il pattern e aggiorna la visualizzazione.
 
 ### Flusso eventi nella UI Max for Live
 
@@ -190,6 +220,8 @@ L'external `cryptoseq` ha un solo formato di uscita, `event step active note vel
 Nel patcher `cryptoseq_engine.maxpat` questi due flussi sono separati. Gli eventi bulk aggiornano il monitor della sequenza ma restano chiusi rispetto al MIDI. Per il playback, il clock usa il messaggio interno `playstep <n>`: l'external risponde con `playevent ...`, che il motore inoltra sia al monitor sia al MIDI. Questa separazione evita raffiche di note quando si cambia un parametro, mentre l'API pubblica `step <n>` continua a emettere il normale `event ...` per test e debug.
 
 Lo step timing e' affidato a `metro 16n @active 1`, quindi segue il transport di Live. Il layer MIDI calcola la durata delle note da divisione, `duration` e `gate`; non interroga direttamente la Live API durante il playback, cosi' evita errori di inizializzazione durante il caricamento del device.
+
+Il pulsante `export` scrive nel clip slot MIDI evidenziato e mostra uno stato breve nel device (`select slot`, `no notes`, `exporting <n>`, `exported <n>`). Il nome della clip esportata include mode, scene e CRT Split, cosi' le variazioni restano riconoscibili nella Session View.
 
 ### Funzioni 0.2 implementate
 
@@ -221,6 +253,7 @@ Nel pannello performance della UI:
 - `morph %`: percentuale di fusione tra pattern A e pattern B;
 - `scene B`: scena usata per generare il pattern B;
 - `mode`: campo del morph da applicare (`all`, `pitch`, `rhythm`, `velocity`).
+- `CRT split`: separazione dei residui modulari di `p` e `q` tra dimensioni melodiche e ritmiche.
 
 La UI del patcher Max for Live e' divisa in cinque aree di presentation:
 
@@ -228,7 +261,7 @@ La UI del patcher Max for Live e' divisa in cinque aree di presentation:
 - controlli RSA piu' display formula/stato per `n`, `phi(n)` e `gcd(e, phi)`;
 - controlli specifici per `melodic`, `hybrid` e `rhythm`, incluso il toggle `poly` solo melodico;
 - visualizzazione read-only della sequenza, guidata dal vero stream `event`;
-- pannello performance 0.2 con `scene`, ratchet/fill e morph A/B.
+- pannello performance 0.2/0.3 con `scene`, ratchet/fill, morph A/B e `CRT split`.
 
 Il progetto Max usa ora astrazioni riutilizzabili per la logica di servizio: `cryptoseq_auto_setup.maxpat`, `cryptoseq_clock.maxpat`, `cryptoseq_engine.maxpat`, `cryptoseq_live_scale.maxpat` e `cryptoseq_midi_out.maxpat`. Il patcher principale mantiene i controlli visibili del device e richiama questi moduli invece di incorporare direttamente le loro reti di oggetti.
 
@@ -239,6 +272,8 @@ cmake -S . -B build-release -DCMAKE_BUILD_TYPE=Release
 cmake --build build-release
 ./build-release/cryptoseq_print_sequence
 ```
+
+Prima di consegnare una release Max for Live, eseguire `tools\Test-CryptoSeqRelease.ps1`, installare con `tools\Install-CryptoSeqAbletonPreset.ps1 -ArchiveOtherCryptoSeqPresets`, poi riaprire o reinserire il device se Ableton Live era gia' aperto. I preset di partenza sono in `PRESETS.md`; la checklist manuale completa e' in `RELEASE_CHECKLIST.md`.
 
 ## API principale
 

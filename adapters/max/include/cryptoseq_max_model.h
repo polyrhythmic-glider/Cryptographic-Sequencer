@@ -49,6 +49,7 @@ cs_status_t cs_max_model_set_length(cs_max_model_t *model, size_t length);
 cs_status_t cs_max_model_set_sequence_shift(cs_max_model_t *model, int32_t shift);
 cs_status_t cs_max_model_set_scene(cs_max_model_t *model, uint8_t scene);
 cs_status_t cs_max_model_set_mode(cs_max_model_t *model, const char *mode);
+cs_status_t cs_max_model_set_crt_split(cs_max_model_t *model, const char *split);
 cs_status_t cs_max_model_set_scale(cs_max_model_t *model, const char *scale);
 cs_status_t cs_max_model_set_scale_intervals(
     cs_max_model_t *model,

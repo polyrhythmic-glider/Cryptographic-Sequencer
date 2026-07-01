@@ -7,6 +7,7 @@ var last_signature = "";
 var live_api_ready = false;
 var live_set_api = null;
 var live_scale_supported = null;
+var POLL_INTERVAL_MS = 5000;
 
 function bang()
 {
@@ -55,7 +56,7 @@ function start_polling()
     }
 
     poll_task = new Task(refresh, this);
-    poll_task.interval = 2000;
+    poll_task.interval = POLL_INTERVAL_MS;
     poll_task.repeat();
 }
 

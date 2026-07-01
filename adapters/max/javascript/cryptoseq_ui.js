@@ -26,6 +26,7 @@ var current_p = DEFAULT_P;
 var current_q = DEFAULT_Q;
 var current_e = DEFAULT_E;
 var current_mode = "hybrid";
+var current_crt_split = "off";
 var current_melody_low = DEFAULT_MELODY_LOW;
 var current_melody_high = DEFAULT_MELODY_HIGH;
 var current_pad_count = DEFAULT_PAD_COUNT;
@@ -144,6 +145,7 @@ function defaults()
     current_q = DEFAULT_Q;
     current_e = DEFAULT_E;
     current_mode = "hybrid";
+    current_crt_split = "off";
     current_melody_low = DEFAULT_MELODY_LOW;
     current_melody_high = DEFAULT_MELODY_HIGH;
     current_pad_count = DEFAULT_PAD_COUNT;
@@ -164,6 +166,7 @@ function defaults()
     outlet(0, "scene", DEFAULT_SCENE);
     outlet(0, "root", DEFAULT_ROOT);
     outlet(0, "mode", current_mode);
+    outlet(0, "crtsplit", current_crt_split);
     outlet(0, "melodyrange", current_melody_low, current_melody_high);
     outlet(0, "padcount", current_pad_count);
     outlet(0, "rhythm", rhythm_divisor, rhythm_threshold);
@@ -341,6 +344,24 @@ function morphmode(value)
     outlet(0, "morphmode", text);
 }
 
+function crtsplit(value)
+{
+    var text = value.toString();
+
+    if (!symbol_is_one_of(text, [
+        "off",
+        "p_pitch_q_rhythm",
+        "p_rhythm_q_pitch",
+        "p_melody_q_drums"
+    ])) {
+        post("cryptoseq-ui: ignored CRT split " + text + "\n");
+        return;
+    }
+
+    current_crt_split = text;
+    outlet(0, "crtsplit", current_crt_split);
+}
+
 function root(value)
 {
     var parsed = note_name_to_midi(value);
@@ -490,6 +511,17 @@ function padcount(value)
 
     current_pad_count = parsed;
     outlet(0, "padcount", current_pad_count);
+}
+
+function padcountindex(value)
+{
+    var index = parse_int(value, 0, pad_count_candidates.length - 1);
+
+    if (index === null) {
+        return;
+    }
+
+    padcount(pad_count_candidates[index]);
 }
 
 function send_prime(name, value)
@@ -649,8 +681,12 @@ function fill_exponent_menu(selected)
         selected = choose_smallest_exponent(valid);
     }
 
-    current_e = selected;
     outlet(5, "clear");
+    if (selected === null) {
+        return;
+    }
+
+    current_e = selected;
     for (i = 0; i < valid.length; i += 1) {
         outlet(5, "append", valid[i].toString());
     }
